@@ -51,12 +51,8 @@ def locate(name=None, ensembl=None, gene_name=None, organism=None):
     if not query:
         raise ValueError, 'proteinlocate.locate: Empty query'
     accessions = []
-    first = True
     url = 'http://www.uniprot.org/uniprot/?' + urllib.urlencode({'query' : query, 'format':'tab', 'columns':'id'})
     for line in urllib.urlopen(url):
-        if first:
-            first = False
-            continue
         accessions.append(line.strip())
     results = []
     for acc in accessions:
