@@ -47,7 +47,7 @@ def locate(name=None, ensembl=None, gene_name=None, organism=None):
     if organism:
         query += ' organism:"%s"' % organism
     if ensembl:
-        query += ' "ensembl %s"' % ensembl
+        query += ' ensembl %s' % ensembl
     if not query:
         raise ValueError, 'proteinlocate.locate: Empty query'
     accessions = []
