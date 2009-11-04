@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2009, Luís Pedro Coelho <lpc@cmu.edu>
+# vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
@@ -20,21 +21,43 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-import cPickle as pickle
-import gzip
-from lxml import etree
+try:
+    import amara
+except ImportError:
+    print '''Amara is missing.
 
-labels = {}
-locations = {}
-for event, node in etree.iterparse('LOCATE_mouse_v6_20081121.xml'):
-    if node.find('literature') is not None:
-        key = node.findtext('protein/source/accn')
-        locs = []
-        for n in node.findall('literature/reference/locations/location'):
-            locs.append([nn.text for nn in n.getchildren()])
-        locations[key] = locs
-        print len(locations)
-        node.clear()
+Amara is a Python package for XML parsing which makes it easier to parse
+very large files while keeping memory usage to an acceptable level.
 
-pickle.dump((labels,locations),gzip.GzipFile('labelslocations.pp.gz','w'))
-# vim: set ts=4 sts=4 sw=4 expandtab smartindent:
+Please install it.'''
+
+from collections import namedtuple
+Protein = namedtuple('Protein', 'name location')
+proteins = []
+locatefile = 'LOCATE_mouse_v6_20081121.xml'
+#locatefile = 'LOCATE_sample.xml'
+locations = set()
+protein_records = 0
+with_location = 0
+images = 0
+coloc_images = 0
+
+for protein in amara.pushbind(locatefile, u'LOCATE_protein'):
+    protein_records += 1
+    curlocations = protein.xml_xpath('literature//location[@goid]')
+    if curlocations:
+        with_location += 1
+    for location in curlocations:
+        goids = location.goid.split(';')
+        for g in goids:
+            locations.add(g)
+    if unicode(protein.experimental_data.images).strip():
+        images += 1
+    if unicode(protein.experimental_data.coloc_images).strip():
+        coloc_images += 1
+
+print 'Protein records:', protein_records
+print 'Protein records with literature records:', with_location
+print 'With image record:', images
+print 'With colocalisation record:', coloc_images
+
