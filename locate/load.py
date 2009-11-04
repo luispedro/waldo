@@ -32,32 +32,32 @@ very large files while keeping memory usage to an acceptable level.
 Please install it.'''
 
 from collections import namedtuple
-Protein = namedtuple('Protein', 'name location')
-proteins = []
-locatefile = 'LOCATE_mouse_v6_20081121.xml'
-#locatefile = 'LOCATE_sample.xml'
-locations = set()
-protein_records = 0
-with_location = 0
-images = 0
-coloc_images = 0
+fullfile = 'LOCATE_mouse_v6_20081121.xml'
+samplefile = 'LOCATE_sample.xml'
 
-for protein in amara.pushbind(locatefile, u'LOCATE_protein'):
-    protein_records += 1
-    curlocations = protein.xml_xpath('literature//location[@goid]')
-    if curlocations:
-        with_location += 1
-    for location in curlocations:
-        goids = location.goid.split(';')
-        for g in goids:
-            locations.add(g)
-    if unicode(protein.experimental_data.images).strip():
-        images += 1
-    if unicode(protein.experimental_data.coloc_images).strip():
-        coloc_images += 1
+def collect(locatefile):
+    locations = set()
+    protein_records = 0
+    with_location = 0
+    images = 0
+    coloc_images = 0
 
-print 'Protein records:', protein_records
-print 'Protein records with literature records:', with_location
-print 'With image record:', images
-print 'With colocalisation record:', coloc_images
+    for protein in amara.pushbind(locatefile, u'LOCATE_protein'):
+        protein_records += 1
+        curlocations = protein.xml_xpath('literature//location[@goid]')
+        if curlocations:
+            with_location += 1
+        for location in curlocations:
+            goids = location.goid.split(';')
+            for g in goids:
+                locations.add(g)
+        if unicode(protein.experimental_data.images).strip():
+            images += 1
+        if unicode(protein.experimental_data.coloc_images).strip():
+            coloc_images += 1
+
+    print 'Protein records:', protein_records
+    print 'Protein records with literature records:', with_location
+    print 'With image record:', images
+    print 'With colocalisation record:', coloc_images
 
