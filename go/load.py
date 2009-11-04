@@ -31,10 +31,10 @@ def _getgo(r):
         raise ValueError, "go.load._getgo: Don't know what to do with %s" % r
     return r[len(prefix):]
 G = nx.DiGraph()
-root = amara.parse('go_daily-termdb.rdf-xml')
 names = {}
-terms = root.xml_xpath('//go:term')
-for term in terms:
+prefixes = { 'go' : 'http://www.geneontology.org/dtds/go.dtd#' }
+
+for term in amara.pushbind('go_daily-termdb.rdf-xml', u'//go:term', prefixes=prefixes):
     G.add_node(unicode(term.accession))
     names[unicode(term.accession)] = unicode(term.name)
     if hasattr(term, 'is_a'):
