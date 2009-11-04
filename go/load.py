@@ -21,32 +21,35 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-import numpy as np
-import amara
 import networkx as nx
-
-def _getgo(r):
-    prefix = u'http://www.geneontology.org/go#'
-    if not r.startswith(prefix):
-        raise ValueError, "go.load._getgo: Don't know what to do with %s" % r
-    return r[len(prefix):]
+from collections import namedtuple 
 G = nx.DiGraph()
-names = {}
-prefixes = { 'go' : 'http://www.geneontology.org/dtds/go.dtd#' }
+Term = namedtuple('Term', 'id name is_a is_obsolete')
+id = None
+terms = []
+for line in file('gene_ontology.1_2.obo'):
+    line = line.strip()
+    if line == '[Term]':
+        if id is not None:
+            terms.append(Term(id=id,name=name,is_obsolete=is_obsolete,is_a=is_a))
+            if not is_obsolete:
+                G.add_node(id)
+                for p in is_a:
+                    G.add_edge(id,p)
+        is_a = []
+        is_obsolete = False
+    if line.find(':') > 0:
+        code, content = line.split(':',1)
+        content = content.strip()
+        if code == 'id':
+            id = content
+        elif code == 'name':
+            name = content
+        elif code == 'is_a':
+            content,_ = content.split('!')
+            content = content.strip()
+            is_a.append(content)
+        elif code == 'is_obsolete':
+            is_obsolete = True
 
-for term in amara.pushbind('go_daily-termdb.rdf-xml', u'//go:term', prefixes=prefixes):
-    G.add_node(unicode(term.accession))
-    names[unicode(term.accession)] = unicode(term.name)
-    if hasattr(term, 'is_a'):
-        for isa in term.is_a:
-            G.add_edge(unicode(term.accession), _getgo(isa.resource))
-            
-G.name = 'Gene Ontology'
-cc_root = 'GO:0005575'
-obsolete_biological_process = u'obsolete_biological_process'
-obsolete_cellular_component = u'obsolete_cellular_component'
-obsolete_molecular_function = u'obsolete_molecular_function'
 
-
-cellular_components = set(nx.search.dfs_tree(G,cc_root,reverse_graph=1).nodes())
-obsolete_ccs = set(nx.search.dfs_tree(G,obsolete_cellular_component,reverse_graph=1).nodes())
