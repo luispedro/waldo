@@ -22,12 +22,14 @@
 
 from __future__ import division
 import networkx as nx
-from collections import namedtuple 
+from collections import namedtuple
+import os
+_basedir = os.path.dirname(os.path.abspath(__file__))
 G = nx.DiGraph()
 Term = namedtuple('Term', 'id name is_a is_obsolete')
 id = None
 terms = []
-for line in file('gene_ontology.1_2.obo'):
+for line in file(_basedir + '/gene_ontology.1_2.obo'):
     line = line.strip()
     if line == '[Term]':
         if id is not None:
@@ -52,4 +54,7 @@ for line in file('gene_ontology.1_2.obo'):
         elif code == 'is_obsolete':
             is_obsolete = True
 
+G.name = 'Gene Ontology'
+cc_root = 'GO:0005575'
+cellular_components = set(nx.search.dfs_tree(G,cc_root,reverse_graph=1).nodes())
 
