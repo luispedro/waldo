@@ -22,9 +22,24 @@
 
 from __future__ import division
 from collections import defaultdict 
+from go.load import cellular_components
+
 annotations = defaultdict(list)
 lines = []
 for line in file('gene_association.mgi'):
     if line[0] == '!': continue
     _,id,_,_,goid,_,_,_,_,_,_,_,_,_,db = line.strip().split('\t')
     annotations[id].append(goid)
+
+with_cc = 0
+for anns in annotations.values():
+    has_cc = False
+    for an in anns:
+        if an in cellular_components:
+            has_cc = True
+            break
+    with_cc += has_cc
+
+print 'Entries:', len(annotations)
+print 'Entries with cellular component:', with_cc
+
