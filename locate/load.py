@@ -60,4 +60,5 @@ def collect(locatefile):
     print 'Protein records with literature records:', with_location
     print 'With image record:', images
     print 'With colocalisation record:', coloc_images
+    print 'Different locations used:', len(locations)
 
