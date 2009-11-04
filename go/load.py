@@ -32,21 +32,21 @@ def _getgo(r):
     return r[len(prefix):]
 G = nx.DiGraph()
 root = amara.parse('go_daily-termdb.rdf-xml')
+names = {}
 terms = root.xml_xpath('//go:term')
 for term in terms:
     G.add_node(unicode(term.accession))
+    names[unicode(term.accession)] = unicode(term.name)
     if hasattr(term, 'is_a'):
         for isa in term.is_a:
             G.add_edge(unicode(term.accession), _getgo(isa.resource))
             
 G.name = 'Gene Ontology'
 cc_root = 'GO:0005575'
-q = set(G.predecessors(cc_root))
-seen = set()
-while q:
-    next = q.pop()
-    seen.add(next)
-    neighbours = G.predecessors(next)
-    for n in neighbours:
-        if n not in seen:
-            q.add(n)
+obsolete_biological_process = u'obsolete_biological_process'
+obsolete_cellular_component = u'obsolete_cellular_component'
+obsolete_molecular_function = u'obsolete_molecular_function'
+
+
+cellular_components = set(nx.search.dfs_tree(G,cc_root,reverse_graph=1).nodes())
+obsolete_ccs = set(nx.search.dfs_tree(G,obsolete_cellular_component,reverse_graph=1).nodes())
