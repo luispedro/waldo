@@ -54,16 +54,21 @@ def locate(name=None, ensembl=None, gene_name=None, organism=None):
     url = 'http://www.uniprot.org/uniprot/?' + urllib.urlencode({'query' : query, 'format':'tab', 'columns':'id'})
     for line in urllib.urlopen(url):
         accessions.append(line.strip())
-    results = []
+    #results = []
+    results = {}
     for acc in accessions:
         for line in urllib.urlopen('http://www.uniprot.org/uniprot/%s.txt' % acc):
             match = re.search('GO; +GO:([0-9]+);\s*C:([^;]*);',line)
             if match:
                 go_nr,go_name = match.groups()
-                results.append((acc,go_nr,go_name))
+                if go_name in results.keys():
+			results[go_name] += 1
+		else:
+                	results[go_name] = 1
+                #results.append((acc,go_nr,go_name))
     return results
 
-    
-
+if __name__ == "__main__":
+	print locate(ensembl='ENSMUSG00000034254')
 
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
