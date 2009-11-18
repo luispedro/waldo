@@ -35,7 +35,7 @@ from collections import namedtuple
 fullfile = 'LOCATE_mouse_v6_20081121.xml'
 samplefile = 'LOCATE_sample.xml'
 
-def collect(locatefile):
+def collect(locatefile = fullfile):
     locations = set()
     protein_records = 0
     with_location = 0
