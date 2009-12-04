@@ -27,12 +27,12 @@ import locatedb.locate
 import util.proteinlocations
 import util.goslim
 
-AVAILABLE_DATABASES = {
-			'esldb':'eSLDB',
-			'uniprot':'Uniprot',
-			'mgi':'MGI',
-			'locatedb':'LOCATE',
-			}
+AVAILABLE_DATABASES = [
+			'esldb',
+			'uniprot',
+			'mgi',
+			'locatedb',
+			]
 
 def locate(ensemblgeneid):
 	'''
@@ -51,7 +51,7 @@ def locate(ensemblgeneid):
 	*a dictionary of results, organized by database
 	'''
 	retval = {}
-	for k in AVAILABLE_DATABASES.iterkeys():
+	for k in AVAILABLE_DATABASES:
 		results = None
 		if k == 'esldb':
 			results = esldb.locate.locate(ensemblgeneid)
@@ -74,12 +74,42 @@ def locate(ensemblgeneid):
 
 def optimize(locationobj):
 	'''
-	Performs various optimizations on the data.
+	Performs various optimizations on the data. Specifically:
+	many times the same ID will appear multiple times or return
+	multiple hits, all of which reduce to the same location
+	and URL. Rather than repeat these two items 12 separate times
+	as independent hits, we'll strip out all but 1.
+
+	Parameters
+	----------
+	*locationobj A ProteinLocation object
+
+	Return Value
+	------------
+	*optimized ProteinLocation object
 	'''
 
-	# FIXME
+	length = len(locationobj.getResult()[locationobj.LOCATIONIDX])
+	todelete = []
+	for i in range(0, length):
+		for j in range(i, length):
+			if i != j:
+				# get the two elements
+				one = locationobj.getElementByIndex(i)
+				two = locationobj.getElementByIndex(j)
+				
+				# compare them - are they the same?
+				if one[locationobj.LOCATIONIDX] == two[locationobj.LOCATIONIDX] and one[locationobj.URLIDX] == two[locationobj.URLIDX]:
+					# yes they are: mark one of them for deletion
+					if i not in todelete:
+						todelete.append(i)
+
+	# go through the delete array, deleting those indices
+	for delindex in reversed(todelete):
+		locationobj.removeElementByIndex(delindex)
+
 	return locationobj
 
 if __name__ == "__main__":
 	#locate('ENSMUSG00000026004')
-	locate('ENSMUSG00000049553')
+	print locate('ENSMUSG00000049553')

@@ -66,7 +66,7 @@ class ProteinLocations:
 	def removeElementByIndex(self, index):
 		del self.collection[self.LOCATIONIDX][index]
 		del self.collection[self.GOIDIDX][index]
-		del self.collection[SELF.URLIDX][index]
+		del self.collection[self.URLIDX][index]
 
 	def getResult(self):
 		return self.collection
