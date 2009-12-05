@@ -33,11 +33,11 @@ def map(locationobj):
 	'''
 
 	items = locationobj.getResult()
+	goterms = items[locationobj.GOIDIDX]
 	for line in file(mapfile):
 		# loop through the GO terms in the location object
-		goterms = items[locationobj.GOIDIDX]
 		for i in range(0, len(goterms)):
-			if line.find(goterms[i]) >= 0:
+			if goterms[i] != '' and line.find(goterms[i]) >= 0:
 				# found something
 				bin = line.split("\t")[2]
 				locationobj.modifyElementByIndex(i, bin, '', locationobj.getElementByIndex(i)[locationobj.URLIDX])

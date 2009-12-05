@@ -23,10 +23,10 @@
 from __future__ import division
 import util.proteinlocations
 import util.synergizer
-import amara
+import re
 
-human = util.proteinlocations.PREFIX + 'LOCATE_human_v6_20081121_SAMPLE.xml'
-mouse = util.proteinlocations.PREFIX + 'LOCATE_mouse_v6_20081121_SAMPLE.xml'
+human = util.proteinlocations.PREFIX + 'LOCATE_human_v6_20081121.xml'
+mouse = util.proteinlocations.PREFIX + 'LOCATE_mouse_v6_20081121.xml'
 
 def locate(ensemblgeneid):
 	'''
@@ -55,21 +55,50 @@ def locate(ensemblgeneid):
 
 	return retval
 
-def parseXML(ensemblid, file, retval):
-	url = 'http://www.ncbi.nlm.nih.gov/pubmed/'
-	for protein in amara.pushbind(file, u'LOCATE_protein'):
-		# first, is this the droid we're looking for?
-		refs = protein.xml_xpath('xrefs//accn')
-		if ensemblid in refs:
-			# found the correct element, extract the info
-			locations = protein.xml_xpath('literature//location[@goid]')
-			citations = protein.xml_xpath('literature//accn')
-			for citation in citations:
-				# for each citation, list the locations
-				for location in locations:
-					goids = location.goid.split(';')
-					for g in goids:
-						# add the element
-						retval.addElement('', g, url + str(citation))
-			
+def parseXML(ensemblid, filename, retval):
+	literature = ''
+	inliterature = 0
+	inxrefs = 0
+	header = ''
+	xrefs = ''
+	#url = 'http://www.ncbi.nlm.nih.gov/pubmed/'
+	url = 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry='	
+
+	# line by line!
+	for line in file(filename):
+        	# first, all the checks for where we might be
+		if line.find('<LOCATE_protein') >= 0:
+			header = line
+		elif line.find('<literature>') >= 0:
+			inliterature = 1
+		elif line.find('</literature>') >= 0:
+			inliterature = 0
+		elif line.find('<xrefs>') >= 0:
+			inxrefs = 1
+		elif line.find('</xrefs>') >= 0:
+			# at this state, we have all the info we need
+			inxrefs = 0
+			# start the search for the ensemblid
+			if xrefs.find(ensemblid) >= 0:
+				# found it
+				#citations = re.search('<accn>([0-9]*)</accn>', literature)
+				citations = re.search('uid="([0-9]*)"', header)
+				goterms = re.search('(GO:[0-9]+)+;*(GO:[0-9]+)*', literature)
+				if citations and goterms:
+					cite = citations.groups()
+					goids = goterms.groups()
+					for goid in goids:
+						if goid != None:
+							retval.addElement('', goid, url + cite[0])
+			# start over!
+			literature = ''
+			xrefs = ''
+			header = ''
+
+		# now, check what state we're in and act accordingly
+		if inxrefs == 1:
+			xrefs += line
+		if inliterature == 1:
+			literature += line
+	
 	return retval

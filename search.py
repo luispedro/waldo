@@ -111,5 +111,35 @@ def optimize(locationobj):
 	return locationobj
 
 if __name__ == "__main__":
-	#locate('ENSMUSG00000026004')
-	print locate('ENSMUSG00000049553')
+	count = 0
+	input = '/home/squinn/ensembl_ids.txt'
+	f = open('/home/squinn/protein_locator/output.txt', 'w')
+	for line in file(input):
+		count += 1
+		item = line.strip()
+		retval = locate(item)
+		output = item
+		if 'uniprot' in AVAILABLE_DATABASES and len(retval['uniprot']['locations']) > 0:
+			output += ',' + retval['uniprot']['locations'][0] + ',' + retval['uniprot']['urls'][0]
+		else:
+			output += ',None,None' 
+
+		if 'esldb' in AVAILABLE_DATABASES and len(retval['esldb']['locations']) > 0:
+			output += ',' + retval['esldb']['locations'][0].replace(',', ';') + ',' + retval['esldb']['urls'][0]
+		else:
+			output += ',None,None'
+
+		if 'mgi' in AVAILABLE_DATABASES and len(retval['mgi']['locations']) > 0:
+			output += ',' + retval['mgi']['locations'][0] + ',' + retval['mgi']['urls'][0]
+		else:
+			output += ',None,None'
+
+		if 'locatedb' in AVAILABLE_DATABASES and len(retval['locatedb']['locations']) > 0:
+			output += ',' + retval['locatedb']['locations'][0] + ',' + retval['locatedb']['urls'][0]
+		else:
+			output += ',None,None'
+		print output
+		f.write(output + '\n')
+		if count == 20:
+			break
+	f.close()
