@@ -29,9 +29,9 @@ import util.goslim
 
 AVAILABLE_DATABASES = [
 			'esldb',
-			'uniprot',
-			'mgi',
-			'locatedb',
+#			'uniprot',
+#			'mgi',
+#			'locatedb',
 			]
 
 def locate(ensemblgeneid):
@@ -140,6 +140,6 @@ if __name__ == "__main__":
 			output += ',None,None'
 		print output
 		f.write(output + '\n')
-		if count == 20:
-			break
+		#if count == 20:
+		#	break
 	f.close()

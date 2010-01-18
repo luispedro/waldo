@@ -65,7 +65,7 @@ def processLine(line, peptideids, index, retval):
 	if len(elements) != 11:
 		return retval
 
-	_, ensembl_peptide, exp_location, uniprot_location, uniprot_entry, sim_annotation, _, _, prediction, _, _ = elements
+	_, ensembl_peptide, exp_location, uniprot_location, uniprot_entry, sim_annotation, uniprot_homologue, _, prediction, _, _ = elements
 	if ensembl_peptide in peptideids[index]:
 		# match!
 		# hierarchy of terms: first, do we have a URL?
@@ -73,6 +73,8 @@ def processLine(line, peptideids, index, retval):
 		locationToAdd = ''
 		if uniprot_entry != 'None':
 			urlToAdd = url + uniprot_entry
+		elif uniprot_homologue != 'None':
+			urlToAdd = url + uniprot_homologue
 		else:
 			urlToAdd = url + ensembl_peptide
 
