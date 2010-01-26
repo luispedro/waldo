@@ -22,24 +22,63 @@
 
 from __future__ import division
 from collections import defaultdict 
-from go.load import cellular_components
+import models
 
-annotations = defaultdict(list)
-lines = []
-for line in file('gene_association.mgi'):
-    if line[0] == '!': continue
-    _,id,_,_,goid,_,_,_,_,_,_,_,_,_,db = line.strip().split('\t')
-    annotations[id].append(goid)
+def load(filename, create_session):
+    '''
+    load(filename, create_session)
 
-with_cc = 0
-for anns in annotations.values():
-    has_cc = False
-    for an in anns:
-        if an in cellular_components:
-            has_cc = True
-            break
-    with_cc += has_cc
+    Load a gene_annotation file from MGI
 
-print 'Entries:', len(annotations)
-print 'Entries with cellular component:', with_cc
+    Parameters
+    ----------
+      filename : input file name
 
+    References
+    ----------
+    For the file format see:
+    http://www.geneontology.org/GO.format.gaf-1_0.shtml
+    http://wiki.geneontology.org/index.php/GAF_2.0
+    '''
+    session = create_session()
+    entries = set()
+    for line in file(filename):
+        if line[-1] == '\n': line = line[:-1]
+        # DO NOT USE
+        # line = line.strip()
+        #
+        # The reason is that there might be empty fields at the end
+        # in which case, the line will end with '\t\t\n'. split()
+        # handles this case correctly, but strip() would remove the extra
+        # tabs.
+        if line[0] == '!':
+            if line.startswith('!gaf-version:'):
+                if not line == '!gaf-version: 2.0':
+                    raise IOError("waldo.go.load: Cannot parse. Wrong GAF version.\nHeader line: %s" % line)
+            continue
+        DB, \
+         DB_object_id, \
+         DB_object_symbol, \
+         qualifier, \
+         go_id, \
+         db_ref, \
+         evidence_code, \
+         with_or_from, \
+         aspect, \
+         DB_object_name, \
+         DB_object_synonym, \
+         DB_object_type, \
+         taxon, \
+         date, \
+         assigned_by, \
+         annotation_cross_products, \
+         gene_products = line.split('\t')
+
+        if aspect == 'C':
+            if DB_object_id not in entries:
+                entry = models.Entry(DB_object_id, DB_object_name)
+                entries.add(DB_object_id)
+                session.add(entry)
+            annotation = models.GOAnnotation(DB_object_id, go_id, assigned_by)
+            session.add(annotation)
+            session.commit()
