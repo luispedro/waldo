@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
 #  in the Software without restriction, including without limitation the rights
 #  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 #  copies of the Software, and to permit persons to whom the Software is
 #  furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 #  all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 #  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,45 +21,19 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-from models import Term
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relation, backref
+from sqlalchemy.ext.declarative import declarative_base
+from backend import Base
 
-def load(filename, engine):
-    '''
-    load(filename, engine)
+class Term(Base):
+    __tablename__ = 'go_term'
+    id = Column(String(24), primary_key=True)
+    name = Column(String(32))
+    namespace = Column(String(64))
 
-    Load Gene Ontology OBO file into database
-
-    Parameters
-    ----------
-      filename : OBO file filename
-      engine : SQLAlchemy engine
-    '''
-    session = sessionmaker(bind=engine)()
-
-    id = None
-    for line in file(filename):
-        line = line.strip()
-        if line == '[Term]':
-            if id is not None and not is_obsolete:
-                term = Term(id, name, namespace)
-                session.add(term)
-                session.commit()
-            is_a = []
-            is_obsolete = False
-        if line.find(':') > 0:
-            code, content = line.split(':',1)
-            content = content.strip()
-            if code == 'id':
-                id = content
-            elif code == 'name':
-                name = content
-            elif code == 'is_a':
-                content,_ = content.split('!')
-                content = content.strip()
-                is_a.append(content)
-            elif code == 'is_obsolete':
-                is_obsolete = True
-            elif code == 'namespace':
-                namespace = content
+    def __init__(self, id, name, namespace):
+        self.id = id
+        self.name = name
+        self.namespace = namespace
 
