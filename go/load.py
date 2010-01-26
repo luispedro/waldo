@@ -24,18 +24,18 @@ from __future__ import division
 from models import Term
 from sqlalchemy.orm import sessionmaker
 
-def load(filename, engine):
+def load(filename, create_session):
     '''
-    load(filename, engine)
+    load(filename, create_session)
 
     Load Gene Ontology OBO file into database
 
     Parameters
     ----------
       filename : OBO file filename
-      engine : SQLAlchemy engine
+      create_session : a callable object that returns an sqlalchemy session
     '''
-    session = sessionmaker(bind=engine)()
+    session = create_session()
 
     id = None
     for line in file(filename):

@@ -25,21 +25,26 @@ import re
 import amara
 import models
 from sqlalchemy.orm import sessionmaker
+import gzip
 
-def load(filename, engine):
+def load(filename, create_session):
     '''
-    load(filename, engine)
+    load(filename, create_session)
 
     Load uniprot XML into database
 
     Parameters
     ----------
-      filename : XML filename
-      engine : SQLAlchemy engine
+      filename : XML filename (possibly gzipped)
+      create_session : a callable object that returns an sqlalchemy session
     '''
-    session = sessionmaker(bind=engine)()
+    session = create_session()
     uniprot_nss = { u'uniprot' : u'http://uniprot.org/uniprot', }
-    for entry in amara.pushbind(file(filename), '//uniprot:entry', prefixes=uniprot_nss):
+    if filename.endswith('.gz'):
+        input = gzip.GzipFile(filename)
+    else:
+        input = file(filename)
+    for entry in amara.pushbind(input, '//uniprot:entry', prefixes=uniprot_nss):
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
         try:

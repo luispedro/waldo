@@ -28,19 +28,23 @@ from backend import Base
 
 class Accession(Base):
     __tablename__ = 'uniprot_accession'
-    uniprot_name = Column(String, ForeignKey('uniprot_entry.name'))
-    accession = Column(String, nullable=False, primary_key=True)
+    
+    # We cannot use accession as primary key because they are not unique.
+    # Sometimes, one single accession number has been demerged into multiple entries.
+    acc_name_id = Column(Integer, primary_key=True)
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
+    accession = Column(String(8), nullable=False)
 
     def __init__(self, accession):
         self.accession = accession
 
 class Reference(Base):
     __tablename__ = 'uniprot_reference'
-    uniprot_name = Column(String, ForeignKey('uniprot_entry.name'))
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
     refid = Column(Integer, primary_key=True)
-    key = Column(String)
-    type = Column(String)
-    title = Column(String)
+    key = Column(String(64))
+    type = Column(String(32))
+    title = Column(String(512))
 
     def __init__(self, key, type, title):
         self.type = type
@@ -49,10 +53,10 @@ class Reference(Base):
 
 class Comment(Base):
     __tablename__ = 'uniprot_comment'
-    uniprot_name = Column(String, ForeignKey('uniprot_entry.name'))
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
     commentid = Column(Integer, primary_key=True)
-    type = Column(String)
-    text = Column(String)
+    type = Column(String(64))
+    text = Column(String(512))
 
     def __init__(self, type, text):
         self.type = type
@@ -60,7 +64,7 @@ class Comment(Base):
 
 class Entry(Base):
     __tablename__ = 'uniprot_entry'
-    name = Column(String, nullable=False, primary_key=True)
+    name = Column(String(32), nullable=False, primary_key=True)
     accessions = relation(Accession)
     references = relation(Reference)
     comments = relation(Comment)
