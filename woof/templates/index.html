@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="text-align: center">
+<form action="/search/query" method="GET">
+Type in an Ensembl gene ID:
+<input type="text" name="ensemblid" value="ENSMUSG" />
+<input type="submit" value="Search" />
+</form>
+</div>
+{% endblock %}

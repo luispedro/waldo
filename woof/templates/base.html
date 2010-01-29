@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    {% block head %}
+    <title>{% block title %}Waldo{% endblock %}</title>
+    <meta name="authors" content="Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy" />
+    <meta name="keywords" content="subcellular location, subcellular localization, protein, database" />
+    <script type="text/javascript" src="/media/js/jquery.js"></script>
+    <link rel="shortcut icon" href="favicon.ico" />
+    {% endblock %}
+</head>
+
+
+<body>
+<div id="header">
+<h1>Waldo</h1>
+</div>
+
+{% autoescape off %}
+        <div id="content">
+            {% block content %}
+                My content
+            {% endblock %}
+        </div>
+{% endautoescape %}
+
+<div class="footer">
+        {% block footer %}
+            <p>Copyright (c) 2010. Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, and Robert F. Murphy. All rights reserved.</p>
+        {% endblock %}
+</div>
+</body>
+</html>
