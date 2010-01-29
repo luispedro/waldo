@@ -23,7 +23,6 @@
 from __future__ import division
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relation, backref
-from sqlalchemy.ext.declarative import declarative_base
 from backend import Base
 
 class Accession(Base):
