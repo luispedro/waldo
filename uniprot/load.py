@@ -24,7 +24,7 @@ from __future__ import division
 import re
 import amara
 import models
-from sqlalchemy.orm import sessionmaker
+from translations.models import Translation
 import gzip
 
 def load(filename, create_session):
@@ -61,7 +61,20 @@ def load(filename, create_session):
             except AttributeError:
                 pass # This means that this was a reference without a title or key, which we don't care about
 
+        for dbref in getattr(entry, 'dbReference', ()):
+            print dbref
+            if dbref.type == 'Ensembl':
+                t = Translation('ensembl:transcript_id', dbref.id, 'uniprot:name', name)
+                session.add(t)
+                for prop in dbref.property:
+                    if prop.type == 'gene designation':
+                        subnamespace = 'gene_id'
+                    elif prop.type == 'protein sequence ID':
+                        subnamespace = 'protein_id'
+                    else:
+                        continue
+                    t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)
+                    session.add(t)
         entry = models.Entry(name, accessions, comments, references)
         session.add(entry)
         session.commit()
-        
