@@ -23,10 +23,14 @@
 from __future__ import division
 from models import Term
 from sqlalchemy.orm import sessionmaker
+from os import path
 
-def load(filename, create_session):
+_basedir = path.dirname(path.abspath(__file__))
+_inputfilename = path.abspath(path.join(_basedir, '../data/gene_ontology.1_2.obo'))
+
+def load(filename=None, create_session=None):
     '''
-    load(filename, create_session)
+    load(filename={data/gene_ontology.1_2.obo}, create_session={backend.create_session})
 
     Load Gene Ontology OBO file into database
 
@@ -35,6 +39,10 @@ def load(filename, create_session):
       filename : OBO file filename
       create_session : a callable object that returns an sqlalchemy session
     '''
+    if filename is None: filename = _inputfilename
+    if create_session is None:
+        import backend
+        create_session = backend.create_session
     session = create_session()
 
     id = None
