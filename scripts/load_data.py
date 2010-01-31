@@ -4,15 +4,12 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 #
 import backend
-import mgi.files
 import mgi.load
 import go.files
 import go.load
 import uniprot.load
 
-create_session = backend.create_session
-
-go.load.load(go.files.inputfilename, create_session)
-mgi.load.load(mgi.files.inputfilename, create_session)
+go.load.load(go.files.inputfilename, backend.create_session)
+mgi.load.load()
 uniprot.load.load()
 

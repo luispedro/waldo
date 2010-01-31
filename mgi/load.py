@@ -21,27 +21,48 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-from collections import defaultdict 
+from collections import defaultdict
+from os import path
+
+from translations.models import Translation
 import models
 
-def load(filename, create_session):
+_basedir = path.dirname(path.abspath(__file__))
+_datadir = path.abspath(path.join(_basedir, '../data'))
+def load(dirname=None, create_session=None):
     '''
-    load(filename, create_session)
+    load(dirname={data/}, create_session={backend.create_session})
 
-    Load a gene_annotation file from MGI
+    Loads gene_annotation.mgi and MRK_ENSEMBL.rpt files from MGI
 
     Parameters
     ----------
-      filename : input file name
+      dirname : base directory for data.
+
+    Returns
+    -------
+      Nr of annotation entries loaded.
 
     References
     ----------
-    For the file format see:
+
+    For the file formats see:
+    ftp://ftp.informatics.jax.org/pub/reports/index.html
     http://www.geneontology.org/GO.format.gaf-1_0.shtml
     http://wiki.geneontology.org/index.php/GAF_2.0
     '''
+    if dirname is None: dirname = _datadir
+    if create_session is None:
+        import backend
+        create_session = backend.create_session
     session = create_session()
+    loaded = _load_gene_annotation(path.join(dirname, 'gene_association.mgi'), session)
+    _load_mrk_ensembl(path.join(dirname, 'MRK_ENSEMBL.rpt'), session)
+    return loaded
+
+def _load_gene_annotation(filename, session):
     entries = set()
+    loaded = 0
     for line in file(filename):
         if line[-1] == '\n': line = line[:-1]
         # DO NOT USE
@@ -79,6 +100,20 @@ def load(filename, create_session):
                 entry = models.Entry(DB_object_id, DB_object_name)
                 entries.add(DB_object_id)
                 session.add(entry)
+                loaded += 1
             annotation = models.GOAnnotation(DB_object_id, go_id, assigned_by)
             session.add(annotation)
+            if (loaded % 1024) == 0:
+                session.commit()
+    session.commit()
+    return loaded
+
+def _load_mrk_ensembl(filename, session):
+    for i,line in enumerate(file(filename)):
+        mgi_accession, marker_sym, marker_name, cm_pos, chromosome, ensembl_id = line.split('\t')
+        session.add(
+                Translation('ensembl:gene_id', ensembl_id, 'mgi', marker_sym)
+                )
+        if (i % 1024) == 0:
             session.commit()
+    session.commit()
