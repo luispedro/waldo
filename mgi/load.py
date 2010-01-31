@@ -110,6 +110,7 @@ def _load_gene_annotation(filename, session):
 
 def _load_mrk_ensembl(filename, session):
     for i,line in enumerate(file(filename)):
+        line = line.strip()
         mgi_accession, marker_sym, marker_name, cm_pos, chromosome, ensembl_id = line.split('\t')
         session.add(
                 Translation('ensembl:gene_id', ensembl_id, 'mgi', marker_sym)
