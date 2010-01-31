@@ -44,7 +44,6 @@ def load(filename, create_session):
             if id is not None and not is_obsolete:
                 term = Term(id, name, namespace)
                 session.add(term)
-                session.commit()
             is_a = []
             is_obsolete = False
         if line.find(':') > 0:
@@ -63,3 +62,4 @@ def load(filename, create_session):
             elif code == 'namespace':
                 namespace = content
 
+    session.commit()

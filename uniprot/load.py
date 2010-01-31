@@ -33,7 +33,7 @@ _inputfilename = path.abspath(path.join(_basedir, '../data/uniprot_sprot.xml.gz'
 
 def load(filename=None, create_session=None):
     '''
-    load(filename={data/uniprot_sprot.xml.gz}, create_session={backend.create_session})
+    nr_loaded = load(filename={data/uniprot_sprot.xml.gz}, create_session={backend.create_session})
 
     Load uniprot XML into database
 
@@ -41,6 +41,9 @@ def load(filename=None, create_session=None):
     ----------
       filename : XML filename (possibly gzipped)
       create_session : a callable object that returns an sqlalchemy session
+    Returns
+    -------
+      nr_loaded : Nr. of entries loaded
     '''
     if filename is None: filename = _inputfilename
     if create_session is None:
@@ -52,6 +55,7 @@ def load(filename=None, create_session=None):
         input = gzip.GzipFile(filename)
     else:
         input = file(filename)
+    loaded = 0
     for entry in amara.pushbind(input, '//uniprot:entry', prefixes=uniprot_nss):
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
@@ -70,7 +74,6 @@ def load(filename=None, create_session=None):
                 pass # This means that this was a reference without a title or key, which we don't care about
 
         for dbref in getattr(entry, 'dbReference', ()):
-            print dbref
             if dbref.type == 'Ensembl':
                 t = Translation('ensembl:transcript_id', dbref.id, 'uniprot:name', name)
                 session.add(t)
@@ -85,4 +88,9 @@ def load(filename=None, create_session=None):
                     session.add(t)
         entry = models.Entry(name, accessions, comments, references)
         session.add(entry)
-        session.commit()
+        loaded += 1
+        if (loaded % 1024) == 0:
+            session.commit()
+    session.commit()
+    return loaded
+
