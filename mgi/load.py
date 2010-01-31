@@ -31,7 +31,7 @@ _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../data'))
 def load(dirname=None, create_session=None):
     '''
-    load(dirname={data/}, create_session={backend.create_session})
+    nr_loaded = load(dirname={data/}, create_session={backend.create_session})
 
     Loads gene_annotation.mgi and MRK_ENSEMBL.rpt files from MGI
 
