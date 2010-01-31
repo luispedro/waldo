@@ -21,17 +21,55 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-try:
-    import amara
-except ImportError:
-    print '''Amara is missing.
+import re
+import amara
+import models
+from sqlalchemy.orm import sessionmaker
+from os import path
 
-Amara is a Python package for XML parsing which makes it easier to parse
-very large files while keeping memory usage to an acceptable level.
+_basedir = path.dirname(path.abspath(__file__))
 
-Please install it.'''
+inputfilename_human = path.abspath(path.join(_basedir, '../../databases/LOCATE_human_v6_20081121.xml'))
+inputfilename_mouse = path.abspath(path.join(_basedir, '../../databases/LOCATE_mouse_v6_20081121.xml'))
+
+del _basedir
+del path
+
+__all__ = [
+    'inputfilename_human',
+    'inputfilename_mouse',
+]
+
+def load(filename, dbtype, create_session):
+    '''
+    load(filename, dbtype, create_session)
+
+    Load LOCATE database file information into local relational database
+
+    Parameters
+    ----------
+      filename : XML database file
+      dbtype : Organism type specified in the XML file (mouse, human, etc)
+      create_session : Callable object which returns an sqlalchemy session
+
+    Returns
+    -------
+      num_entries : Number of entries loaded into the local database
+
+    References
+    ----------
+        To download database files:
+        http://locate.imb.uq.edu.au/downloads.shtml
+    '''
+    session = create_session()
+    input = file(filename)
+
+    # use amara to loop through all the entries
+    for entry in amara.pushbind(input, u'LOCATE_protein'):
+        pass
 
 from collections import namedtuple
+
 fullfile = 'LOCATE_mouse_v6_20081121.xml'
 samplefile = 'LOCATE_sample.xml'
 
