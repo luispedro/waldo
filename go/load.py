@@ -23,10 +23,15 @@
 from __future__ import division
 from models import Term
 from sqlalchemy.orm import sessionmaker
+import gzip
+from os import path
 
-def load(filename, create_session):
+_basedir = path.dirname(path.abspath(__file__))
+_inputfilename = path.abspath(path.join(_basedir, '../data/gene_ontology.1_2.obo'))
+
+def load(filename=None, create_session=None):
     '''
-    load(filename, create_session)
+    nr_entries = load(filename={data/gene_ontology.1_2.obo}, create_session={backend.create_session})
 
     Load Gene Ontology OBO file into database
 
@@ -34,19 +39,36 @@ def load(filename, create_session):
     ----------
       filename : OBO file filename
       create_session : a callable object that returns an sqlalchemy session
+    Returns
+    -------
+      nr_entries : Nr of entries
     '''
+    if filename is None: filename = _inputfilename
+    if create_session is None:
+        import backend
+        create_session = backend.create_session
     session = create_session()
+    if filename.endswith('.gz'):
+        input = gzip.GzipFile(filename)
+    else:
+        input = file(filename)
 
     id = None
-    for line in file(filename):
+    in_term = False
+    loaded = 0
+    for line in input:
         line = line.strip()
-        if line == '[Term]':
+        if line in ('[Term]', '[Typedef]'):
             if id is not None and not is_obsolete:
                 term = Term(id, name, namespace)
                 session.add(term)
-                session.commit()
+                loaded += 1
             is_a = []
             is_obsolete = False
+            id = None
+            in_term = (line == '[Term]')
+        if not in_term:
+            continue
         if line.find(':') > 0:
             code, content = line.split(':',1)
             content = content.strip()
@@ -63,3 +85,5 @@ def load(filename, create_session):
             elif code == 'namespace':
                 namespace = content
 
+    session.commit()
+    return loaded

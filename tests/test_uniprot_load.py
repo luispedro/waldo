@@ -14,7 +14,8 @@ def test_nr_entries():
     metadata = uniprot.models.Base.metadata
     metadata.bind = engine
     metadata.create_all()
-    uniprot.load.load(_testinput, engine)
-    session = sessionmaker(engine)()
+    sessionmaker_ = sessionmaker(engine)
+    uniprot.load.load(_testinput, sessionmaker_)
+    session = sessionmaker_()
     assert session.query(uniprot.models.Entry).count() == nr_entries
 

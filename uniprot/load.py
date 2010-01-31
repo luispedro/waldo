@@ -24,12 +24,16 @@ from __future__ import division
 import re
 import amara
 import models
-from sqlalchemy.orm import sessionmaker
+from translations.models import Translation
 import gzip
+from os import path
+_basedir = path.dirname(path.abspath(__file__))
 
-def load(filename, create_session):
+_inputfilename = path.abspath(path.join(_basedir, '../data/uniprot_sprot.xml.gz'))
+
+def load(filename=None, create_session=None):
     '''
-    load(filename, create_session)
+    nr_loaded = load(filename={data/uniprot_sprot.xml.gz}, create_session={backend.create_session})
 
     Load uniprot XML into database
 
@@ -37,13 +41,21 @@ def load(filename, create_session):
     ----------
       filename : XML filename (possibly gzipped)
       create_session : a callable object that returns an sqlalchemy session
+    Returns
+    -------
+      nr_loaded : Nr. of entries loaded
     '''
+    if filename is None: filename = _inputfilename
+    if create_session is None:
+        import backend
+        create_session = backend.create_session
     session = create_session()
     uniprot_nss = { u'uniprot' : u'http://uniprot.org/uniprot', }
     if filename.endswith('.gz'):
         input = gzip.GzipFile(filename)
     else:
         input = file(filename)
+    loaded = 0
     for entry in amara.pushbind(input, '//uniprot:entry', prefixes=uniprot_nss):
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
@@ -61,7 +73,24 @@ def load(filename, create_session):
             except AttributeError:
                 pass # This means that this was a reference without a title or key, which we don't care about
 
+        for dbref in getattr(entry, 'dbReference', ()):
+            if dbref.type == 'Ensembl':
+                t = Translation('ensembl:transcript_id', dbref.id, 'uniprot:name', name)
+                session.add(t)
+                for prop in dbref.property:
+                    if prop.type == 'gene designation':
+                        subnamespace = 'gene_id'
+                    elif prop.type == 'protein sequence ID':
+                        subnamespace = 'protein_id'
+                    else:
+                        continue
+                    t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)
+                    session.add(t)
         entry = models.Entry(name, accessions, comments, references)
         session.add(entry)
-        session.commit()
-        
+        loaded += 1
+        if (loaded % 1024) == 0:
+            session.commit()
+    session.commit()
+    return loaded
+
