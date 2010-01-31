@@ -26,10 +26,14 @@ import amara
 import models
 from translations.models import Translation
 import gzip
+from os import path
+_basedir = path.dirname(path.abspath(__file__))
 
-def load(filename, create_session):
+_inputfilename = path.abspath(path.join(_basedir, '../data/uniprot_sprot.xml.gz'))
+
+def load(filename=None, create_session=None):
     '''
-    load(filename, create_session)
+    load(filename={data/uniprot_sprot.xml.gz}, create_session={backend.create_session})
 
     Load uniprot XML into database
 
@@ -38,6 +42,10 @@ def load(filename, create_session):
       filename : XML filename (possibly gzipped)
       create_session : a callable object that returns an sqlalchemy session
     '''
+    if filename is None: filename = _inputfilename
+    if create_session is None:
+        import backend
+        create_session = backend.create_session
     session = create_session()
     uniprot_nss = { u'uniprot' : u'http://uniprot.org/uniprot', }
     if filename.endswith('.gz'):
