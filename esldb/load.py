@@ -21,37 +21,96 @@
 #  THE SOFTWARE.
 
 from __future__ import division
+from collections import defaultdict
+from os import path
+import models
 
-def collect(esldbfile):
-	first = 0
-	indices = {"0":"eSLDB code", 
-		"1":"Original Database Code",
-		"2":"Experimental Annotation",
-		"3":"Swissprot Fulltext Annotation",
-		"4":"Swissprot Entry",
-		"5":"Similarity-based Annotation",
-		"6":"Swissprot Homologue",
-		"7":"E-value",
-		"8":"Prediction",
-		"9":"Aminoacidic Sequence",
-		"10":"Common Name"}
-	indices = []
-	entries = []
-	for line in file(esldbfile):
-		li = line.split("\t")
-		if first == 0:
-			first = 1
-			indices = li[:]
-		else:
-			# capture the information about this entry
-			entries.append(li)
-				
-	# given each item, let's collect statistics
-	for entry in entries:
-		if len(entry) > 3:
-			print entry[2]
-			print entry[3]
-			print entry[4]
+_basedir = path.dirname(path.abspath(__file__))
 
-if __name__ == "__main__":
-	collect("../../datasets/ESLDB_MOUSE.txt")
+inputfilename_human = path.abspath(path.join(_basedir, '../../databases/eSLDB_Homo_sapiens.txt'))
+inputfilename_mouse = path.abspath(path.join(_basedir, '../../databases/eSLDB_Mus_musculus.txt'))
+
+del _basedir
+del path
+
+__all__ = [
+    'inputfilename_human',
+    'inputfilename_mouse',
+]
+
+def load(filename, dbtype, create_session):
+    '''
+    load(filename, dbtype, create_session)
+
+    Load an eSLDB database-download file into a local relational database
+
+    Parameters
+    ----------
+      filename : The name of the eSLDB file
+      dbtype : indicates the type of organism in the eSLDB file (mouse, human, etc)
+      create_session : Callable object which returns an sqlalchemy session
+
+    Returns
+    -------
+      num_entries : Number of entries loaded into the local database
+
+    References
+    ----------
+    To download the database files:
+    http://gpcr.biocomp.unibo.it/esldb/download.htm
+    '''
+    session = create_session()
+    entries = set()
+
+    # loop through the entries in the file
+    for line in file(filename):
+        if line.startswith('eSLDB code'):
+            continue
+
+        # split the line on tabs
+        eSLDB_code, \
+        orig_db_code, \
+        exp_annotation, \
+        uniprot_annotation, \
+        uniprot_entry, \
+        sim_annotation, \
+        uniprot_homolog, \
+        e_value, \
+        prediction, \
+        aa_sequence, \
+        common_name = line.split('\t')
+
+        # create sqlalchemy objects and insert them
+        if eSLDB_code not in entries:
+            # create the entry itself
+            entry = models.Entry(eSLDB_code, dbtype)
+            entries.add(eSLDB_code)
+            session.add(entry)
+
+        # now all the annotations
+        if exp_annotation != 'None':
+            annotation = models.Annotation(eSLDB_code, 'experimental', exp_annotation)
+            session.add(annotation)
+        if uniprot_annotation != 'None':
+            annotation = models.Annotation(eSLDB_code, 'uniprot', uniprot_annotation)
+            session.add(annotation)
+        if sim_annotation != 'None':
+            annotation = models.Annotation(eSLDB_code, 'similarity', sim_annotation)
+            session.add(annotation)
+        if prediction != 'None':
+            annotation = models.Annotation(eSLDB_code, 'predicted', prediction)
+            session.add(annotation)
+
+        # finally, add the uniprot data, if it exists
+        if uniprot_entry != 'None':
+            uniprot = models.UniprotEntry(eSLDB_code, uniprot_entry)
+            session.add(uniprot)
+        elif uniprot_homolog != 'None':
+            uniprot = models.UniprotHomolog(eSLDB_code, uniprot_homolog)
+            session.add(uniprot)
+
+        # commit this session's additions
+        session.commit()
+
+    # all done! return the number of entries loaded
+    return len(entries)
