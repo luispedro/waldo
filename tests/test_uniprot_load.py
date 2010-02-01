@@ -1,9 +1,10 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
 import re
 
 import uniprot.load
 import uniprot.models
+from translations.models import Translation
 
 _testinput = 'tests/data/uniprot_small.xml'
 
@@ -18,4 +19,4 @@ def test_nr_entries():
     uniprot.load.load(_testinput, sessionmaker_)
     session = sessionmaker_()
     assert session.query(uniprot.models.Entry).count() == nr_entries
-
+    assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace ==  'uniprot:name')).count()

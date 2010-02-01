@@ -773,4 +773,899 @@
   </feature>
   <sequence version="1" modified="1995-11-01" mass="27055" length="236" fragment="single" checksum="CC7D9958AD1BB46D">SEDCVFLSKLAEQSERYDEMVQYMKQVAALNTELSVEERNLLSVAYKNVIGSRRASWRIITSLEQKEQAKGNDKHVEIIKGYRAKIEDELAKYCDDVLKVIKENLLPNASTSESKVFYKKMEGDYYRYYAEFTVDEKRQEVADKSLAAYTEATEISNADLAPTHPIRLGLALNFSVFYYEIMNDADKACQLAKQAFDDSIAKLDEVPESSYKDSTLIMQLLRDNLTLWTSDTADEE</sequence>
 </entry>
+<entry version="55" modified="2010-01-19" dataset="Swiss-Prot" created="2004-09-27">
+  <accession>Q76MZ3</accession>
+  <name>2AAA_MOUSE</name>
+  <protein>
+    <recommendedName>
+      <fullName>Serine/threonine-protein phosphatase 2A 65 kDa regulatory subunit A alpha isoform</fullName>
+    </recommendedName>
+    <alternativeName>
+      <fullName>PP2A, subunit A, PR65-alpha isoform</fullName>
+    </alternativeName>
+    <alternativeName>
+      <fullName>PP2A, subunit A, R1-alpha isoform</fullName>
+    </alternativeName>
+  </protein>
+  <gene>
+    <name type="primary">Ppp2r1a</name>
+  </gene>
+  <organism key="1">
+    <name type="scientific">Mus musculus</name>
+    <name type="common">Mouse</name>
+    <dbReference type="NCBI Taxonomy" key="2" id="10090"/>
+    <lineage>
+      <taxon>Eukaryota</taxon>
+      <taxon>Metazoa</taxon>
+      <taxon>Chordata</taxon>
+      <taxon>Craniata</taxon>
+      <taxon>Vertebrata</taxon>
+      <taxon>Euteleostomi</taxon>
+      <taxon>Mammalia</taxon>
+      <taxon>Eutheria</taxon>
+      <taxon>Euarchontoglires</taxon>
+      <taxon>Glires</taxon>
+      <taxon>Rodentia</taxon>
+      <taxon>Sciurognathi</taxon>
+      <taxon>Muroidea</taxon>
+      <taxon>Muridae</taxon>
+      <taxon>Murinae</taxon>
+      <taxon>Mus</taxon>
+    </lineage>
+  </organism>
+  <reference key="3">
+    <citation volume="446" type="journal article" name="FEBS Lett." last="112" first="108" date="1999">
+      <title>Alpha4 protein as a common regulator of type 2A-related serine/threonine protein phosphatases.</title>
+      <authorList>
+        <person name="Nanahoshi M."/>
+        <person name="Tsujishita Y."/>
+        <person name="Tokunaga C."/>
+        <person name="Inui S."/>
+        <person name="Sakaguchi N."/>
+        <person name="Hara K."/>
+        <person name="Yonezawa K."/>
+      </authorList>
+      <dbReference type="DOI" key="4" id="10.1016/S0014-5793(99)00189-1"/>
+      <dbReference type="PubMed" key="5" id="10100624"/>
+    </citation>
+    <scope>NUCLEOTIDE SEQUENCE [MRNA]</scope>
+  </reference>
+  <reference key="6">
+    <citation volume="309" type="journal article" name="Science" last="1563" first="1559" date="2005">
+      <title>The transcriptional landscape of the mammalian genome.</title>
+      <authorList>
+        <person name="Carninci P."/>
+        <person name="Kasukawa T."/>
+        <person name="Katayama S."/>
+        <person name="Gough J."/>
+        <person name="Frith M.C."/>
+        <person name="Maeda N."/>
+        <person name="Oyama R."/>
+        <person name="Ravasi T."/>
+        <person name="Lenhard B."/>
+        <person name="Wells C."/>
+        <person name="Kodzius R."/>
+        <person name="Shimokawa K."/>
+        <person name="Bajic V.B."/>
+        <person name="Brenner S.E."/>
+        <person name="Batalov S."/>
+        <person name="Forrest A.R."/>
+        <person name="Zavolan M."/>
+        <person name="Davis M.J."/>
+        <person name="Wilming L.G."/>
+        <person name="Aidinis V."/>
+        <person name="Allen J.E."/>
+        <person name="Ambesi-Impiombato A."/>
+        <person name="Apweiler R."/>
+        <person name="Aturaliya R.N."/>
+        <person name="Bailey T.L."/>
+        <person name="Bansal M."/>
+        <person name="Baxter L."/>
+        <person name="Beisel K.W."/>
+        <person name="Bersano T."/>
+        <person name="Bono H."/>
+        <person name="Chalk A.M."/>
+        <person name="Chiu K.P."/>
+        <person name="Choudhary V."/>
+        <person name="Christoffels A."/>
+        <person name="Clutterbuck D.R."/>
+        <person name="Crowe M.L."/>
+        <person name="Dalla E."/>
+        <person name="Dalrymple B.P."/>
+        <person name="de Bono B."/>
+        <person name="Della Gatta G."/>
+        <person name="di Bernardo D."/>
+        <person name="Down T."/>
+        <person name="Engstrom P."/>
+        <person name="Fagiolini M."/>
+        <person name="Faulkner G."/>
+        <person name="Fletcher C.F."/>
+        <person name="Fukushima T."/>
+        <person name="Furuno M."/>
+        <person name="Futaki S."/>
+        <person name="Gariboldi M."/>
+        <person name="Georgii-Hemming P."/>
+        <person name="Gingeras T.R."/>
+        <person name="Gojobori T."/>
+        <person name="Green R.E."/>
+        <person name="Gustincich S."/>
+        <person name="Harbers M."/>
+        <person name="Hayashi Y."/>
+        <person name="Hensch T.K."/>
+        <person name="Hirokawa N."/>
+        <person name="Hill D."/>
+        <person name="Huminiecki L."/>
+        <person name="Iacono M."/>
+        <person name="Ikeo K."/>
+        <person name="Iwama A."/>
+        <person name="Ishikawa T."/>
+        <person name="Jakt M."/>
+        <person name="Kanapin A."/>
+        <person name="Katoh M."/>
+        <person name="Kawasawa Y."/>
+        <person name="Kelso J."/>
+        <person name="Kitamura H."/>
+        <person name="Kitano H."/>
+        <person name="Kollias G."/>
+        <person name="Krishnan S.P."/>
+        <person name="Kruger A."/>
+        <person name="Kummerfeld S.K."/>
+        <person name="Kurochkin I.V."/>
+        <person name="Lareau L.F."/>
+        <person name="Lazarevic D."/>
+        <person name="Lipovich L."/>
+        <person name="Liu J."/>
+        <person name="Liuni S."/>
+        <person name="McWilliam S."/>
+        <person name="Madan Babu M."/>
+        <person name="Madera M."/>
+        <person name="Marchionni L."/>
+        <person name="Matsuda H."/>
+        <person name="Matsuzawa S."/>
+        <person name="Miki H."/>
+        <person name="Mignone F."/>
+        <person name="Miyake S."/>
+        <person name="Morris K."/>
+        <person name="Mottagui-Tabar S."/>
+        <person name="Mulder N."/>
+        <person name="Nakano N."/>
+        <person name="Nakauchi H."/>
+        <person name="Ng P."/>
+        <person name="Nilsson R."/>
+        <person name="Nishiguchi S."/>
+        <person name="Nishikawa S."/>
+        <person name="Nori F."/>
+        <person name="Ohara O."/>
+        <person name="Okazaki Y."/>
+        <person name="Orlando V."/>
+        <person name="Pang K.C."/>
+        <person name="Pavan W.J."/>
+        <person name="Pavesi G."/>
+        <person name="Pesole G."/>
+        <person name="Petrovsky N."/>
+        <person name="Piazza S."/>
+        <person name="Reed J."/>
+        <person name="Reid J.F."/>
+        <person name="Ring B.Z."/>
+        <person name="Ringwald M."/>
+        <person name="Rost B."/>
+        <person name="Ruan Y."/>
+        <person name="Salzberg S.L."/>
+        <person name="Sandelin A."/>
+        <person name="Schneider C."/>
+        <person name="Schoenbach C."/>
+        <person name="Sekiguchi K."/>
+        <person name="Semple C.A."/>
+        <person name="Seno S."/>
+        <person name="Sessa L."/>
+        <person name="Sheng Y."/>
+        <person name="Shibata Y."/>
+        <person name="Shimada H."/>
+        <person name="Shimada K."/>
+        <person name="Silva D."/>
+        <person name="Sinclair B."/>
+        <person name="Sperling S."/>
+        <person name="Stupka E."/>
+        <person name="Sugiura K."/>
+        <person name="Sultana R."/>
+        <person name="Takenaka Y."/>
+        <person name="Taki K."/>
+        <person name="Tammoja K."/>
+        <person name="Tan S.L."/>
+        <person name="Tang S."/>
+        <person name="Taylor M.S."/>
+        <person name="Tegner J."/>
+        <person name="Teichmann S.A."/>
+        <person name="Ueda H.R."/>
+        <person name="van Nimwegen E."/>
+        <person name="Verardo R."/>
+        <person name="Wei C.L."/>
+        <person name="Yagi K."/>
+        <person name="Yamanishi H."/>
+        <person name="Zabarovsky E."/>
+        <person name="Zhu S."/>
+        <person name="Zimmer A."/>
+        <person name="Hide W."/>
+        <person name="Bult C."/>
+        <person name="Grimmond S.M."/>
+        <person name="Teasdale R.D."/>
+        <person name="Liu E.T."/>
+        <person name="Brusic V."/>
+        <person name="Quackenbush J."/>
+        <person name="Wahlestedt C."/>
+        <person name="Mattick J.S."/>
+        <person name="Hume D.A."/>
+        <person name="Kai C."/>
+        <person name="Sasaki D."/>
+        <person name="Tomaru Y."/>
+        <person name="Fukuda S."/>
+        <person name="Kanamori-Katayama M."/>
+        <person name="Suzuki M."/>
+        <person name="Aoki J."/>
+        <person name="Arakawa T."/>
+        <person name="Iida J."/>
+        <person name="Imamura K."/>
+        <person name="Itoh M."/>
+        <person name="Kato T."/>
+        <person name="Kawaji H."/>
+        <person name="Kawagashira N."/>
+        <person name="Kawashima T."/>
+        <person name="Kojima M."/>
+        <person name="Kondo S."/>
+        <person name="Konno H."/>
+        <person name="Nakano K."/>
+        <person name="Ninomiya N."/>
+        <person name="Nishio T."/>
+        <person name="Okada M."/>
+        <person name="Plessy C."/>
+        <person name="Shibata K."/>
+        <person name="Shiraki T."/>
+        <person name="Suzuki S."/>
+        <person name="Tagami M."/>
+        <person name="Waki K."/>
+        <person name="Watahiki A."/>
+        <person name="Okamura-Oho Y."/>
+        <person name="Suzuki H."/>
+        <person name="Kawai J."/>
+        <person name="Hayashizaki Y."/>
+      </authorList>
+      <dbReference type="DOI" key="7" id="10.1126/science.1112014"/>
+      <dbReference type="PubMed" key="8" id="16141072"/>
+    </citation>
+    <scope>NUCLEOTIDE SEQUENCE [LARGE SCALE MRNA]</scope>
+    <source>
+      <tissue>Medulla oblongata</tissue>
+      <tissue>Oviduct</tissue>
+      <strain>C57BL/6J</strain>
+    </source>
+  </reference>
+  <reference key="9">
+    <citation volume="14" type="journal article" name="Genome Res." last="2127" first="2121" date="2004">
+      <title>The status, quality, and expansion of the NIH full-length cDNA project: the Mammalian Gene Collection (MGC).</title>
+      <authorList>
+        <consortium name="The MGC Project Team"/>
+      </authorList>
+      <dbReference type="DOI" key="10" id="10.1101/gr.2596504"/>
+      <dbReference type="PubMed" key="11" id="15489334"/>
+    </citation>
+    <scope>NUCLEOTIDE SEQUENCE [LARGE SCALE MRNA]</scope>
+    <source>
+      <strain>FVB/N</strain>
+      <tissue>Mammary tumor</tissue>
+    </source>
+  </reference>
+  <comment type="function">
+    <text status="By similarity">The PR65 subunit of protein phosphatase 2A serves as a scaffolding molecule to coordinate the assembly of the catalytic subunit and a variable regulatory B subunit.</text>
+  </comment>
+  <comment type="subunit">
+    <text status="By similarity">PP2A consists of a common heterodimeric core enzyme, composed of PPP2CA a 36 kDa catalytic subunit (subunit C) and PPP2R1A a 65 kDa constant regulatory subunit (PR65 or subunit A), that associates with a variety of regulatory subunits. Proteins that associate with the core dimer include three families of regulatory subunits B (the R2/B/PR55/B55, R3/B''/PR72/PR130/PR59 and R5/B'/B56 families), the 48 kDa variable regulatory subunit, viral proteins, and cell signaling molecules. Interacts with IPO9 (By similarity). Interacts with TP53.</text>
+  </comment>
+  <comment type="domain">
+    <text>Each HEAT repeat appears to consist of two alpha helices joined by a hydrophilic region, the intrarepeat loop. The repeat units may be arranged laterally to form a rod-like structure.</text>
+  </comment>
+  <comment type="similarity">
+    <text>Belongs to the phosphatase 2A regulatory subunit A family.</text>
+  </comment>
+  <comment type="similarity">
+    <text>Contains 15 HEAT repeats.</text>
+  </comment>
+  <dbReference type="EMBL" key="12" id="AB021743">
+    <property value="BAA75478.1" type="protein sequence ID"/>
+    <property value="mRNA" type="molecule type"/>
+  </dbReference>
+  <dbReference type="EMBL" key="13" id="AK054239">
+    <property value="BAC35700.1" type="protein sequence ID"/>
+    <property value="mRNA" type="molecule type"/>
+  </dbReference>
+  <dbReference type="EMBL" key="14" id="AK078135">
+    <property value="BAC37143.1" type="protein sequence ID"/>
+    <property value="mRNA" type="molecule type"/>
+  </dbReference>
+  <dbReference type="EMBL" key="15" id="BC006606">
+    <property value="AAH06606.1" type="protein sequence ID"/>
+    <property value="mRNA" type="molecule type"/>
+  </dbReference>
+  <dbReference type="IPI" key="16" id="IPI00310091"/>
+  <dbReference type="RefSeq" key="17" id="NP_058587.1"/>
+  <dbReference type="UniGene" key="18" id="Mm.294138"/>
+  <dbReference type="PDB" key="19" id="2IAE">
+    <property value="X-ray" type="method"/>
+    <property value="3.50 A" type="resolution"/>
+    <property value="A/D=1-589" type="chains"/>
+  </dbReference>
+  <dbReference type="PDB" key="20" id="2PF4">
+    <property value="X-ray" type="method"/>
+    <property value="3.10 A" type="resolution"/>
+    <property value="A/B/C/D=1-589" type="chains"/>
+  </dbReference>
+  <dbReference type="PDB" key="21" id="3FGA">
+    <property value="X-ray" type="method"/>
+    <property value="2.70 A" type="resolution"/>
+    <property value="A=2-589" type="chains"/>
+  </dbReference>
+  <dbReference type="PDBsum" key="22" id="2IAE"/>
+  <dbReference type="PDBsum" key="23" id="2PF4"/>
+  <dbReference type="PDBsum" key="24" id="3FGA"/>
+  <dbReference type="DIP" key="25" id="DIP-29429N"/>
+  <dbReference type="IntAct" key="26" id="Q76MZ3"/>
+  <dbReference type="String" key="27" id="Q76MZ3"/>
+  <dbReference type="PhosphoSite" key="28" id="Q76MZ3"/>
+  <dbReference type="REPRODUCTION-2DPAGE" key="29" id="Q76MZ3"/>
+  <dbReference type="PRIDE" key="30" id="Q76MZ3"/>
+  <dbReference type="Ensembl" key="31" id="ENSMUST00000007708">
+    <property value="ENSMUSP00000007708" type="protein sequence ID"/>
+    <property value="ENSMUSG00000007564" type="gene designation"/>
+    <property value="Mus musculus" type="organism name"/>
+  </dbReference>
+  <dbReference type="GeneId" key="32" id="51792"/>
+  <dbReference type="KEGG" key="33" id="mmu:51792"/>
+  <dbReference type="Ucsc" key="34" id="uc008aqi.1"/>
+  <dbReference type="Ctd" key="35" id="51792"/>
+  <dbReference type="MGI" key="36" id="MGI:1926334">
+    <property value="Ppp2r1a" type="gene designation"/>
+  </dbReference>
+  <dbReference type="eggNOG" key="37" id="roNOG07248"/>
+  <dbReference type="HOGENOM" key="38" id="HBG526812"/>
+  <dbReference type="HOVERGEN" key="39" id="Q76MZ3"/>
+  <dbReference type="InParanoid" key="40" id="Q76MZ3"/>
+  <dbReference type="OMA" key="41" id="SKWRVRL"/>
+  <dbReference type="OrthoDB" key="42" id="EOG94BDNC"/>
+  <dbReference type="PhylomeDB" key="43" id="Q76MZ3"/>
+  <dbReference type="NextBio" key="44" id="308024"/>
+  <dbReference type="ArrayExpress" key="45" id="Q76MZ3"/>
+  <dbReference type="Bgee" key="46" id="Q76MZ3"/>
+  <dbReference type="Genevestigator" key="47" id="Q76MZ3"/>
+  <dbReference type="GermOnline" key="48" id="ENSMUSG00000007564">
+    <property value="Mus musculus" type="organism name"/>
+  </dbReference>
+  <dbReference type="Go" key="49" id="GO:0005829">
+    <property value="C:cytosol" type="term"/>
+    <property value="IDA:MGI" type="evidence"/>
+  </dbReference>
+  <dbReference type="Go" key="50" id="GO:0000159">
+    <property value="C:protein phosphatase type 2A complex" type="term"/>
+    <property value="IDA:MGI" type="evidence"/>
+  </dbReference>
+  <dbReference type="InterPro" key="51" id="IPR011989">
+    <property value="ARM-like" type="entry name"/>
+  </dbReference>
+  <dbReference type="InterPro" key="52" id="IPR016024">
+    <property value="ARM-type_fold" type="entry name"/>
+  </dbReference>
+  <dbReference type="InterPro" key="53" id="IPR000357">
+    <property value="HEAT" type="entry name"/>
+  </dbReference>
+  <dbReference type="Gene3D" key="54" id="G3DSA:1.25.10.10">
+    <property value="ARM-like" type="entry name"/>
+    <property value="1" type="match status"/>
+  </dbReference>
+  <dbReference type="Pfam" key="55" id="PF02985">
+    <property value="HEAT" type="entry name"/>
+    <property value="6" type="match status"/>
+  </dbReference>
+  <dbReference type="PROSITE" key="56" id="PS50077">
+    <property value="HEAT_REPEAT" type="entry name"/>
+    <property value="11" type="match status"/>
+  </dbReference>
+  <proteinExistence type="Evidence at protein level"/>
+  <keyword id="KW-0002">3D-structure</keyword>
+  <keyword id="KW-0007">Acetylation</keyword>
+  <keyword id="KW-0677">Repeat</keyword>
+  <feature type="initiator methionine" status="By similarity" description="Removed">
+    <location>
+      <position position="1"/>
+    </location>
+  </feature>
+  <feature type="chain" id="PRO_0000071401" description="Serine/threonine-protein phosphatase 2A 65 kDa regulatory subunit A alpha isoform">
+    <location>
+      <begin position="2"/>
+      <end position="589"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 1">
+    <location>
+      <begin position="8"/>
+      <end position="46"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 2">
+    <location>
+      <begin position="47"/>
+      <end position="84"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 3">
+    <location>
+      <begin position="85"/>
+      <end position="123"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 4">
+    <location>
+      <begin position="124"/>
+      <end position="161"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 5">
+    <location>
+      <begin position="162"/>
+      <end position="200"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 6">
+    <location>
+      <begin position="201"/>
+      <end position="239"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 7">
+    <location>
+      <begin position="240"/>
+      <end position="278"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 8">
+    <location>
+      <begin position="279"/>
+      <end position="321"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 9">
+    <location>
+      <begin position="322"/>
+      <end position="360"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 10">
+    <location>
+      <begin position="361"/>
+      <end position="399"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 11">
+    <location>
+      <begin position="400"/>
+      <end position="438"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 12">
+    <location>
+      <begin position="439"/>
+      <end position="477"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 13">
+    <location>
+      <begin position="478"/>
+      <end position="516"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 14">
+    <location>
+      <begin position="517"/>
+      <end position="555"/>
+    </location>
+  </feature>
+  <feature type="repeat" description="HEAT 15">
+    <location>
+      <begin position="556"/>
+      <end position="589"/>
+    </location>
+  </feature>
+  <feature type="modified residue" status="By similarity" description="N-acetylalanine">
+    <location>
+      <position position="2"/>
+    </location>
+  </feature>
+  <feature type="modified residue" status="By similarity" description="N6-acetyllysine">
+    <location>
+      <position position="280"/>
+    </location>
+  </feature>
+  <feature type="strand">
+    <location>
+      <begin position="23"/>
+      <end position="25"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="26"/>
+      <end position="33"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="35"/>
+      <end position="37"/>
+    </location>
+  </feature>
+  <feature type="strand">
+    <location>
+      <begin position="39"/>
+      <end position="42"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="46"/>
+      <end position="49"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="50"/>
+      <end position="57"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="63"/>
+      <end position="75"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="83"/>
+      <end position="85"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="90"/>
+      <end position="97"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="102"/>
+      <end position="117"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="121"/>
+      <end position="124"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="125"/>
+      <end position="127"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="128"/>
+      <end position="135"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="141"/>
+      <end position="147"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="148"/>
+      <end position="150"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="151"/>
+      <end position="154"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="155"/>
+      <end position="157"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="160"/>
+      <end position="174"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="179"/>
+      <end position="187"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="189"/>
+      <end position="193"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="198"/>
+      <end position="203"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="205"/>
+      <end position="213"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="218"/>
+      <end position="231"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="241"/>
+      <end position="243"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="246"/>
+      <end position="253"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="257"/>
+      <end position="264"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="267"/>
+      <end position="274"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="276"/>
+      <end position="281"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="283"/>
+      <end position="290"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="296"/>
+      <end position="303"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="306"/>
+      <end position="311"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="317"/>
+      <end position="324"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="327"/>
+      <end position="333"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="339"/>
+      <end position="341"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="342"/>
+      <end position="349"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="352"/>
+      <end position="356"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="359"/>
+      <end position="364"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="366"/>
+      <end position="373"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="378"/>
+      <end position="385"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="386"/>
+      <end position="388"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="389"/>
+      <end position="394"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="397"/>
+      <end position="411"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="417"/>
+      <end position="424"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="427"/>
+      <end position="430"/>
+    </location>
+  </feature>
+  <feature type="strand">
+    <location>
+      <begin position="436"/>
+      <end position="438"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="439"/>
+      <end position="442"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="444"/>
+      <end position="448"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="449"/>
+      <end position="452"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="456"/>
+      <end position="469"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="476"/>
+      <end position="481"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="482"/>
+      <end position="488"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="489"/>
+      <end position="491"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="495"/>
+      <end position="505"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="510"/>
+      <end position="512"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="513"/>
+      <end position="520"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="522"/>
+      <end position="528"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="534"/>
+      <end position="546"/>
+    </location>
+  </feature>
+  <feature type="turn">
+    <location>
+      <begin position="547"/>
+      <end position="550"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="554"/>
+      <end position="556"/>
+    </location>
+  </feature>
+  <feature type="strand">
+    <location>
+      <begin position="558"/>
+      <end position="561"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="562"/>
+      <end position="566"/>
+    </location>
+  </feature>
+  <feature type="strand">
+    <location>
+      <begin position="569"/>
+      <end position="571"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="575"/>
+      <end position="578"/>
+    </location>
+  </feature>
+  <feature type="helix">
+    <location>
+      <begin position="581"/>
+      <end position="585"/>
+    </location>
+  </feature>
+  <sequence version="3" modified="2007-01-23" mass="65323" length="589" checksum="5175409E4D50A366">MAAADGDDSLYPIAVLIDELRNEDVQLRLNSIKKLSTIALALGVERTRSELLPFLTDTIYDEDEVLLALAEQLGTFTTLVGGPEYVHCLLPPLESLATVEETVVRDKAVESLRAISHEHSPSDLEAHFVPLVKRLAGGDWFTSRTSACGLFSVCYPRVSSAVKAELRQYFRNLCSDDTPMVRRAAASKLGEFAKVLELDNVKSEIIPMFSNLASDEQDSVRLLAVEACVNIAQLLPQEDLEALVMPTLRQAAEDKSWRVRYMVADKFTELQKAVGPEITKTDLVPAFQNLMKDCEAEVRAAASHKVKEFCENLSADCRENVIMTQILPCIKELVSDANQHVKSALASVIMGLSPILGKDNTIEHLLPLFLAQLKDECPEVRLNIISNLDCVNEVIGIRQLSQSLLPAIVELAEDAKWRVRLAIIEYMPLLAGQLGVEFFDEKLNSLCMAWLVDHVYAIREAATSNLKKLVEKFGKEWAHATIIPKVLAMSGDPNYLHRMTTLFCINVLSEVCGQDITTKHMLPTVLRMAGDPVANVRFNVAKSLQKIGPILDNSTLQSEVKPILEKLTQDQDVDVKYFAQEALTVLSLA</sequence>
+</entry>
 </uniprot>
