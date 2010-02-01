@@ -4,6 +4,7 @@ import re
 
 import uniprot.load
 import uniprot.models
+import uniprot.retrieve
 from translations.models import Translation
 
 _testinput = 'tests/data/uniprot_small.xml'
@@ -20,3 +21,5 @@ def test_nr_entries():
     session = sessionmaker_()
     assert session.query(uniprot.models.Entry).count() == nr_entries
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace ==  'uniprot:name')).count()
+    assert uniprot.retrieve.from_ensembl_gene_id('ENSMUSG00000007564') == '2AAA_MOUSE'
+    assert 'GO:0005829' in uniprot.retrieve.retrieve_go_annotations('2AAA_MOUSE')
