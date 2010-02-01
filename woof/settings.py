@@ -1,6 +1,10 @@
 import os
+from os import path
+import sys
 
-_BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+_BASE_DIR = path.abspath(path.dirname(__file__))
+_WALDO_DIR = path.abspath(path.join(path.dirname(__file__),'..'))
+sys.path.append(_WALDO_DIR)
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
