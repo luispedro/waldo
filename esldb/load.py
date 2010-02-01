@@ -64,6 +64,7 @@ def load(filename, dbtype, create_session):
 
     # loop through the entries in the file
     for line in file(filename):
+        line = line.strip()
         if line.startswith('eSLDB code'):
             continue
 
