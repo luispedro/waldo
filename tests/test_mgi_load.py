@@ -24,9 +24,10 @@ def test_mgi_load():
     # MGI:1915545 is in the file but does not have a cellular component
     assert not session.query(mgi.models.Entry).filter(mgi.models.Entry.mgi_id == 'MGI:1915545').count()
 
-    assert session.query(Translation).filter(
-                        and_(Translation.input_namespace == 'ensembl:gene_id',
-                            Translation.input_name == 'ENSMUSG00000026004',
-                            Translation.output_namespace ==  'mgi')).count()
+    for namespace in ('mgi:name', 'mgi:id', 'mgi:symbol'):
+        assert session.query(Translation).filter(
+                            and_(Translation.input_namespace == 'ensembl:gene_id',
+                                Translation.input_name == 'ENSMUSG00000026004',
+                                Translation.output_namespace ==  namespace)).count()
 
 

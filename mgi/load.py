@@ -112,8 +112,11 @@ def _load_mrk_ensembl(filename, session):
     for i,line in enumerate(file(filename)):
         line = line.strip()
         mgi_accession, marker_sym, marker_name, cm_pos, chromosome, ensembl_id = line.split('\t')
-        session.add(
-                Translation('ensembl:gene_id', ensembl_id, 'mgi', marker_sym)
+        session.add_all([
+                Translation('ensembl:gene_id', ensembl_id, 'mgi:id', mgi_accession),
+                Translation('ensembl:gene_id', ensembl_id, 'mgi:symbol', marker_sym),
+                Translation('ensembl:gene_id', ensembl_id, 'mgi:name', marker_name),
+                ]
                 )
         if (i % 1024) == 0:
             session.commit()
