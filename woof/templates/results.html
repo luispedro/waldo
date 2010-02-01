@@ -6,17 +6,30 @@
 
 <p>Uniprot name: <em>{{ uniprot_name }}</em></p>
 
-{% if uniprot_goterms %}
-<p>Subcellular Locations (GO Terms):</p>
-<ul>
-{% for goid in uniprot_goterms %}
-<li>{{ goid }}</li>
-{% endfor %}
-</ul>
+{% if uniprot_go_terms %}
+    <p>Subcellular Locations (GO Terms):</p>
+    <ul>
+    {% for goid in uniprot_go_terms %}
+        <li>{{ goid }}</li>
+    {% endfor %}
+    </ul>
 {% else %}
-<p>No subcellular location information.</p>
+    <p>No subcellular location information.</p>
 {% endif %}
 
 <h2>Mouse Genome Informatics</h2>
+
+<p>MGI ID: <em>{{ mgi_id }}</em></p>
+
+{% if mgi_go_terms %}
+    <p>Subcellular Locations (GO Terms):</p>
+    <ul>
+    {% for goid in mgi_go_terms %}
+        <li>{{ goid }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No subcellular location information.</p>
+{% endif %}
 
 {% endblock %}
