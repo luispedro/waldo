@@ -30,14 +30,6 @@ _basedir = path.dirname(path.abspath(__file__))
 inputfilename_human = path.abspath(path.join(_basedir, '../../databases/eSLDB_Homo_sapiens.txt'))
 inputfilename_mouse = path.abspath(path.join(_basedir, '../../databases/eSLDB_Mus_musculus.txt'))
 
-del _basedir
-del path
-
-__all__ = [
-    'inputfilename_human',
-    'inputfilename_mouse',
-]
-
 def load(filename, dbtype, create_session):
     '''
     load(filename, dbtype, create_session)
