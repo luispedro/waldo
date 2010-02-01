@@ -1,7 +1,13 @@
+# -*- coding: utf-8 -*-
+# Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
+# vim: set ts=4 sts=4 sw=4 expandtab smartindent:
+# License: MIT. See COPYING.MIT file in the Waldo distribution
+
+from __future__ import division
 import backend
-from translations.models import Translation
 from sqlalchemy import and_
 from uniprot.models import Entry
+from translations.services import translate
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
@@ -17,13 +23,7 @@ def from_ensembl_gene_id(ensembl_gene_id, session=None):
     -------
       name : uniprot gene name
     '''
-    if session is None:
-        session = backend.create_session()
-    trans = session.query(Translation).filter(
-                    and_(Translation.input_namespace == 'ensembl:gene_id',
-                    Translation.input_name == ensembl_gene_id,
-                    Translation.output_namespace ==  'uniprot:name')).first()
-    return trans.output_name
+    return translate(ensembl_gene_id, 'ensembl:gene_id', 'uniprot:name', session)
 
 def retrieve_go_annotations(name, session=None):
     '''
