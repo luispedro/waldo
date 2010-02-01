@@ -37,6 +37,15 @@ class Accession(Base):
     def __init__(self, accession):
         self.accession = accession
 
+class GoAnnotation(Base):
+    __tablename__ = 'uniprot_go_annotation'
+    go_ann_id = Column(Integer, primary_key=True)
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
+    go_id = Column(String(32))
+
+    def __init__(self, go_id):
+        self.go_id = go_id
+
 class Reference(Base):
     __tablename__ = 'uniprot_reference'
     uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
@@ -44,11 +53,13 @@ class Reference(Base):
     key = Column(String(64))
     type = Column(String(32))
     title = Column(String(512))
+    authors = Column(String(512))
 
-    def __init__(self, key, type, title):
+    def __init__(self, key, type, title, authors):
         self.type = type
         self.key = key
         self.title = title
+        self.authors = authors
 
 class Comment(Base):
     __tablename__ = 'uniprot_comment'
@@ -67,14 +78,16 @@ class Entry(Base):
     accessions = relation(Accession)
     references = relation(Reference)
     comments = relation(Comment)
+    go_annotations = relation(GoAnnotation)
 
-    def __init__(self, name, accessions, comments, references):
+    def __init__(self, name, accessions, comments, references, go_annotations):
         self.name = name
         if type(accessions[0]) in (str, unicode):
             accessions = map(Accession, accessions)
         self.accessions = accessions
         self.references = references
         self.comments = comments
+        self.go_annotations = go_annotations
 
     def __repr__(self):
         return '<Uniprot Entry: %s>' % self.name

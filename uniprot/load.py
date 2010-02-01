@@ -24,11 +24,13 @@ from __future__ import division
 import re
 import amara
 import models
-from translations.models import Translation
 import gzip
 from os import path
-_basedir = path.dirname(path.abspath(__file__))
 
+import go
+from translations.models import Translation
+
+_basedir = path.dirname(path.abspath(__file__))
 _inputfilename = path.abspath(path.join(_basedir, '../data/uniprot_sprot.xml.gz'))
 
 def load(filename=None, create_session=None):
@@ -64,12 +66,17 @@ def load(filename=None, create_session=None):
         except AttributeError:
             comments = []
         references = []
+        go_annotations = []
         for ref in entry.reference:
             try:
                 key = ref.key
                 type = ref.citation.type
                 title = unicode(ref.citation.title).strip()
-                references.append( models.Reference(key, type, title) )
+                authors = []
+                for p in ref.authorList.person:
+                    authors.append(p.name)
+                authors = " AND ".join(authors)
+                references.append( models.Reference(key, type, title, authors) )
             except AttributeError:
                 pass # This means that this was a reference without a title or key, which we don't care about
 
@@ -86,7 +93,11 @@ def load(filename=None, create_session=None):
                         continue
                     t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)
                     session.add(t)
-        entry = models.Entry(name, accessions, comments, references)
+            elif dbref.type == 'Go':
+                id = dbref.id
+                if go.is_cellular_component(id):
+                    go_annotations.append( models.GoAnnotation(id) )
+        entry = models.Entry(name, accessions, comments, references, go_annotations)
         session.add(entry)
         loaded += 1
         if (loaded % 1024) == 0:
