@@ -61,10 +61,7 @@ def load(filename=None, create_session=None):
     for entry in amara.pushbind(input, '//uniprot:entry', prefixes=uniprot_nss):
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
-        try:
-            comments = [ models.Comment(c.type, unicode(c).strip()) for c in entry.comments]
-        except AttributeError:
-            comments = []
+        comments = [models.Comment(c.type, unicode(c).strip()) for c in getattr(entry, 'comments', [])]
         references = []
         go_annotations = []
         for ref in entry.reference:
