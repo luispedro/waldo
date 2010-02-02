@@ -83,7 +83,7 @@ class Image(Base):
         self.channel1 = channel1
         self.channel2 = channel2
 
-class Predictions(Base):
+class Prediction(Base):
     __tablename__ = 'locate_predictions'
     predict_id = Column(Integr(11), primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
@@ -110,19 +110,17 @@ class Literature(Base):
     citation = Column(String(100))
     organism = Column(String(50))
     notes = Column(String(50), nullable=True)
-    date_analyzed = Column(Date)
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
 
-    def __init__(self, locate_id, author, title, citation, organism, date_analyzed, source_id, source_name, accn, notes=None):
+    def __init__(self, locate_id, author, title, citation, organism, source_id, source_name, accn, notes=None):
         self.locate_id = locate_id
         self.author = author
         self.title = title
         self.citation = citation
         self.organism = organism
         self.notes = notes
-        self.date_analyzed = date_analyzed
         self.source_id = source_id
         self.source_name = source_name
         self.accn = accn
@@ -146,14 +144,16 @@ class Annotation(Base):
 class Location(Base):
     __tablename__ = 'locate_locations'
     location_id = Column(Integer(11), primary_key=True)
-    literature_id = Column(Integer(11), ForeignKey('locate_literature.ref_id'))
-    externalannot_id = Column(Integer(11), ForeignKey('locate_annotationst.annot_id'))
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
+    literature_id = Column(Integer(11), ForeignKey('locate_literature.ref_id'), nullable=True)
+    externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.annot_id'), nullable=True)
     goid = Column(String(50))
     tier1 = Column(String(100))
     tier2 = Column(String(100), nullable=True)
     tier3 = Column(String(100), nullable=True)
 
-    def __init__(self, lit_id, ext_id, goid, tier1, tier2=None, tier3=None):
+    def __init__(self, locate_id, goid, tier1, lit_id=None, ext_id=None, tier2=None, tier3=None):
+        self.locate_id = locate_id
         self.literature_id = lit_id
         self.externalannot_id = ext_id
         self.goid = goid
