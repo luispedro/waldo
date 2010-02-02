@@ -26,20 +26,17 @@ from os import path
 import models
 
 _basedir = path.dirname(path.abspath(__file__))
+_datadir = path.abspath(path.join(_basedir, '../data'))
 
-inputfilename_human = path.abspath(path.join(_basedir, '../../databases/eSLDB_Homo_sapiens.txt'))
-inputfilename_mouse = path.abspath(path.join(_basedir, '../../databases/eSLDB_Mus_musculus.txt'))
-
-def load(filename, dbtype, create_session):
+def load(dirname=None, create_session=None):
     '''
-    load(filename, dbtype, create_session)
+    num_entries = load(dirname={data/}, create_session={backend.create_session})
 
     Load an eSLDB database-download file into a local relational database
 
     Parameters
     ----------
-      filename : The name of the eSLDB file
-      dbtype : indicates the type of organism in the eSLDB file (mouse, human, etc)
+      dirname : Base directory containing the database files
       create_session : Callable object which returns an sqlalchemy session
 
     Returns
@@ -51,9 +48,14 @@ def load(filename, dbtype, create_session):
     To download the database files:
     http://gpcr.biocomp.unibo.it/esldb/download.htm
     '''
+    if dirname is None: dirname = _datadir
+    if create_session is None:
+        import backend
+        create_session = backend.create_session
     session = create_session()
     entries = set()
 
+    # FIXME - Take into account the DIRECTORY name, rather than the FILE name
     # loop through the entries in the file
     for line in file(filename):
         line = line.strip()
