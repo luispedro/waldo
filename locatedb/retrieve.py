@@ -40,9 +40,22 @@ def retrieve_go_annotations(id, session=None):
       go_ids : list of go terms (of the form "GO:00...")
     '''
     if session is None: session = backend.create_session()
-    entr = session.query(Entry).filter(Entry.locate_id == id).first()
+    entry = session.query(Entry).filter(Entry.locate_id == id).first()
 
     # parse out all the locations: in entr.locations, entr.predictions.location, 
     # entr.references.locations, and entr.annotations.locations
+    locations = []
+    locations.extend(_extractGO(entry.locations, locations))
+    locations.extend(_extractGO([entry.predictions.goid], locations))
+    locations.extend(_extractGO(entry.references.locations, locations))
+    locations.extend(_extractGO(entry.annotations.locations, locations))
+    return locations
 
-    #return [go.go_id for go in entr.go_annotations]
+def _extractGO(golist, currentlist):
+    retval = []
+    for location in golist:
+        goids = location.goid.split(';')
+        for goid in goids:
+            if goid not in currentlist:
+                retval.append(goid)
+    return retval

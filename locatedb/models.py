@@ -39,7 +39,7 @@ class Isoform(Base):
 
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
-    predict_id = Column(Integr(11), primary_key=True)
+    predict_id = Column(Integer(11), primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
     source_id = Column(Integer(11))
     method = Column(String(30))

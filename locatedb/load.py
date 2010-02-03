@@ -84,7 +84,7 @@ def _loadfile(filename, dbtype, session):
                     locations = [] 
                     if hasattr(elem, 'locations'):
                         locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
-                    annots.append(Annotation(elem.evidence, elem.source[1].source_id, elem.source[1].source_name, elem.source[1].accn)
+                    annots.append(Annotation(elem.evidence, elem.source[1].source_id, elem.source[1].source_name, elem.source[1].accn))
 
         # now the subcellular location predictions
         predicts = []
@@ -99,8 +99,8 @@ def _loadfile(filename, dbtype, session):
             literature = entry.literature 
             if hasattr(literature, 'reference'):
                 for elem in literature.reference:
-                    locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location)
-                    refs.append(Literature(elem.author, elem.title, elem.citation, elem.source.source_id, elem.source.source_name, elem.source.accn, locations)
+                    locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
+                    refs.append(Literature(elem.author, elem.title, elem.citation, elem.source.source_id, elem.source.source_name, elem.source.accn, locations))
         
         # now the external database references
         extrefs = []
@@ -108,7 +108,7 @@ def _loadfile(filename, dbtype, session):
             xrefs = entry.xrefs
             if hasattr(xrefs, 'xref'):
                 for elem in xrefs.xref:
-                    extrefs.append(ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn)
+                    extrefs.append(ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn))
                     # check if our data is Ensembl-related
                     if elem.source.source_name.startswith('Ensembl'):
                         if elem.source.source_name.startswith('Ensembl-Gene'):
