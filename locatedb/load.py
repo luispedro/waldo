@@ -58,22 +58,22 @@ def _loadfile(filename, dbtype, session):
         count += 1
 
         # even though data are listed in the XML schema as being required,
-        # in reality this seems not to be the case. The only entry we can take
-        # for granted is this one: <protein> ... </protein>
+        # in reality this seems not to be the case. As such, many checks are
+        # in place to make sure certain attributes do exist
 
         # add any isoforms that exist
         isoforms = []
         if hasattr(entry, 'transcript'):
             transcript = entry.transcript
             if hasattr(transcript.other_isoforms, 'isoform'):
-                isoforms = [Isoform(elem.class_, elem) for elem in transcript.other_isoforms.isoform]
+                isoforms = [models.Isoform(elem.class_, str(elem)) for elem in transcript.other_isoforms.isoform]
 
         # check the experimental data section for location information
         images = []
         if hasattr(entry, 'experimental_data'):
             experimental = entry.experimental_data
             if hasattr(experimental, 'locations'):
-                images = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
+                images = [models.Location(loc.goid, str(loc.tier1), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
 
         # go through the annotations
         annots = []
@@ -83,8 +83,8 @@ def _loadfile(filename, dbtype, session):
                 for elem in annotations.reference:
                     locations = [] 
                     if hasattr(elem, 'locations'):
-                        locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
-                    annots.append(Annotation(elem.evidence, elem.source[1].source_id, elem.source[1].source_name, elem.source[1].accn))
+                        locations = [models.Location(loc.goid, str(loc.tier1), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
+                    annots.append(models.Annotation(str(elem.evidence), elem.source[1].source_id, str(elem.source[1].source_name), str(elem.source[1].accn), locations))
 
         # now the subcellular location predictions
         predicts = []
@@ -92,7 +92,7 @@ def _loadfile(filename, dbtype, session):
             predictions = entry.scl_prediction
             if hasattr(predictions, 'source'):
                 try:
-                    predicts = [models.Prediction(elem.source_id, elem.method, elem.location, elem.goid) for elem in predictions.source]
+                    predicts = [models.Prediction(elem.source_id, str(elem.method), str(elem.location), str(elem.goid)) for elem in predictions.source]
                 except AttributeError:
                     pass
                     # thankfully, we don't care in this situation
@@ -103,8 +103,8 @@ def _loadfile(filename, dbtype, session):
             literature = entry.literature 
             if hasattr(literature, 'reference'):
                 for elem in literature.reference:
-                    locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
-                    refs.append(Literature(elem.author, elem.title, elem.citation, elem.source.source_id, elem.source.source_name, elem.source.accn, locations))
+                    locations = [models.Location(loc.goid, str(loc.tier1), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
+                    refs.append(models.Literature(str(elem.author), str(elem.title), str(elem.citation), elem.source.source_id, str(elem.source.source_name), str(elem.source.accn), locations))
         
         # now the external database references
         extrefs = []
@@ -112,20 +112,20 @@ def _loadfile(filename, dbtype, session):
             xrefs = entry.xrefs
             if hasattr(xrefs, 'xref'):
                 for elem in xrefs.xref:
-                    extrefs.append(models.ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn))
+                    extrefs.append(models.ExternalReference(elem.source.source_id, str(elem.source.source_name), str(elem.source.accn)))
                     # check if our data is Ensembl-related
-                    # FIXME - this is an XML object, not a string!
-                    if elem.source.source_name.startswith('Ensembl'):
-                        if elem.source.source_name.startswith('Ensembl-Gene'):
+                    value = str(elem.source.source_name)
+                    if value.startswith('Ensembl'):
+                        if value.startswith('Ensembl-Gene'):
                             subnamespace = 'gene_id'
-                        elif elem.source.source_name.startswith('Ensembl-Peptide'):
+                        elif value.startswith('Ensembl-Peptide'):
                             subnamespace = 'peptide_id'
-                        t = Translation('ensembl:' + subnamespace, elem.source.accn, 'locate:id', entry.uid)
+                        t = Translation('ensembl:' + subnamespace, str(elem.source.accn), 'locate:id', entry.uid)
                         session.add(t)
 
         # create the object we're really interested in
         protein = entry.protein
-        locate_entry = Entry(entry.uid, protein.source.source_name, protein.source_id, protein.accn, isoforms, predicts, refs, annots, images, extrefs, dbtype)
+        locate_entry = models.Entry(entry.uid, str(protein.source.source_name), protein.source.source_id, str(protein.source.accn), isoforms, predicts, refs, annots, images, extrefs, dbtype)
         session.add(locate_entry)
 
         # finally

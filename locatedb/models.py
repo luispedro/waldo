@@ -67,7 +67,15 @@ class Location(Base):
         self.goid = goid
         self.tier1 = tier1
         self.tier2 = tier2
+
+        # this section is a dirty hack to get around getattr() and the possible
+        # (and unwanted) conversion of None to 'None'...this should be fixed
+        # from within load.py FIXME
+        if tier2 is not None:
+            self.tier2 = unicode(tier2)
         self.tier3 = tier3
+        if tier3 is not None:
+            self.tier3 = unicode(tier3)
 
 class Literature(Base):
     __tablename__ = 'locate_literature'

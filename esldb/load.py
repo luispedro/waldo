@@ -48,9 +48,11 @@ def load(dirname=None, create_session=None):
 
 def _process_file(filename, dbtype, session):
     entries = defaultdict(str)
+    count = 0
     for line in file(filename):
+        count += 1
         line = line.strip()
-        if line.startswith('eSLDB code'):
+        if line.startswith('eSLDB code') or len(line.split('\t')) < 10:
             continue
 
         # split the line on tabs
@@ -64,7 +66,7 @@ def _process_file(filename, dbtype, session):
         e_value, \
         prediction, \
         aa_sequence, \
-        common_name = line.strip().split('\t')
+        common_name = line.split('\t')
 
         # create sqlalchemy objects and insert them
         if eSLDB_code not in entries:
@@ -105,7 +107,4 @@ def _process_file(filename, dbtype, session):
 
         # commit this session's additions
         session.commit()
-        if len(entries) % 1000 is 0:
-            print len(entries)
-
     return len(entries)

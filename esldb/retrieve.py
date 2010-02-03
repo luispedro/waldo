@@ -41,9 +41,9 @@ def retrieve_location_annotations(id, session=None):
       locations : A list of locations in the format specified by eSLDB
     '''
     if session is None: session = backend.create_session()
-    entr = session.query(Entry).filter(Entry.esldb_id == id).first()
-
-    # parse out all the locations: in entr.locations, entr.predictions.location, 
-    # entr.references.locations, and entr.annotations.locations
-
-    #return [go.go_id for go in entr.go_annotations]
+    entry = session.query(Entry).filter(Entry.esldb_id == id).first()
+    
+    # eSLDB has several levels of locations: experimental, similarity, and predicted
+    # some may be blank, others not. They also need to be split on semi-colons, as
+    # can be lengthy
+    
