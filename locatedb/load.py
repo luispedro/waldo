@@ -91,7 +91,11 @@ def _loadfile(filename, dbtype, session):
         if hasattr(entry, 'scl_prediction'):
             predictions = entry.scl_prediction
             if hasattr(predictions, 'source'):
-                predicts = [Prediction(elem.source_id, elem.method, elem.location, elem.goid) for elem in predictions.source]
+                try:
+                    predicts = [models.Prediction(elem.source_id, elem.method, elem.location, elem.goid) for elem in predictions.source]
+                except AttributeError:
+                    pass
+                    # thankfully, we don't care in this situation
 
         # next, the literature citations
         refs = []
@@ -108,8 +112,9 @@ def _loadfile(filename, dbtype, session):
             xrefs = entry.xrefs
             if hasattr(xrefs, 'xref'):
                 for elem in xrefs.xref:
-                    extrefs.append(ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn))
+                    extrefs.append(models.ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn))
                     # check if our data is Ensembl-related
+                    # FIXME - this is an XML object, not a string!
                     if elem.source.source_name.startswith('Ensembl'):
                         if elem.source.source_name.startswith('Ensembl-Gene'):
                             subnamespace = 'gene_id'
