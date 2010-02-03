@@ -11,9 +11,10 @@ from backend import Base
 
 class Annotation(Base):
     __tablename__ = 'esldb_annotations'
-    type = Column(String(30), primary_key=True) # experimental, similarity, predict, etc
-    value = Column(String(50), primary_key=True)
+    annotations_id = Column(Integer(11), primary_key=True)
     entry_id = Column(String(30), ForeignKey('esldb_ids.esldb_id'))
+    type = Column(String(30)) # experimental, similarity, predict, etc
+    value = Column(String(50))
 
     def __init__(self, esldb_id, annot_type, annotation):
         self.type = annot_type
@@ -22,8 +23,9 @@ class Annotation(Base):
 
 class UniprotEntry(Base):
     __tablename__ = 'esldb_uniprot_entry'
-    uniprot_entry = Column(String(30), primary_key=True)
-    entry_id = Column(String(30), primary_key=True, ForeignKey('esldb_ids.esldb_id'))
+    uniprot_entry_id = Column(Integer(11), primary_key=True)
+    uniprot_entry = Column(String(30))
+    entry_id = Column(String(30), ForeignKey('esldb_ids.esldb_id'))
 
     def __init__(self, esldb_id, uniprot_entry):
         self.uniprot_entry = uniprot_entry
@@ -31,8 +33,9 @@ class UniprotEntry(Base):
 
 class UniprotHomolog(Base):
     __tablename__ = 'esldb_uniprot_homolog'
-    uniprot_homolog = Column(String(30), primary_key=True)
-    entry_id = Column(String(30), primary_key=True, ForeignKey('esldb_ids.esldb_id'))
+    uniprot_homolog_id = Column(Integer(11), primary_key=True)
+    uniprot_homolog = Column(String(30))
+    entry_id = Column(String(30), ForeignKey('esldb_ids.esldb_id'))
 
     def __init__(self, entryid, homolog):
         self.uniprot_homolog = homolog

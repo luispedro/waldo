@@ -12,6 +12,9 @@ from translations.models import Translation
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../data'))
 
+_mouse = 'eSLDB_Mus_musculus.txt'
+_human = 'eSLDB_Homo_sapiens.txt'
+
 def load(dirname=None, create_session=None):
     '''
     num_entries = load(dirname={data/}, create_session={backend.create_session})
@@ -37,10 +40,14 @@ def load(dirname=None, create_session=None):
         import backend
         create_session = backend.create_session
     session = create_session()
-    entries = defaultdict(str)
 
-    # FIXME - Take into account the DIRECTORY name, rather than the FILE name
     # loop through the entries in the file
+    count = _process_file(path.join(dirname, _mouse), 'mouse', session)
+    count += _process_file(path.join(dirname, _human), 'human', session)
+    return count
+
+def _process_file(filename, dbtype, session):
+    entries = defaultdict(str)
     for line in file(filename):
         line = line.strip()
         if line.startswith('eSLDB code'):
@@ -98,5 +105,7 @@ def load(dirname=None, create_session=None):
 
         # commit this session's additions
         session.commit()
+        if len(entries) % 1000 is 0:
+            print len(entries)
 
     return len(entries)

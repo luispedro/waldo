@@ -20,3 +20,27 @@ these are only needed when the data is loaded into the local relational database
 which should happen very infrequently.
 
 All tests (which are written for every module) are stored in the "tests/" folder.
+
+Install
+-------
+
+To install, you can either execute the "scripts/create_tables.py" script, or 
+from an external script:
+
+import backend
+backend.create_tables()
+
+This will connect to either the local relational database, or to the development
+SQLite internal Python database.
+
+Update
+------
+
+In order to periodically update the datasources, new versions of the files need
+to be pulled down from the servers. Executing the following command will perform
+this function:
+
+python data/update.sh
+
+Note: this will take a *very* long time, e.g. the Uniprot file is 4.5GB at time
+of writing.

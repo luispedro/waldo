@@ -15,8 +15,8 @@ _datadir = path.abspath(path.join(_basedir, '../data'))
 
 #_mouse = 'LOCATE_mouse_v6_20081121.xml'
 #_human = 'LOCATE_human_v6_20081121.xml'
-_mouse = 'LOCATE_mouse_v6_20081121_SMALL.xml'
-_human = 'LOCATE_human_v6_20081121_SMALL.xml'
+_mouse = 'LOCATE_mouse_SMALL.xml'
+_human = 'LOCATE_human_SMALL.xml'
 
 def load(dirname=None, create_session=None):
     '''
@@ -91,7 +91,7 @@ def _loadfile(filename, dbtype, session):
         if hasattr(entry, 'scl_prediction'):
             predictions = entry.scl_prediction
             if hasattr(predictions, 'source'):
-                predicts = [Prediction(elem.source_id, elem.method, elem.location, elem.goid, elem.evaluation) for elem in predictions.source]
+                predicts = [Prediction(elem.source_id, elem.method, elem.location, elem.goid) for elem in predictions.source]
 
         # next, the literature citations
         refs = []

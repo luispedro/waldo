@@ -19,6 +19,7 @@ def test_esldb_load():
     session = sessionmaker_ ()
     loaded = session.query(esldb.models.Entry).count()
 
+    print nr_entries
     #assert nr_entries == 15
     #assert loaded == nr_entries
     # MGI:1915545 is in the file but does not have a cellular component

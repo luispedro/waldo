@@ -45,14 +45,12 @@ class Prediction(Base):
     method = Column(String(30))
     location = Column(String(50))
     goid = Column(String(50))
-    evaluation = Column(Float)
 
-    def __init__(self, source_id, method, location, goid, evaluation):
+    def __init__(self, source_id, method, location, goid):
         self.source_id = source_id
         self.method = method
         self.location = location
         self.goid = goid
-        self.evaluation = evaluation
 
 class Location(Base):
     __tablename__ = 'locate_locations'
