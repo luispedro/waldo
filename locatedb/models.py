@@ -30,18 +30,28 @@ class Entry(Base):
     __tablename__ = 'locate_entries'
     locate_id = Column(Integer(11), primary_key=True)
     dbtype = Column(String(30), nullable=True)
-    location_notes = Column(String(100), nullable=True)
     source_name = Column(String(50))
     source_id = Column(Integer(11))
     accn = Column(String(20))
+    isoforms = relation(Isoform)
+    predictions = relation(Prediction)
+    references = relation(Literature)
+    annotations = relation(Annotation)
+    locations = relation(Location)
+    xrefs = relation(ExternalReference)
 
-    def __init__(self, id, source_name, source_id, accn, dbtype=None, location_notes=None):
+    def __init__(self, id, source_name, source_id, accn, isoforms, predictions, references, annotations, locations, xrefs, dbtype=None):
         self.locate_id = id
         self.source_name = source_name
         self.source_id = source_id
         self.accn = accn
         self.dbtype = dbtype
-        self.location_notes = location_notes 
+        self.isoforms = isoforms
+        self.predictions = predictions
+        self.references = references
+        self.annotations = annotations
+        self.locations = locations
+        self.xrefs = xrefs
 
 class Isoform(Base):
     __tablename__ = 'locate_isoforms'
@@ -50,38 +60,9 @@ class Isoform(Base):
     isoform_class = Column(String(20))
     isoform_name = Column(String(30))
 
-    def __init__(self, locate_id, isoclass, isoname):
-        self.locate_id = locate_id
+    def __init__(self, isoclass, isoname):
         self.isoform_class = isoclass
         self.isoform_name = isoname
-
-class Image(Base):
-    __tablename__ = 'locate_images'
-    image_id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
-    is_coloc = Column(Boolean)
-    filename = Column(String(100))
-    celltype = Column(String(50))
-    magnification = Column(String(10))
-    tag = Column(String(30))
-    epitope = Column(String(30))
-    channel = Column(String(20))
-    coloc = Column(String(20), nullable=True)
-    channel1 = Column(String(30), nullable=True)
-    channel2 = Column(String(30), nullable=True)
-
-    def __init__(self, locate_id, is_coloc, filename, celltype, magnification, tag, epitope, channel, coloc=None, channel1=None, channel2=None):
-        self.locate_id = locate_id
-        self.is_coloc = is_coloc
-        self.filename = filename
-        self.celltype = celltype
-        self.magnification = magnification
-        self.tag = tag
-        self.epitope = epitope
-        self.channel = channel
-        self.coloc = coloc
-        self.channel1 = channel1
-        self.channel2 = channel2
 
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
@@ -93,8 +74,7 @@ class Prediction(Base):
     goid = Column(String(50))
     evaluation = Column(Float)
 
-    def __init__(self, locate_id, source_id, method, location, goid, evaluation):
-        self.locate_id = locate_id
+    def __init__(self, source_id, method, location, goid, evaluation):
         self.source_id = source_id
         self.method = method
         self.location = location
@@ -108,22 +88,19 @@ class Literature(Base):
     author = Column(String(200))
     title = Column(String(200))
     citation = Column(String(100))
-    organism = Column(String(50))
-    notes = Column(String(50), nullable=True)
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
+    locations = relation(Location)
 
-    def __init__(self, locate_id, author, title, citation, organism, source_id, source_name, accn, notes=None):
-        self.locate_id = locate_id
+    def __init__(self, author, title, citation, source_id, source_name, accn, locations):
         self.author = author
         self.title = title
         self.citation = citation
-        self.organism = organism
-        self.notes = notes
         self.source_id = source_id
         self.source_name = source_name
         self.accn = accn
+        self.locations = locations
 
 class Annotation(Base):
     __tablename__ = 'locate_annotations'
@@ -133,18 +110,19 @@ class Annotation(Base):
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
+    locations = relation(Location)
 
-    def __init__(self, locate_id, evidence, source_id, source_name, accn):
-        self.locate_id = locate_id
+    def __init__(self, evidence, source_id, source_name, accn, locations):
         self.evidence = evidence
         self.source_id = source_id
         self.source_name = source_name
         self.accn = accn
+        self.locations = locations
 
 class Location(Base):
     __tablename__ = 'locate_locations'
     location_id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'), nullable=True)
     literature_id = Column(Integer(11), ForeignKey('locate_literature.ref_id'), nullable=True)
     externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.annot_id'), nullable=True)
     goid = Column(String(50))
@@ -152,25 +130,21 @@ class Location(Base):
     tier2 = Column(String(100), nullable=True)
     tier3 = Column(String(100), nullable=True)
 
-    def __init__(self, locate_id, goid, tier1, lit_id=None, ext_id=None, tier2=None, tier3=None):
-        self.locate_id = locate_id
-        self.literature_id = lit_id
-        self.externalannot_id = ext_id
+    def __init__(self, goid, tier1, tier2=None, tier3=None):
         self.goid = goid
         self.tier1 = tier1
         self.tier2 = tier2
         self.tier3 = tier3
 
-class ExternalDatabase(Base):
-    __tablename__ = 'locate_externaldatabases'
+class ExternalReference(Base):
+    __tablename__ = 'locate_externalreferences'
     xref_id = Column(Integer(11), primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
 
-    def __init__(self, locate_id, source_id, source_name, accn):
-        self.locate_id = locate_id
+    def __init__(self, source_id, source_name, accn):
         self.source_id = source_id
         self.source_name = source_name
         self.accn = accn

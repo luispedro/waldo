@@ -73,91 +73,63 @@ def _loadfile(filename, dbtype, session):
     # LOCATE doesn't define a namespace, so we don't need prefix information ?
     for entry in amara.pushbind(input, u'LOCATE_protein'):
         count += 1
-        protein = entry.protein
-        experimental = entry.experimental_data
 
-        # construct the primary Entry object
-        # even though other data are listed in the XML schema as being required,
+        # even though data are listed in the XML schema as being required,
         # in reality this seems not to be the case. The only entry we can take
         # for granted is this one: <protein> ... </protein>
-        locate_id = Entry(entry.uid, protein.source.source_name, protein.source_id, protein.accn, dbtype, getattr(protein, 'location_notes', None))
-        session.add(locate_id) 
 
         # add any isoforms that exist
+        isoforms = []
         if hasattr(entry, 'transcript'):
             transcript = entry.transcript
             if hasattr(transcript.other_isoforms, 'isoform'):
-                for elem in transcript.other_isoforms.isoform:
-                    isoform = Isoform(locate_id.locate_id, elem.class_, elem)
-                    session.add(isoform)
+                isoforms = [Isoform(elem.class_, elem) for elem in transcript.other_isoforms.isoform]
 
-        # run through the experimental data
+        # check the experimental data section for location information
+        images = []
         if hasattr(entry, 'experimental_data'):
             experimental = entry.experimental_data
-            if hasattr(experimental.images, 'rep_image'):
-                img = experimental.images.rep_image
-                image = Image(locate_id.locate_id, False, img.filename, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'coloc', None), getattr(img, 'channel1', None), getattr(img, 'channel2', None))
-                session.add(image)
-
-            if hasattr(experimental.images, 'image'):
-                for img in experimental.images.image:
-                    image = Image(locate_id.locate_id, False, img.filename, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'coloc', None), getattr(img, 'channel1', None), getattr(img, 'channel2', None))
-                    session.add(image)
-
-            if hasattr(experimental.coloc_images, 'rep_coloc_image'):
-                img = experimental.coloc_images.rep_coloc_image
-                image = Image(locate_id.locate_id, True, img.filename, img.celltype, img.magnification, img.tag, img.epitope, img.channel, img.coloc, img.channel1, img.channel2)
-                session.add(image)
-
-            if hasattr(experimental.coloc_images, 'coloc_image'):
-                for img in experimental.coloc_images.coloc_image:
-                    image = Image(locate_id.locate_id, True, img.filename, img.celltype, img.magnification, img.tag, img.epitope, img.channel, img.coloc, img.channel1, img.channel2)
-                    session.add(image)
-
             if hasattr(experimental, 'locations'):
-                for loc in experimental.locations.location:
-                    location = Location(locate_id.locate_id, loc.goid, loc.tier1, None, None, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None))
-                    session.add(location)
+                images = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
 
         # go through the annotations
+        annots = []
         if hasattr(entry, 'externalannot'):
              annotations = entry.externalannot
              if hasattr(annotations, 'reference'):
                 for elem in annotations.reference:
-                    annotation = Annotation(locate_id.locate_id, elem.evidence, elem.source[1].source_id, elem.source[1].source_name, elem.source[1].accn)
-                    session.add(annotation)
-                    
+                    locations = [] 
                     if hasattr(elem, 'locations'):
-                        for loc in elem.locations.location:
-                            location = Location(locate_id.locate_id, loc.goid, loc.tier1, None, annotation.annot_id, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None))
-                            session.add(location)
+                        locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
+                    annots.append(Annotation(elem.evidence, elem.source[1].source_id, elem.source[1].source_name, elem.source[1].accn)
 
         # now the subcellular location predictions
+        predicts = []
         if hasattr(entry, 'scl_prediction'):
             predictions = entry.scl_prediction
             if hasattr(predictions, 'source'):
-                for elem in predictions.source:
-                    prediction = Prediction(locate_id.locate_id, elem.source_id, elem.method, elem.location, elem.goid, elem.evaluation)
-                    session.add(prediction)
+                predicts = [Prediction(elem.source_id, elem.method, elem.location, elem.goid, elem.evaluation) for elem in predictions.source]
 
         # next, the literature citations
+        refs = []
         if hasattr(entry, 'literature'):
             literature = entry.literature 
             if hasattr(literature, 'reference'):
                 for elem in literature.reference:
-                    cite = Literature(locate_id.locate_id, elem.author, elem.title, elem.citation, elem.organism, elem.source.source_id, elem.source.source_name, elem.source.accn, elem.notes)
-                    session.add(cite)
-                    for loc in elem.locations.location:
-                        location = Location(locate_id.locate_id, loc.goid, loc.tier1, cite.ref_id, None, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None))
-                        session.add(location)
+                    locations = [Location(loc.goid, loc.tier1, getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location)
+                    refs.append(Literature(elem.author, elem.title, elem.citation, elem.source.source_id, elem.source.source_name, elem.source.accn, locations)
         
         # now the external database references
+        extrefs = []
         if hasattr(entry, 'xrefs'):
             xrefs = entry.xrefs
             if hasattr(xrefs, 'xref'):
-                for elem in xrefs.xref:
-                    xref = ExternalDatabase(locate_id.locate_id, elem.source.source_id, elem.source.source_name, elem.source.accn)
-                    session.add(xref)
+                extrefs = [ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn) for elem in xrefs.xref]
+
+        # create the object we're really interested in
+        protein = entry.protein
+        locate_entry = Entry(entry.uid, protein.source.source_name, protein.source_id, protein.accn, isoforms, predicts, refs, annots, images, extrefs, dbtype)
+        session.add(locate_entry)
 
         # finally
         session.commit()
