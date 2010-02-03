@@ -13,10 +13,8 @@ from translations.models import Translation
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../data'))
 
-#_mouse = 'LOCATE_mouse_v6_20081121.xml'
-#_human = 'LOCATE_human_v6_20081121.xml'
-_mouse = 'LOCATE_mouse_SMALL.xml'
-_human = 'LOCATE_human_SMALL.xml'
+_mouse = 'LOCATE_mouse.xml'
+_human = 'LOCATE_human.xml'
 
 def load(dirname=None, create_session=None):
     '''

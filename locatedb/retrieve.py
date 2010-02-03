@@ -45,17 +45,35 @@ def retrieve_go_annotations(id, session=None):
     # parse out all the locations: in entr.locations, entr.predictions.location, 
     # entr.references.locations, and entr.annotations.locations
     locations = []
-    locations.extend(_extractGO(entry.locations, locations))
-    locations.extend(_extractGO([entry.predictions.goid], locations))
-    locations.extend(_extractGO(entry.references.locations, locations))
-    locations.extend(_extractGO(entry.annotations.locations, locations))
+    for location in entry.locations:
+        locations.extend(_splitGO(location, locations)) 
+
+    for predict in entry.predictions:
+        locations.extend(_splitGO(predict.goid, locations))
+
+    for reference in entry.references:
+        for location in reference.locations:
+            locations.extend(_splitGO(location.goid, locations))
+
+    for annotation in entry.annotations:
+        for location in annotation.locations:
+            locations.extend(_splitGO(location.goid, locations))
+
     return locations
 
-def _extractGO(golist, currentlist):
+def _splitGO(goids, curlist):
     retval = []
-    for location in golist:
-        goids = location.goid.split(';')
-        for goid in goids:
-            if goid not in currentlist:
-                retval.append(goid)
+    ids = goids.split(';')
+    for goid in ids:
+        if goid not in curlist: retval.append(goid)
+    return list(set(retval))
+
+def _extractGO(elemlist, currentlist):
+    retval = []
+    for elem in elemlist:
+        for location in elem.locations:
+            goids = location.goid.split(';')
+            for goid in goids:
+                if goid not in currentlist:
+                    retval.append(goid)
     return retval

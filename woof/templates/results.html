@@ -32,4 +32,19 @@
     <p>No subcellular location information.</p>
 {% endif %}
 
+<h2>LOCATE</h2>
+
+<p>LOCATE ID: <em>{{ locate_id }}</em></p>
+
+{% if locate_go_terms %}
+    <p>Subcellular Locations (GO Terms):</p>
+    <ul>
+    {% for goid in locate_go_terms %}
+        <li>{{ goid }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No subcellular location information.</p>
+{% endif %}
+
 {% endblock %}
