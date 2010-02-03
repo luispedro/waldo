@@ -1,24 +1,7 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009, Luís Pedro Coelho <lpc@cmu.edu>
+# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-#  of this software and associated documentation files (the "Software"), to deal
-#  in the Software without restriction, including without limitation the rights
-#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#  copies of the Software, and to permit persons to whom the Software is
-#  furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in
-#  all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#  THE SOFTWARE.
+# License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
 import amara
@@ -124,7 +107,16 @@ def _loadfile(filename, dbtype, session):
         if hasattr(entry, 'xrefs'):
             xrefs = entry.xrefs
             if hasattr(xrefs, 'xref'):
-                extrefs = [ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn) for elem in xrefs.xref]
+                for elem in xrefs.xref:
+                    extrefs.append(ExternalReference(elem.source.source_id, elem.source.source_name, elem.source.accn)
+                    # check if our data is Ensembl-related
+                    if elem.source.source_name.startswith('Ensembl'):
+                        if elem.source.source_name.startswith('Ensembl-Gene'):
+                            subnamespace = 'gene_id'
+                        elif elem.source.source_name.startswith('Ensembl-Peptide'):
+                            subnamespace = 'peptide_id'
+                        t = Translation('ensembl:' + subnamespace, elem.source.accn, 'locate:id', entry.uid)
+                        session.add(t)
 
         # create the object we're really interested in
         protein = entry.protein

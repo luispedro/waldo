@@ -1,29 +1,13 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-#  of this software and associated documentation files (the "Software"), to deal
-#  in the Software without restriction, including without limitation the rights
-#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#  copies of the Software, and to permit persons to whom the Software is
-#  furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in
-#  all copies or substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#  THE SOFTWARE.
+# License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
 from collections import defaultdict
 from os import path
 import models
+from translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../data'))
@@ -53,7 +37,7 @@ def load(dirname=None, create_session=None):
         import backend
         create_session = backend.create_session
     session = create_session()
-    entries = set()
+    entries = defaultdict(str)
 
     # FIXME - Take into account the DIRECTORY name, rather than the FILE name
     # loop through the entries in the file
@@ -64,7 +48,7 @@ def load(dirname=None, create_session=None):
 
         # split the line on tabs
         eSLDB_code, \
-        orig_db_code, \
+        ensembl_peptide, \
         exp_annotation, \
         uniprot_annotation, \
         uniprot_entry, \
@@ -73,13 +57,13 @@ def load(dirname=None, create_session=None):
         e_value, \
         prediction, \
         aa_sequence, \
-        common_name = line.split('\t')
+        common_name = line.strip().split('\t')
 
         # create sqlalchemy objects and insert them
         if eSLDB_code not in entries:
             # create the entry itself
             entry = models.Entry(eSLDB_code, dbtype)
-            entries.add(eSLDB_code)
+            entries[eSLDB_code] = []
             session.add(entry)
 
         # now all the annotations
@@ -96,7 +80,7 @@ def load(dirname=None, create_session=None):
             annotation = models.Annotation(eSLDB_code, 'predicted', prediction)
             session.add(annotation)
 
-        # finally, add the uniprot data, if it exists
+        # add the uniprot data, if it exists
         if uniprot_entry != 'None':
             uniprot = models.UniprotEntry(eSLDB_code, uniprot_entry)
             session.add(uniprot)
@@ -104,8 +88,15 @@ def load(dirname=None, create_session=None):
             uniprot = models.UniprotHomolog(eSLDB_code, uniprot_homolog)
             session.add(uniprot)
 
+        # provide the ensembl ID translations
+        # PROBLEM: eSLDB, in its awful organizational format, will have multiple 
+        # lines in the file with the same eSLDB_code AND ensembl peptide ID
+        # hence we have to track each one as it occurs
+        if ensembl_peptide not in entries[eSLDB_code]:
+            session.add(Translation('ensembl:peptide_id', ensembl_peptide, 'esldb:id', eSLDB_code))
+            entries[eSLDB_code].append(ensembl_peptide)
+
         # commit this session's additions
         session.commit()
 
-    # all done! return the number of entries loaded
     return len(entries)
