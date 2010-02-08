@@ -32,14 +32,19 @@ from translations.services import translate
 def esldbstats(session=None):
     if session is None: session = backend.create_session()
     entries = session.query(esldb.models.Entry)
-    print entries.count()
     return entries.count()
 
-def uniprot(session=None):
-    pass
+def uniprotstats(session=None):
+    if session is None: session = backend.create_session()
+    entries = session.query(uniprot.models.Entry)
+    return entries.count()
 
-def locate(session=None):
-    pass
+def locatestats(session=None):
+    if session is None: session = backend.create_session()
+    entries = session.query(locatedb.models.Entry)
+    return entries.count()
 
-def mgi(session=None):
-    pass
+def mgistats(session=None):
+    if session is None: session = backend.create_session()
+    entries = session.query(mgi.models.Entry)
+    return entries.count()
