@@ -90,3 +90,18 @@ color: #333;
 font-size: 11px;
 padding: 0 0 10px 0;
 }
+
+.results {
+    border-left: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+}
+
+.results th, td {
+    width: 150px;
+    border-top: 1px solid #000000;
+    border-right: 1px solid #000000;
+}
+
+.results th {
+    background-color: #EEEEEE;
+}

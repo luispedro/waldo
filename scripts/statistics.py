@@ -32,19 +32,15 @@ from translations.services import translate
 def esldbstats(session=None):
     if session is None: session = backend.create_session()
     entries = session.query(esldb.models.Entry)
-    return entries.count()
 
 def uniprotstats(session=None):
     if session is None: session = backend.create_session()
-    entries = session.query(uniprot.models.Entry)
-    return entries.count()
+    entries = session.query(esldb.models.Entry)
 
 def locatestats(session=None):
     if session is None: session = backend.create_session()
-    entries = session.query(locatedb.models.Entry)
-    return entries.count()
+    entries = session.query(esldb.models.Entry)
 
 def mgistats(session=None):
     if session is None: session = backend.create_session()
-    entries = session.query(mgi.models.Entry)
-    return entries.count()
+    entries = session.query(esldb.models.Entry)
