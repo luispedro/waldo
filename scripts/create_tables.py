@@ -25,6 +25,8 @@ import backend
 import uniprot.models
 import go.models
 import mgi.models
+import esldb.models
+import locatedb.models
 import translations.models
 
 backend.create_tables()

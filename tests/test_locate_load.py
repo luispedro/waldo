@@ -7,14 +7,14 @@ import locatedb.retrieve
 from translations.models import Translation
 
 _testdir = 'tests/data/'
-_testinput1 = _testdir + 'LOCATE_human_SMALL.xml'
-_testinput2 = _testdir + 'LOCATE_mouse_SMALL.xml'
+_testinput1 = _testdir + 'LOCATE_human.xml'
+_testinput2 = _testdir + 'LOCATE_mouse.xml'
 
 def test_num_entries():
     num_entries = len(re.findall('</LOCATE_protein>', file(_testinput1).read()))
     num_entries += len(re.findall('</LOCATE_protein>', file(_testinput2).read()))
 
-    engine = create_engine('sqlite://')
+    engine = create_engine('mysql://djangouser@localhost/django')
     metadata = locatedb.models.Base.metadata
     metadata.bind = engine
     metadata.create_all()

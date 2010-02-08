@@ -6,8 +6,18 @@
 import mgi.load
 import go.load
 import uniprot.load
+import esldb.load
+import locatedb.load
 
-go.load.load()
+#go.load.load()
+print 'Beginning MGI...'
 mgi.load.load()
-uniprot.load.load()
-
+print 'MGI done.'
+#print 'Beginning Uniprot...'
+#uniprot.load.load()
+#print 'Uniprot done.'
+print 'Beginning LOCATE...'
+locatedb.load.load()
+print 'LOCATE done. Beginning eSLDB...'
+esldb.load.load()
+print 'eSLDB done. Finished!'

@@ -71,7 +71,7 @@ def _loadfile(filename, dbtype, session):
         if hasattr(entry, 'experimental_data'):
             experimental = entry.experimental_data
             if hasattr(experimental, 'locations'):
-                images = [models.Location(loc.goid, str(loc.tier1), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
+                images = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
 
         # go through the annotations
         annots = []
@@ -81,7 +81,7 @@ def _loadfile(filename, dbtype, session):
                 for elem in annotations.reference:
                     locations = [] 
                     if hasattr(elem, 'locations'):
-                        locations = [models.Location(loc.goid, str(loc.tier1), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
+                        locations = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
                     annots.append(models.Annotation(str(elem.evidence), elem.source[1].source_id, str(elem.source[1].source_name), str(elem.source[1].accn), locations))
 
         # now the subcellular location predictions
@@ -101,7 +101,7 @@ def _loadfile(filename, dbtype, session):
             literature = entry.literature 
             if hasattr(literature, 'reference'):
                 for elem in literature.reference:
-                    locations = [models.Location(loc.goid, str(loc.tier1), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
+                    locations = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
                     refs.append(models.Literature(str(elem.author), str(elem.title), str(elem.citation), elem.source.source_id, str(elem.source.source_name), str(elem.source.accn), locations))
         
         # now the external database references

@@ -13,3 +13,9 @@ wget -N http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.ob
 # Uniprot
 wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 
+# LOCATE
+wget -N http://locate.imb.uq.edu.au/info_files/
+wget -N http://locate.imb.uq.edu.au/info_files/
+
+# eSLDB
+# POST to /cgi-bin/predictors/esldb/full_download.cgi

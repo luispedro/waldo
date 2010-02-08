@@ -59,7 +59,7 @@ class Location(Base):
     literature_id = Column(Integer(11), ForeignKey('locate_literature.ref_id'), nullable=True)
     externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.annot_id'), nullable=True)
     goid = Column(String(50))
-    tier1 = Column(String(100))
+    tier1 = Column(String(100), nullable=True)
     tier2 = Column(String(100), nullable=True)
     tier3 = Column(String(100), nullable=True)
 
