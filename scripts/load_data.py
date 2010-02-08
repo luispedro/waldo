@@ -8,9 +8,21 @@ import go.load
 import uniprot.load
 import locatedb.load
 import esldb.load
+from os import path
 
-go.load.load()
-mgi.load.load()
-uniprot.load.load()
-locatedb.load.load()
-esldb.load.load()
+# Put to "dev" to set the application in development mode - namely,
+# it loads only the small versions of the database files found in the
+# "tests/data" folder
+MODE = 'dev'
+
+_basedir = path.dirname(path.abspath(__file__))
+_testdir = None
+
+if MODE is 'dev':
+    _testdir = path.abspath(path.join(_basedir, 'tests/data'))
+
+go.load.load(_testdir)
+mgi.load.load(_testdir)
+uniprot.load.load(_testdir)
+locatedb.load.load(_testdir)
+esldb.load.load(_testdir)

@@ -29,8 +29,11 @@ import esldb.models
 import locatedb.models
 from translations.services import translate
 
-def esldb(session=None):
-    pass
+def esldbstats(session=None):
+    if session is None: session = backend.create_session()
+    entries = session.query(esldb.models.Entry)
+    print entries.count()
+    return entries.count()
 
 def uniprot(session=None):
     pass
