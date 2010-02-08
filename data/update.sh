@@ -14,8 +14,10 @@ wget -N http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.ob
 wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 
 # LOCATE
-wget -N http://locate.imb.uq.edu.au/info_files/
-wget -N http://locate.imb.uq.edu.au/info_files/
+wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_mouse_v6_20081121.xml.zip
+wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_human_v6_20081121.xml.zip
 
 # eSLDB
-# POST to /cgi-bin/predictors/esldb/full_download.cgi
+wget --post-data 'organism=Homo+sapiens&checkbox1_1=SI&checkbox1_2=SI&checkbox1_3=SI&checkbox1_4=SI&checkbox1_5=SI&checkbox1_6=SI&checkbox1_7=SI&checkbox1_8=SI&checkbox1_9=SI&checkbox1_10=SI&f_type=plain' -N http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/full_download.cgi
+wget --post-data 'organism=Mus+musculus&checkbox1_1=SI&checkbox1_2=SI&checkbox1_3=SI&checkbox1_4=SI&checkbox1_5=SI&checkbox1_6=SI&checkbox1_7=SI&checkbox1_8=SI&checkbox1_9=SI&checkbox1_10=SI&f_type=plain' -N http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/full_download.cgi
+
