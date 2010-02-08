@@ -21,15 +21,22 @@
 #  THE SOFTWARE.
 
 from __future__ import division
+import backend
+from sqlalchemy import and_
+import uniprot.models
+import mgi.models
+import esldb.models
+import locatedb.models
+from translations.services import translate
 
-def esldb():
+def esldb(session=None):
     pass
 
-def uniprot():
+def uniprot(session=None):
     pass
 
-def locate():
+def locate(session=None):
     pass
 
-def mgi():
+def mgi(session=None):
     pass
