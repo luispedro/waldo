@@ -27,27 +27,29 @@ import gzip
 from os import path
 
 _basedir = path.dirname(path.abspath(__file__))
-_inputfilename = path.abspath(path.join(_basedir, '../data/gene_ontology.1_2.obo'))
+_datadir = path.abspath(path.join(_basedir, '../data'))
+_inputfilename = 'gene_ontology.1_2.obo.gz'
 
-def load(filename=None, create_session=None):
+def load(dirname=None, create_session=None):
     '''
-    nr_entries = load(filename={data/gene_ontology.1_2.obo}, create_session={backend.create_session})
+    nr_entries = load(dirname={data/}, create_session={backend.create_session})
 
     Load Gene Ontology OBO file into database
 
     Parameters
     ----------
-      filename : OBO file filename
+      dirname : Directory containing GO files
       create_session : a callable object that returns an sqlalchemy session
     Returns
     -------
       nr_entries : Nr of entries
     '''
-    if filename is None: filename = _inputfilename
+    if dirname is None: dirname = _datadir
     if create_session is None:
         import backend
         create_session = backend.create_session
     session = create_session()
+    filename = path.join(dirname, _inputfilename)
     if filename.endswith('.gz'):
         input = gzip.GzipFile(filename)
     else:

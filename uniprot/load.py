@@ -31,23 +31,25 @@ import go
 from translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
-_inputfilename = path.abspath(path.join(_basedir, '../data/uniprot_sprot.xml.gz'))
+_datadir = path.abspath(path.join(_basedir, '../data'))
+_inputfilename = 'uniprot_sprot.xml.gz'
 
-def load(filename=None, create_session=None):
+def load(dirname=None, create_session=None):
     '''
-    nr_loaded = load(filename={data/uniprot_sprot.xml.gz}, create_session={backend.create_session})
+    nr_loaded = load(dirname={data/}, create_session={backend.create_session})
 
     Load uniprot XML into database
 
     Parameters
     ----------
-      filename : XML filename (possibly gzipped)
+      dirname : Directory containing the XML Uniprot file
       create_session : a callable object that returns an sqlalchemy session
     Returns
     -------
       nr_loaded : Nr. of entries loaded
     '''
-    if filename is None: filename = _inputfilename
+    if dirname is None: dirname = _datadir
+    filename = path.join(dirname, _inputfilename)
     if create_session is None:
         import backend
         create_session = backend.create_session

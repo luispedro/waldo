@@ -59,7 +59,7 @@ class Location(Base):
     literature_id = Column(Integer(11), ForeignKey('locate_literature.ref_id'), nullable=True)
     externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.annot_id'), nullable=True)
     goid = Column(String(50))
-    tier1 = Column(String(100))
+    tier1 = Column(String(100), nullable=True)
     tier2 = Column(String(100), nullable=True)
     tier3 = Column(String(100), nullable=True)
 
@@ -67,15 +67,14 @@ class Location(Base):
         self.goid = goid
         self.tier1 = tier1
         self.tier2 = tier2
+        self.tier3 = tier3
 
         # this section is a dirty hack to get around getattr() and the possible
         # (and unwanted) conversion of None to 'None'...this should be fixed
         # from within load.py FIXME
-        if tier2 is not None:
-            self.tier2 = unicode(tier2)
-        self.tier3 = tier3
-        if tier3 is not None:
-            self.tier3 = unicode(tier3)
+        if tier1 is not None: self.tier1 = unicode(tier1)
+        if tier2 is not None: self.tier2 = unicode(tier2)
+        if tier3 is not None: self.tier3 = unicode(tier3)
 
 class Literature(Base):
     __tablename__ = 'locate_literature'

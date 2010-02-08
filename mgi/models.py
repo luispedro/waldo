@@ -30,7 +30,7 @@ class GOAnnotation(Base):
     __tablename__ = 'mgi_goannotation'
     mgi_go_id = Column(Integer, primary_key=True)
     mgi_id = Column(String(32), ForeignKey('mgi_entry.mgi_id'))
-    go_id = Column(Integer(7), nullable=False)
+    go_id = Column(String(15), nullable=False)
     pubmedid = Column(Integer(11))
     evidence = Column(String(3), nullable=True)
 
