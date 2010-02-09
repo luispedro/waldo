@@ -85,9 +85,64 @@ def uniprotstats(session=None):
     if session is None: session = backend.create_session()
     entries = session.query(uniprot.models.Entry)
 
+    accessions = defaultdict(int)
+    references = defaultdict(int)
+    comments = defaultdict(int)
+
+    for entry in entries:
+        for accession in entry.accessions:
+            accessions[accession] += 1
+
+        for reference in entry.references:
+            references[key] += 1
+
+        for comment in entry.comments:
+            comments[comment.type] += 1
+
+        # what other statistics do we want from uniprot?
+
+    print 'Total Uniprot entries: %d' % entries.count()
+    print 'Unique accession #s: %d' % len(accessions)
+    print 'Unique references: %d' % len(references)
+    print 'Unique comment types: %d' % len(comments)
+
 def locatestats(session=None):
     if session is None: session = backend.create_session()
     entries = session.query(locatedb.models.Entry)
+
+    species = defaultdict(int)
+    protein_sources = defaultdict(int)
+    protein_accns = defaultdict(int)
+    predictions = defaultdict(int)
+    references = defaultdict(int)
+    extrefs = defaultdict(int)
+    extannots = defaultdict(int)
+
+    for entry in entries:
+        protein_sources[entry.source_name] += 1
+        protein_accns[entry.accn] += 1
+
+        for prediction in entry.predictions:
+            predictions[prediction.method] += 1
+
+        for reference in entry.references:
+            references[reference.accn] += 1
+
+        for annot in entry.annotations:
+            extannots[annot.source_name] += 1
+
+        for xref in entry.xrefs:
+            extrefs[xref.source_name] += 1
+
+    print 'Total LOCATE entries: %d' % entries.count()
+    for organism in species.keys():
+        print '\tTotal %s entries: %d' % (organism, species[organism])
+    print 'Protein data sources: %d' % len(protein_sources)
+    print 'Unique protein accession #s: %d' % len(protein_accns)
+    print 'Unique SCL prediction methods: %d' % len(predictions)
+    print 'Unique references cited: %d' % len(references)
+    print 'Unique external annotations: %d' % len(extannots)
+    print 'Unique external references: %d' % len(extrefs)
 
 def mgistats(session=None):
     if session is None: session = backend.create_session()

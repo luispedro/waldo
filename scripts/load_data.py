@@ -13,7 +13,8 @@ from os import path
 # Put to "dev" to set the application in development mode - namely,
 # it loads only the small versions of the database files found in the
 # "tests/data" folder
-MODE = 'dev'
+#MODE = 'dev'
+MODE = 'testing'
 
 _basedir = path.dirname(path.abspath(__file__))
 _testdir = None
