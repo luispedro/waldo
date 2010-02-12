@@ -1,8 +1,8 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-import uniprot.retrieve
-import mgi.retrieve
-import locatedb.retrieve
+import waldo.uniprot.retrieve
+import waldo.mgi.retrieve
+import waldo.locate.retrieve
 
 def searchby(request):
     if request.method == 'GET':
@@ -11,14 +11,14 @@ def searchby(request):
 
 def search(request, ensemblid):
     '''
-    uniprot_name = uniprot.retrieve.from_ensembl_gene_id(ensemblid)
-    uniprot_go_terms = uniprot.retrieve.retrieve_go_annotations(uniprot_name)
+    uniprot_name = waldo.uniprot.retrieve.from_ensembl_gene_id(ensemblid)
+    uniprot_go_terms = waldo.uniprot.retrieve.retrieve_go_annotations(uniprot_name)
 
-    mgi_id = mgi.retrieve.from_ensembl_gene_id(ensemblid)
-    mgi_go_terms = mgi.retrieve.retrieve_go_annotations(mgi_id)
+    mgi_id = waldo.mgi.retrieve.from_ensembl_gene_id(ensemblid)
+    mgi_go_terms = waldo.mgi.retrieve.retrieve_go_annotations(mgi_id)
 
-    locate_id = locatedb.retrieve.from_ensembl_gene_id(ensemblid)
-    locate_go_terms = locatedb.retrieve.retrieve_go_annotations(locate_id)
+    locate_id = waldo.locate.retrieve.from_ensembl_gene_id(ensemblid)
+    locate_go_terms = waldo.locate.retrieve.retrieve_go_annotations(locate_id)
     return render_to_response(
                 'results.html',
                 {

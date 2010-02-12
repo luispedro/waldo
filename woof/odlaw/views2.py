@@ -1,8 +1,8 @@
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
-import uniprot.retrieve
-import mgi.retrieve
-import locatedb.retrieve
+import waldo.uniprot.retrieve
+import waldo.mgi.retrieve
+import waldo.locate.retrieve
 
 def searchby(request):
     if request.method == 'GET':
