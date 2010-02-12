@@ -1,6 +1,6 @@
-import backend
+import waldo.backend
 
 def test_backend():
-    assert backend.Base
-    assert backend.engine
+    assert waldo.backend.Base
+    assert waldo.backend.engine
 

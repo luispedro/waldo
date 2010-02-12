@@ -22,7 +22,7 @@
 
 from __future__ import division
 from sqlalchemy import and_
-from backend import create_session
+from waldo.backend import create_session
 import models
 
 def is_cellular_component(go_id, session=None):

@@ -25,7 +25,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from os import path
 
-database_file = path.abspath(path.join(path.abspath(path.dirname(__file__)), '..', 'waldo.sqlite3'))
+database_file = path.abspath(path.join(path.abspath(path.dirname(__file__)), '..', '..', 'waldo.sqlite3'))
 
 Base = declarative_base()
 engine = create_engine('sqlite:///' + database_file, echo=False)

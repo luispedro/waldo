@@ -4,10 +4,10 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-import backend
 from sqlalchemy import and_
-from locatedb.models import Entry
-from translations.services import translate
+from waldo import backend
+from waldo.locate.models import Entry
+from waldo.translations.services import translate
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''

@@ -4,10 +4,10 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-import backend
+import waldo.backend
 from sqlalchemy import and_
-from uniprot.models import Entry
-from translations.services import translate
+from waldo.uniprot.models import Entry
+from waldo.translations.services import translate
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
@@ -39,6 +39,6 @@ def retrieve_go_annotations(name, session=None):
     -------
       go_ids : list of go terms (of the form "GO:00...")
     '''
-    if session is None: session = backend.create_session()
+    if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
     return [go.go_id for go in entr.go_annotations]

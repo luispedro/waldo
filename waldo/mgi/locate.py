@@ -21,11 +21,11 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-import util.proteinlocations
+import waldo.util.proteinlocations
 
 # location of REQUIRED database files on the server
-associations = util.proteinlocations.PREFIX + 'gene_association.mgi'
-ensembl      = util.proteinlocations.PREFIX + 'MRK_ENSEMBL.rpt'
+associations = waldo.util.proteinlocations.PREFIX + 'gene_association.mgi'
+ensembl      = waldo.util.proteinlocations.PREFIX + 'MRK_ENSEMBL.rpt'
 
 def locate(ensemblegeneid):
 	'''

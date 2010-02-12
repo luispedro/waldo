@@ -24,7 +24,7 @@ from __future__ import division
 from collections import defaultdict
 from os import path
 
-from translations.models import Translation
+from waldo.translations.models import Translation
 import models
 
 _basedir = path.dirname(path.abspath(__file__))

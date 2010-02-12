@@ -23,7 +23,7 @@ from __future__ import division
 import numpy as np
 import urllib
 import re
-import util.proteinlocations
+import waldo.util.proteinlocations
 
 __all__ = ['MUS_MUSCULUS','locate']
 

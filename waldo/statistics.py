@@ -21,17 +21,17 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-import backend
-from sqlalchemy import and_
-import uniprot.models
-import mgi.models
-import esldb.models
-import locatedb.models
-from translations.services import translate
 from collections import defaultdict
+from sqlalchemy import and_
+import waldo.backend
+import waldo.uniprot.models
+import waldo.mgi.models
+import waldo.esldb.models
+import waldo.locate.models
+from waldo.translations.services import translate
 
 def esldbstats(session=None):
-    if session is None: session = backend.create_session()
+    if session is None: session = waldo.backend.create_session()
 
     # annotation type counts
     annot_uniprot = 0
@@ -53,7 +53,7 @@ def esldbstats(session=None):
     # species counts
     species = defaultdict(int)
 
-    entries = session.query(esldb.models.Entry)
+    entries = session.query(waldo.esldb.models.Entry)
     for entry in entries:
         species[entry.species] += 1
         for annotation in entry.annotations:
@@ -82,8 +82,8 @@ def esldbstats(session=None):
     print 'Entries with Uniprot verification:\n\tBy entry ID: %d\n\tBy homology: %d\n\tBy entry ID and homology: %d\n\tNeither: %d' % (specific_entry_only, homolog_only, entry_and_homolog, neither)
 
 def uniprotstats(session=None):
-    if session is None: session = backend.create_session()
-    entries = session.query(uniprot.models.Entry)
+    if session is None: session = waldo.backend.create_session()
+    entries = session.query(waldo.uniprot.models.Entry)
 
     accessions = defaultdict(int)
     references = defaultdict(int)
@@ -107,8 +107,8 @@ def uniprotstats(session=None):
     print 'Unique comment types: %d' % len(comments)
 
 def locatestats(session=None):
-    if session is None: session = backend.create_session()
-    entries = session.query(locatedb.models.Entry)
+    if session is None: session = waldo.backend.create_session()
+    entries = session.query(waldo.locate.models.Entry)
 
     species = defaultdict(int)
     protein_sources = defaultdict(int)
@@ -145,8 +145,8 @@ def locatestats(session=None):
     print 'Unique external references: %d' % len(extrefs)
 
 def mgistats(session=None):
-    if session is None: session = backend.create_session()
-    entries = session.query(mgi.models.Entry)
+    if session is None: session = waldo.backend.create_session()
+    entries = session.query(waldo.mgi.models.Entry)
 
     # number of unique PubMed references
     pubmedids = defaultdict(int)

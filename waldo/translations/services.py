@@ -4,8 +4,8 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-import backend
-from translations.models import Translation
+import waldo.backend
+from waldo.translations.models import Translation
 from sqlalchemy import and_
 
 def translate(name, input_namespace, output_namespace, session=None):
@@ -25,7 +25,7 @@ def translate(name, input_namespace, output_namespace, session=None):
       name : result of translation or None.
     '''
     if session is None:
-        session = backend.create_session()
+        session = waldo.backend.create_session()
     trans = session.query(Translation).filter(
                     and_(Translation.input_namespace == input_namespace,
                     Translation.input_name == name,

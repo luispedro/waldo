@@ -8,7 +8,7 @@ import amara
 import models
 from os import path
 from collections import defaultdict
-from translations.models import Translation
+from waldo.translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../data'))

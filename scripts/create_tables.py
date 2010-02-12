@@ -20,14 +20,14 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 
-import backend
+import waldo.backend
 
-import uniprot.models
-import go.models
-import mgi.models
-import locatedb.models
-import esldb.models
-import translations.models
+import waldo.uniprot.models
+import waldo.go.models
+import waldo.mgi.models
+import waldo.locate.models
+import waldo.esldb.models
+import waldo.translations.models
 
-backend.create_tables()
+waldo.backend.create_tables()
 

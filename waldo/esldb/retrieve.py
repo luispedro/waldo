@@ -6,8 +6,8 @@
 from __future__ import division
 import backend
 from sqlalchemy import and_
-from esldb.models import Entry
-from translations.services import translate
+from waldo.esldb.models import Entry
+from waldo.translations.services import translate
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''

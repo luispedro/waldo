@@ -27,8 +27,8 @@ import models
 import gzip
 from os import path
 
-import go
-from translations.models import Translation
+import waldo.go
+from waldo.translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../data'))
@@ -51,7 +51,7 @@ def load(dirname=None, create_session=None):
     if dirname is None: dirname = _datadir
     filename = path.join(dirname, _inputfilename)
     if create_session is None:
-        import backend
+        from waldo import backend
         create_session = backend.create_session
     session = create_session()
     uniprot_nss = { u'uniprot' : u'http://uniprot.org/uniprot', }
@@ -94,7 +94,7 @@ def load(dirname=None, create_session=None):
                     session.add(t)
             elif dbref.type == 'Go':
                 id = dbref.id
-                if go.is_cellular_component(id):
+                if waldo.go.is_cellular_component(id):
                     go_annotations.append( models.GoAnnotation(id) )
         entry = models.Entry(name, accessions, comments, references, go_annotations)
         session.add(entry)

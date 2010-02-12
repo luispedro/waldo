@@ -3,11 +3,11 @@
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
-import mgi.load
-import go.load
-import uniprot.load
-import locatedb.load
-import esldb.load
+import waldo.mgi.load
+import waldo.go.load
+import waldo.uniprot.load
+import waldo.locate.load
+import waldo.esldb.load
 from os import path
 
 # Put to "dev" to set the application in development mode - namely,
@@ -22,8 +22,8 @@ _testdir = None
 if MODE is 'dev':
     _testdir = path.abspath(path.join(_basedir, 'tests/data'))
 
-go.load.load(_testdir)
-mgi.load.load(_testdir)
-uniprot.load.load(_testdir)
-locatedb.load.load(_testdir)
-esldb.load.load(_testdir)
+waldo.go.load.load(_testdir)
+waldo.mgi.load.load(_testdir)
+waldo.uniprot.load.load(_testdir)
+waldo.locatedb.load.load(_testdir)
+waldo.esldb.load.load(_testdir)

@@ -1,4 +1,4 @@
-import protloc.uniprot
+import waldo.protloc.uniprot
 def test_uniprot():
-    res = protloc.uniprot.locate(ensembl='ENSMUSG00000034254')
+    res = waldo.protloc.uniprot.locate(ensembl='ENSMUSG00000034254')
     assert res
