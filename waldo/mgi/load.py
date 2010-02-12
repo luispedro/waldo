@@ -28,7 +28,7 @@ from waldo.translations.models import Translation
 import models
 
 _basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../data'))
+_datadir = path.abspath(path.join(_basedir, '../../data'))
 def load(dirname=None, create_session=None):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session})
@@ -53,8 +53,8 @@ def load(dirname=None, create_session=None):
     '''
     if dirname is None: dirname = _datadir
     if create_session is None:
-        import backend
-        create_session = backend.create_session
+        import waldo.backend
+        create_session = waldo.backend.create_session
     session = create_session()
     loaded = _load_gene_annotation(path.join(dirname, 'gene_association.mgi'), session)
     _load_mrk_ensembl(path.join(dirname, 'MRK_ENSEMBL.rpt'), session)

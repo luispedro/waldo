@@ -25,5 +25,5 @@ if MODE is 'dev':
 waldo.go.load.load(_testdir)
 waldo.mgi.load.load(_testdir)
 waldo.uniprot.load.load(_testdir)
-waldo.locatedb.load.load(_testdir)
+waldo.locate.load.load(_testdir)
 waldo.esldb.load.load(_testdir)

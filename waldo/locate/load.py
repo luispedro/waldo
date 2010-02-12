@@ -11,7 +11,7 @@ from collections import defaultdict
 from waldo.translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../data'))
+_datadir = path.abspath(path.join(_basedir, '../../data'))
 
 _mouse = 'LOCATE_mouse.xml'
 _human = 'LOCATE_human.xml'

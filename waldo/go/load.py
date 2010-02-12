@@ -27,8 +27,8 @@ import gzip
 from os import path
 
 _basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../data'))
-_inputfilename = 'gene_ontology.1_2.obo.gz'
+_datadir = path.abspath(path.join(_basedir, '../../data'))
+_inputfilename = 'gene_ontology.1_2.obo'
 
 def load(dirname=None, create_session=None):
     '''
@@ -46,12 +46,12 @@ def load(dirname=None, create_session=None):
     '''
     if dirname is None: dirname = _datadir
     if create_session is None:
-        import backend
-        create_session = backend.create_session
+        import waldo.backend
+        create_session = waldo.backend.create_session
     session = create_session()
     filename = path.join(dirname, _inputfilename)
-    if filename.endswith('.gz'):
-        input = gzip.GzipFile(filename)
+    if not path.exists(filename) and path.exists(filename + '.gz'):
+        input = gzip.GzipFile(filename + '.gz')
     else:
         input = file(filename)
 

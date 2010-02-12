@@ -31,7 +31,7 @@ import waldo.go
 from waldo.translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../data'))
+_datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'uniprot_sprot.xml.gz'
 
 def load(dirname=None, create_session=None):
