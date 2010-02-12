@@ -14,8 +14,8 @@ def search(request, ensemblid):
                 'condition':'drugged', 'location':'mitochondrial', 'references':'?', 
                 'evidence':'?', 'source':'MyDB'}, 
                 {'protein':'ABC_123', 'organism':'Homo sapiens', 'celltype':'?', 
-                'condition':'ok', 'location':'cytoplasm', 'references':'??', '
-                evidence':'????', 'source':'otherDB'}]
+                'condition':'ok', 'location':'cytoplasm', 'references':'??',
+                'evidence':'????', 'source':'otherDB'}]
     return render_to_response(
                 'results2.html',
                 {

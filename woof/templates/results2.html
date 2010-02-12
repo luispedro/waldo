@@ -3,7 +3,7 @@
 <h1>Results</h1>
 <p>Results for {{ search_term_type }} <em>{{ search_term_value }}</em>
 
-<table cellspacing="0" cellpadding="5" class="results" width="100%">
+<table cellspacing="0" cellpadding="5" class="results">
 <tr>
   <th>Protein</th>
   <th>Organism</th>
@@ -23,8 +23,8 @@
   <td>{{ element.condition }}</td>
   <td>{{ element.location }}</td>
   <td>{{ element.references }}</td>
-  <td>{{ element.evidence }}</td>
-  <td>{{ element.source }}</td>
+  <td>{{ element.evidence }}</td> <!-- experiments, predictions ? -->
+  <td>{{ element.source }}</td> <!-- original database -->
 </tr>
 {% endfor %}
 </table>
