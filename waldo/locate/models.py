@@ -37,6 +37,21 @@ class Isoform(Base):
         self.isoform_class = isoclass
         self.isoform_name = isoname
 
+class Image(Base):
+    __tablename__ = 'locate_images'
+    image_id = Column(Integer(11), primary_key=True)
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'))
+    filename = Column(String(50))
+    is_coloc = Column(Boolean)
+    celltype = Column(String(100))
+    magnification = Column(String(30))
+    tag = Column(String(100))
+    epitope = Column(String(100))
+    channel = Column(String(100))
+    channel1 = Column(String(100), nullable=True)
+    channel2 = Column(String(100), nullable=True)
+    coloc = Column(String(100))
+
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
     predict_id = Column(Integer(11), primary_key=True)
@@ -58,6 +73,7 @@ class Location(Base):
     locate_id = Column(Integer(11), ForeignKey('locate_entries.locate_id'), nullable=True)
     literature_id = Column(Integer(11), ForeignKey('locate_literature.ref_id'), nullable=True)
     externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.annot_id'), nullable=True)
+    image_id = Column(Integer(11), ForeignKey('locate_images.image_id'), nullable=True)
     goid = Column(String(50))
     tier1 = Column(String(100), nullable=True)
     tier2 = Column(String(100), nullable=True)

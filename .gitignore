@@ -1,4 +1,7 @@
 *.pyc
 *.sqlite3
+*.sqlite3.*
 *.swp
+switch.sh
+data.*/
 build/
