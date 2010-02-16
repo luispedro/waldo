@@ -63,6 +63,7 @@ def load(dirname=None, create_session=None):
     for entry in amara.pushbind(input, '//uniprot:entry', prefixes=uniprot_nss):
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
+        sequence = unicode(entry.sequence)
         comments = [models.Comment(c.type, unicode(c).strip()) for c in getattr(entry, 'comments', [])]
         references = []
         go_annotations = []
@@ -96,7 +97,7 @@ def load(dirname=None, create_session=None):
                 id = dbref.id
                 if waldo.go.is_cellular_component(id):
                     go_annotations.append( models.GoAnnotation(id) )
-        entry = models.Entry(name, accessions, comments, references, go_annotations)
+        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence)
         session.add(entry)
         loaded += 1
         if (loaded % 1024) == 0:

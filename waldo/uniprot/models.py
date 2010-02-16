@@ -21,7 +21,7 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, Text
 from sqlalchemy.orm import relation, backref
 from waldo.backend import Base
 
@@ -79,8 +79,9 @@ class Entry(Base):
     references = relation(Reference)
     comments = relation(Comment)
     go_annotations = relation(GoAnnotation)
+    sequence = Column(Text)
 
-    def __init__(self, name, accessions, comments, references, go_annotations):
+    def __init__(self, name, accessions, comments, references, go_annotations, sequence):
         self.name = name
         if type(accessions[0]) in (str, unicode):
             accessions = map(Accession, accessions)
@@ -88,6 +89,7 @@ class Entry(Base):
         self.references = references
         self.comments = comments
         self.go_annotations = go_annotations
+        self.sequence = sequence
 
     def __repr__(self):
         return '<Uniprot Entry: %s>' % self.name
