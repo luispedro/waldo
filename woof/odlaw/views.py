@@ -153,7 +153,7 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
                 'organism': esldb_entry.species,
                 'celltype': '-',
                 'condition': '-',
-                'location': '<br />'.join(['%s: %s' % (annot.type, annot.value) for annot in esldb_entry.annotations]),
+                'location': '<br />'.join(['<b>%s</b>: %s' % (annot.type, annot.value.split(';')[0]) for annot in esldb_entry.annotations]),
                 'references': '<br />'.join(['<a href="http://www.uniprot.org/uniprot/%s">%s</a>' % (entry.uniprot_entry, entry.uniprot_entry) for entry in esldb_entry.uniprot_entries]),
                 'evidence': '<br />'.join(['<a href="http://www.uniprot.org/uniprot/%s">%s</a>' % (homolog.uniprot_homolog, homolog.uniprot_homolog) for homolog in esldb_entry.uniprot_homologs]),
                 'source': '<a href="http://gpcr.biocomp.unibo.it/esldb/">eSLDB</a>',
