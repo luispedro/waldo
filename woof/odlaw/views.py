@@ -1,9 +1,11 @@
+from collections import defaultdict
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
 import waldo.esldb.retrieve
+import waldo.predictions.retrieve
 from waldo.translations.services import translate
 import waldo.backend
 
@@ -27,10 +29,17 @@ def searchby(request):
         return HttpResponseRedirect('/search/%s/%s' % (key, value))
 
 def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None, esldbid=None):
+    predictions = None
     if ensemblgene is not None:
         results = _lcd(ensemblgene)
         search_term_type = 'Ensembl gene'
         search_term_value = ensemblgene
+        predictions = waldo.predictions.retrieve.retrieve_predictions(ensemblgene)
+        predictions_grouped = defaultdict(list)
+        for p in predictions:
+            predictions_grouped[p.predictor].append(p)
+        predictions = predictions_grouped.items()
+        
 
     elif ensemblprot is not None:
         results = _lcd(ensemblpeptide=ensemblprot)
@@ -71,6 +80,7 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
                     'search_term_type' : search_term_type,
                     'search_term_value' : search_term_value,
                     'all_results' : results,
+                    'predictions' : predictions,
                 })
 
 def _lcd(ensemblgene=None, ensemblpeptide=None):

@@ -3,6 +3,7 @@
 <h1>Results</h1>
 <p>Searched by "{{ search_term_type }}" for "<em>{{ search_term_value }}</em>"
 
+<h2>Database Results</h2>
 <table cellspacing="0" cellpadding="5" class="results">
 <tr>
   <th>Protein</th>
@@ -28,5 +29,20 @@
 </tr>
 {% endfor %}
 </table>
+
+<h2>Prediction Results</h2>
+
+{% if predictions %}
+    {% for pred in predictions %}
+        <p>Prediction algorithm: {{pred.0 }}
+            <ul>
+            {% for r in pred.1 %}
+                <li>{{r.prediction}} ({{r.strength}})</li>
+            {% endfor %}
+            </ul>
+    {% endfor %}
+{% else %}
+    <p>No prediction for this protein.</p>
+{% endif %}
 
 {% endblock %}
