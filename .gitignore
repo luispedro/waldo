@@ -2,6 +2,6 @@
 *.sqlite3
 *.sqlite3.*
 *.swp
-switch.sh
+switch.py
 data.*/
 build/

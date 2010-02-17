@@ -52,6 +52,18 @@ class Image(Base):
     channel2 = Column(String(100), nullable=True)
     coloc = Column(String(100))
 
+    def __init__(self, filename, is_coloc, celltype, magnification, tag, epitope, channel, channel1, channel2, coloc):
+        self.filename = filename
+        self.is_coloc = is_coloc
+        self.celltype = celltype
+        self.magnification = magnification
+        self.tag = tag
+        self.epitope = epitope
+        self.channel = channel
+        self.channel1 = channel1
+        self.channel2 = channel2
+        self.coloc = coloc
+
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
     predict_id = Column(Integer(11), primary_key=True)
@@ -156,8 +168,9 @@ class Entry(Base):
     annotations = relation(Annotation)
     locations = relation(Location)
     xrefs = relation(ExternalReference)
+    images = relation(Image)
 
-    def __init__(self, id, source_name, source_id, accn, isoforms, predictions, references, annotations, locations, xrefs, dbtype=None):
+    def __init__(self, id, source_name, source_id, accn, isoforms, predictions, references, annotations, locations, images, xrefs, dbtype=None):
         self.locate_id = id
         self.source_name = source_name
         self.source_id = source_id
@@ -168,4 +181,5 @@ class Entry(Base):
         self.references = references
         self.annotations = annotations
         self.locations = locations
+        self.images = images
         self.xrefs = xrefs

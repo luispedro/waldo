@@ -38,8 +38,8 @@ def load(dirname=None, create_session=None):
     '''
     if dirname is None: dirname = _datadir
     if create_session is None:
-        import backend
-        create_session = backend.create_session
+        import waldo.backend
+        create_session = waldo.backend.create_session
     session = create_session()
 
     # load the mouse and human separately
@@ -68,10 +68,27 @@ def _loadfile(filename, dbtype, session):
 
         # check the experimental data section for location information
         images = []
+        expData = []
         if hasattr(entry, 'experimental_data'):
             experimental = entry.experimental_data
             if hasattr(experimental, 'locations'):
-                images = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
+                expData = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
+            # also load the image data
+            reg_images = experimental.images
+            coloc_images = experimental.coloc_images
+            # are there any images?
+            if hasattr(reg_images, 'rep_image'):
+                img = reg_images.rep_image
+                images.append(models.Image(img.filename, False, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+            if hasattr(reg_images, 'image'):
+                for img in reg_images.image:
+                    images.append(models.Image(img.filename, False, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+            if hasattr(coloc_images, 'rep_coloc_image'):
+                img = coloc_images.rep_coloc_image
+                images.append(models.Image(img.filename, True, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+            if hasattr(coloc_images, 'coloc_image'):
+                for img in coloc_images.coloc_image:
+                    images.append(models.Image(img.filename, True, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
 
         # go through the annotations
         annots = []
@@ -123,7 +140,7 @@ def _loadfile(filename, dbtype, session):
 
         # create the object we're really interested in
         protein = entry.protein
-        locate_entry = models.Entry(entry.uid, str(protein.source.source_name), protein.source.source_id, str(protein.source.accn), isoforms, predicts, refs, annots, images, extrefs, dbtype)
+        locate_entry = models.Entry(entry.uid, str(protein.source.source_name), protein.source.source_id, str(protein.source.accn), isoforms, predicts, refs, annots, expData, images, extrefs, dbtype)
         session.add(locate_entry)
 
         # finally

@@ -10,7 +10,7 @@ import models
 from waldo.translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../data'))
+_datadir = path.abspath(path.join(_basedir, '../../data'))
 
 _mouse = 'eSLDB_Mus_musculus.txt'
 _human = 'eSLDB_Homo_sapiens.txt'
@@ -37,8 +37,8 @@ def load(dirname=None, create_session=None):
     '''
     if dirname is None: dirname = _datadir
     if create_session is None:
-        import backend
-        create_session = backend.create_session
+        import waldo.backend
+        create_session = waldo.backend.create_session
     session = create_session()
 
     # loop through the entries in the file
