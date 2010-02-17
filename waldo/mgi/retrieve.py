@@ -58,4 +58,4 @@ def retrieve_entry(id, session=None):
       entry : models.Entry object
     '''
     if session is None: session = waldo.backend.create_session()
-    return session.query(Entry).filter(Entry.mgi_id = id).first()
+    return session.query(Entry).filter(Entry.mgi_id == id).first()

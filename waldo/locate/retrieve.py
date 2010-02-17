@@ -76,7 +76,7 @@ def retrieve_entry(id, session=None):
     -------
       entry : A models.Entry object
     '''
-    if session is None: session = waldo.backend.create_session()
+    if session is None: session = backend.create_session()
     return session.query(Entry).filter(Entry.locate_id == id).first()
 
 def _splitGO(goids, curlist):
