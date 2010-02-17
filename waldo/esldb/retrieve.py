@@ -4,7 +4,7 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-import backend
+import waldo.backend
 from sqlalchemy import and_
 from waldo.esldb.models import Entry
 from waldo.translations.services import translate
@@ -40,7 +40,7 @@ def retrieve_location_annotations(id, session=None):
     -------
       locations : A list of locations in the format specified by eSLDB
     '''
-    if session is None: session = backend.create_session()
+    if session is None: session = waldo.backend.create_session()
     entry = session.query(Entry).filter(Entry.esldb_id == id).first()
     
     # eSLDB has several levels of locations: experimental, similarity, and predicted

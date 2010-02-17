@@ -4,7 +4,7 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-import backend
+import waldo.backend
 from waldo.mgi.models import Entry
 from waldo.translations.services import translate
 
@@ -38,6 +38,6 @@ def retrieve_go_annotations(mgi_id, session=None):
     -------
       go_ids : list of go terms (of the form "GO:00...")
     '''
-    if session is None: session = backend.create_session()
+    if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.mgi_id == mgi_id).first()
     return [go.go_id for go in entr.annotations]
