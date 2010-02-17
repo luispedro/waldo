@@ -1,10 +1,72 @@
 {% extends "base.html" %}
 {% block content %}
+
+<h3>Search by...</h3>
 <div style="text-align: center; ">
-<form action="/search/query" method="GET">
-Type in an Ensembl gene ID:
-<input type="text" name="ensemblid" value="ENSMUSG00000051391" size="32" />
-<input type="submit" value="Lookup" />
-</form>
+<table cellspacing="10" cellpadding="10" border="0">
+<tr>
+    <td>Ensembl gene ID:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="ensemblgene" value="ENSMUSG00000051391" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>Ensembl peptide ID:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="ensemblprot" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>Uniprot ID:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="uniprotid" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>MGI ID:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="mgiid" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>LOCATE ID:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="locateid" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>eSLDB ID:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="esldbid" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>Protein name:</td>
+    <td>
+        <form action="/search/query" method="get">
+        <input type="text" name="protname" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+</table>
 </div>
 {% endblock %}

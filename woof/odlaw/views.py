@@ -10,7 +10,6 @@ def searchby(request):
         return HttpResponseRedirect('/search/ensemblid/' + ensemblid)
 
 def search(request, ensemblid):
-    '''
     uniprot_name = waldo.uniprot.retrieve.from_ensembl_gene_id(ensemblid)
     uniprot_go_terms = waldo.uniprot.retrieve.retrieve_go_annotations(uniprot_name)
 
@@ -30,17 +29,3 @@ def search(request, ensemblid):
                     'locate_id' : locate_id,
                     'locate_go_terms' : locate_go_terms,
                 })
-    '''
-    testing = [{'protein' : 'atf6', 'organism': 'Mus musculus', 'celltype':'?', \
-    'condition':'drugged', 'location':'mitochondrial', 'references':'?', \
-    'evidence':'?', 'source':'MyDB'}, \
-    {'protein':'ABC_123', 'organism':'Homo sapiens', 'celltype':'?', \
-    'condition':'ok', 'location':'cytoplasm', 'references':'??', 'evidence':'?', \
-    'source':'otherDB'}]
-    return render_to_response(
-                'results2.html',
-                {
-                    'search_term_type' : 'free text search',
-                    'search_term_value' : 'any protein',
-                    'all_results' : testing,
-                })           
