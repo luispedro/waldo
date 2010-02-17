@@ -72,6 +72,16 @@ class Comment(Base):
         self.type = type
         self.text = text
 
+class Organism(Base):
+    __tablename__ = 'uniprot_organism_entry'
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
+    oid = Column(Integer, primary_key=True)
+    organism = Column(String(64))
+
+    def __init__(self, organism):
+        self.organism = organism
+
+
 class Entry(Base):
     __tablename__ = 'uniprot_entry'
     name = Column(String(32), nullable=False, primary_key=True)
@@ -80,16 +90,22 @@ class Entry(Base):
     comments = relation(Comment)
     go_annotations = relation(GoAnnotation)
     sequence = Column(Text)
+    organisms = relation(Organism)
 
-    def __init__(self, name, accessions, comments, references, go_annotations, sequence):
+
+    def __init__(self, name, accessions, comments, references, go_annotations, sequence, organisms):
         self.name = name
         if type(accessions[0]) in (str, unicode):
             accessions = map(Accession, accessions)
+        if organisms and type(organisms[0]) in (str, unicode):
+            organisms = map(Organism, organisms)
+
         self.accessions = accessions
         self.references = references
         self.comments = comments
         self.go_annotations = go_annotations
         self.sequence = sequence
+        self.organisms = organisms
 
     def __repr__(self):
         return '<Uniprot Entry: %s>' % self.name

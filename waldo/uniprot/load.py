@@ -97,7 +97,12 @@ def load(dirname=None, create_session=None):
                 id = dbref.id
                 if waldo.go.is_cellular_component(id):
                     go_annotations.append( models.GoAnnotation(id) )
-        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence)
+        organisms = []
+        for organism in getattr(entry, 'organism', ()):
+            for orgname in organism.name:
+                if orgname.type == u'scientific':
+                    organisms.append(unicode(orgname))
+        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
         if (loaded % 1024) == 0:
