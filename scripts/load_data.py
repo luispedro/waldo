@@ -9,8 +9,8 @@ import waldo.uniprot.load
 import waldo.locate.load
 import waldo.esldb.load
 
-mgi.load.load()
-go.load.load()
-uniprot.load.load()
-locate.load.load()
-esldb.load.load()
+waldo.mgi.load.load()
+waldo.go.load.load()
+waldo.uniprot.load.load()
+waldo.locate.load.load()
+waldo.esldb.load.load()
