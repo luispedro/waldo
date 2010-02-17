@@ -25,6 +25,23 @@ def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
     return translate(ensembl_gene_id, 'ensembl:gene_id', 'uniprot:name', session)
 
+def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
+    '''
+    name = from ensembl_peptide_id(ensembl_peptide_id, session={backend.create_session()})
+
+    Convert ensembl_peptide_id to Uniprot name/ID.
+
+    Parameters
+    ----------
+      ensembl_peptide_id : Ensembl protein ID
+      session : SQLAlchemy session to use (default: create a new one)
+
+    Returns
+    -------
+      name : Uniprot peptide name
+    '''
+    return translate(ensembl_peptide_id, 'ensembl:protein_id', 'uniprot:name', session)
+
 def retrieve_go_annotations(name, session=None):
     '''
     go_ids = retrieve_go_annotations(name, session={backend.create_session()})

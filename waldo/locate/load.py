@@ -137,6 +137,8 @@ def _loadfile(filename, dbtype, session):
                             subnamespace = 'peptide_id'
                         t = Translation('ensembl:' + subnamespace, str(elem.source.accn), 'locate:id', entry.uid)
                         session.add(t)
+                        t = Translation('locate:id', entry.uid, 'ensembl:%s' % subnamespace, str(elem.source.accn))
+                        session.ad(t)
 
         # create the object we're really interested in
         protein = entry.protein

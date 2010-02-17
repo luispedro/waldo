@@ -116,6 +116,9 @@ def _load_mrk_ensembl(filename, session):
                 Translation('ensembl:gene_id', ensembl_id, 'mgi:id', mgi_accession),
                 Translation('ensembl:gene_id', ensembl_id, 'mgi:symbol', marker_sym),
                 Translation('ensembl:gene_id', ensembl_id, 'mgi:name', marker_name),
+                Translation('mgi:id', mgi_accession, 'ensembl:gene_id', ensembl_id),
+                Translation('mgi:symbol', marker_sym, 'ensembl:gene_id', ensembl_id),
+                Translation('mgi:name', marker_name, 'ensemb:gene_id', ensembl_id),
                 ]
                 )
         if (i % 1024) == 0:

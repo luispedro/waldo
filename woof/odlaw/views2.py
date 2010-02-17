@@ -29,12 +29,12 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
     if ensemblgene is not None:
         uniprot_name = waldo.uniprot.retrieve.from_ensembl_gene_id(ensemblgene)
         mgi_id = waldo.mgi.retrieve.from_ensembl_gene_id(ensemblgene)
-        locate_id = waldo.mgi.retrieve.from_ensembl_gene_id(ensemblgene)
+        locate_id = waldo.locate.retrieve.from_ensembl_gene_id(ensemblgene)
 
         uniprot_entry = waldo.uniprot.retrieve.retrieve_entry(uniprot_name)
         mgi_entry = waldo.mgi.retrieve.retrieve_entry(mgi_id)
         locate_entry = waldo.locate.retrieve.retrieve_entry(locate_id)
-        testing = [{'protein' : 'atf6', 'organism': 'Mus musculus', 'celltype':'?', 
+        testing = [{'protein' : locate_id, 'organism': 'Mus musculus', 'celltype':'?', 
                 'condition':'drugged', 'location':'mitochondrial', 'references':'?', 
                 'evidence':'?', 'source':'MyDB'}, 
                 {'protein':'ABC_123', 'organism':'Homo sapiens', 'celltype':'?', 
@@ -45,8 +45,14 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
 
     elif ensemblprot is not None:
         esldb_name = waldo.esldb.retrieve.from_ensembl_peptide_id(ensemblprot)
+        uniprot_name = waldo.uniprot.retrieve.from_ensembl_peptide_id(ensemblprot)
+        
         esldb_entry = waldo.esldb.retrieve.retrieve_entry(esldb_name)
+        uniprot_entry = waldo.uniprot.retrieve.retrieve_entry(uniprot_name)
 
+        testing = [{'protein' : esldb_name, 'organism': 'Mus musculus', 'celltype':'?', 
+                'condition':'drugged', 'location':'mitochondrial', 'references':'?', 
+                'evidence':'?', 'source':'MyDB'}] 
         search_term_type = 'Ensembl peptide'
         search_term_value = ensemblprot
     

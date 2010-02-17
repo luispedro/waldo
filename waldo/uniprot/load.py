@@ -84,6 +84,8 @@ def load(dirname=None, create_session=None):
             if dbref.type == 'Ensembl':
                 t = Translation('ensembl:transcript_id', dbref.id, 'uniprot:name', name)
                 session.add(t)
+                t = Translation('uniprot:name', name, 'ensembl:transcript_id', dbref.id)
+                session.add(t)
                 for prop in dbref.property:
                     if prop.type == 'gene designation':
                         subnamespace = 'gene_id'
@@ -92,6 +94,8 @@ def load(dirname=None, create_session=None):
                     else:
                         continue
                     t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)
+                    session.add(t)
+                    t = Translation('uniprot:name', name, 'ensembl:%s' % subnamespace, prop.value)
                     session.add(t)
             elif dbref.type == 'Go':
                 id = dbref.id
