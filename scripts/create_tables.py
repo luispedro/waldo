@@ -28,6 +28,7 @@ import waldo.mgi.models
 import waldo.locate.models
 import waldo.esldb.models
 import waldo.translations.models
+import waldo.predictions.models
 
 waldo.backend.create_tables()
 
