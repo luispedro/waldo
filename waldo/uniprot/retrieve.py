@@ -42,3 +42,21 @@ def retrieve_go_annotations(name, session=None):
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
     return [go.go_id for go in entr.go_annotations]
+
+def retrieve_entry(id, session=None):
+    '''
+    entry = retrieve_entry(id, session={backend.create_session()})
+
+    Retrieve Uniprot entry based on its identifier.
+
+    Parameters
+    ----------
+      id : Uniprot-specific identifier
+      session: SQLAlchemy session to use (default: create a new one)
+
+    Returns
+    -------
+      entry : models.Entry object
+    '''
+    if session is None: session = waldo.backend.create_session()
+    return session.query(Entry).filter(Entry.name == id).first()

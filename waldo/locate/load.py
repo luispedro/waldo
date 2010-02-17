@@ -79,16 +79,16 @@ def _loadfile(filename, dbtype, session):
             # are there any images?
             if hasattr(reg_images, 'rep_image'):
                 img = reg_images.rep_image
-                images.append(models.Image(img.filename, False, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+                images.append(models.Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
             if hasattr(reg_images, 'image'):
                 for img in reg_images.image:
-                    images.append(models.Image(img.filename, False, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+                    images.append(models.Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
             if hasattr(coloc_images, 'rep_coloc_image'):
                 img = coloc_images.rep_coloc_image
-                images.append(models.Image(img.filename, True, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+                images.append(models.Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
             if hasattr(coloc_images, 'coloc_image'):
                 for img in coloc_images.coloc_image:
-                    images.append(models.Image(img.filename, True, img.celltype, img.magnification, img.tag, img.epitope, img.channel, getattr(img, 'channel1', None), getattr(img, 'channel2', None), img.coloc))
+                    images.append(models.Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
 
         # go through the annotations
         annots = []

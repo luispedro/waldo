@@ -9,22 +9,21 @@ from sqlalchemy import and_
 from waldo.esldb.models import Entry
 from waldo.translations.services import translate
 
-def from_ensembl_gene_id(ensembl_gene_id, session=None):
+def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     '''
-    name = from_ensembl_gene_id(ensembl_gene_id, session={backend.create_session()})
+    name = from_ensembl_peptide_id(ensembl_peptide_id, session={backend.create_session()})
 
-    Convert ensembl_gene_id to eSLDB identifier.
+    Convert ensembl_peptide_id to eSLDB identifier.
 
     Parameters
     ----------
-      ensembl_gene_id : Ensembl gene ID
+      ensembl_peptide_id : Ensembl peptide ID
       session : SQLAlchemy session to use (default: call backend.create_session())
     Returns
     -------
       uid : eSLDB peptide
     '''
-    # FIXME: This must first convert the gene ID to a peptide ID!
-    return translate(ensembl_gene_id, 'ensembl:gene_id', 'esldb:id', session)
+    return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'esldb:id', session)
 
 def retrieve_location_annotations(id, session=None):
     '''
@@ -46,4 +45,22 @@ def retrieve_location_annotations(id, session=None):
     # eSLDB has several levels of locations: experimental, similarity, and predicted
     # some may be blank, others not. They also need to be split on semi-colons, as
     # can be lengthy
-    
+    return [{'type':type, 'value':value} for type, value in entry.annotations]
+
+def retrieve_entry(id, session=None):
+    '''
+    entry = retrieve_entry(id, session={backend.create_session()})
+
+    Retrieve an Entry object based on its ID
+
+    Parameters
+    ----------
+      id : eSLDB peptide ID
+      session : SQLAlchemy session to use (default: create a new one)
+
+    Returns
+    -------
+      entry : A models.Entry object
+    '''
+    if session is None: session = waldo.backend.create_session()
+    return session.query(Entry).filter(Entry.esldb_id == id).first()

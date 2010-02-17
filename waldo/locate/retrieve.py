@@ -61,6 +61,24 @@ def retrieve_go_annotations(id, session=None):
 
     return locations
 
+def retrieve_entry(id, session=None):
+    '''
+    entry = retrieve_entry(id, session={backend.create_session()})
+
+    Retrieve an Entry object based on its ID
+
+    Parameters
+    ----------
+      id : LOCATE database ID
+      session : SQLAlchemy session to use (default: create a new one)
+
+    Returns
+    -------
+      entry : A models.Entry object
+    '''
+    if session is None: session = waldo.backend.create_session()
+    return session.query(Entry).filter(Entry.locate_id == id).first()
+
 def _splitGO(goids, curlist):
     retval = []
     ids = goids.split(';')

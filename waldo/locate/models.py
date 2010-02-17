@@ -64,6 +64,13 @@ class Image(Base):
         self.channel2 = channel2
         self.coloc = coloc
 
+        # Also a hack to get around the use of 'getattr' in loading
+        # FIXME 
+        if channel1 is 'None':
+            self.channel1 = None
+        if channel2 is 'None':
+            self.channel2 = None
+
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
     predict_id = Column(Integer(11), primary_key=True)

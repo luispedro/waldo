@@ -41,3 +41,21 @@ def retrieve_go_annotations(mgi_id, session=None):
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.mgi_id == mgi_id).first()
     return [go.go_id for go in entr.annotations]
+
+def retrieve_entry(id, session=None):
+    '''
+    entry = retrieve_entry(id, session={backend.create_session()})
+
+    Retrieve MGI Entry object by its MGI ID.
+
+    Parameters
+    ----------
+      id : MGI ID
+      session: SQLAlchemy session to use (default: create a new one)
+
+    Returns
+    -------
+      entry : models.Entry object
+    '''
+    if session is None: session = waldo.backend.create_session()
+    return session.query(Entry).filter(Entry.mgi_id = id).first()
