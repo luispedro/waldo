@@ -25,6 +25,22 @@ def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
     return translate(ensembl_gene_id, 'ensembl:gene_id', 'locate:id', session)
 
+def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
+    '''
+    name = from_ensembl_peptide_id(ensembl_peptide_id, session={backend.create_session()})
+
+    Convert ensembl_peptide_id to LOCATE uid.
+
+    Parameters
+    ----------
+      ensembl_peptide_id : Ensembl peptide ID
+      session : SQLAlchemy session to use (default: call backend.create_session())
+    Returns
+    -------
+      uid : LOCATE protein identifier
+    '''
+    return translate(ensembl_peptide_id, 'ensembl:protein_id', 'locate:id', session)
+
 def retrieve_go_annotations(id, session=None):
     '''
     go_ids = retrieve_go_annotations(name, session={backend.create_session()})
