@@ -23,6 +23,7 @@
 from __future__ import division
 from collections import defaultdict
 from os import path
+from sqlalchemy.sql import exists
 
 from waldo.translations.models import Translation
 import models
@@ -139,4 +140,9 @@ def _load_pubmed_ids(filename, session):
         pubmed_ids = line.split('\t')
 
         # first, does mgi_id exist in our database?
-        # FIXME
+        if exists().where(models.Entry.mgi_id == mgi_id):
+            obj = session.query(models.Entry).filter(models.Entry.mgi_id == mgi_id)
+
+            # update the record to include the PubMed IDs
+            obj.pubmedids = pubmed_ids
+            session.commit()
