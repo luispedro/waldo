@@ -116,14 +116,14 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
     # for each object, put in correct format
     list = []
     if uniprot_entry is not None:
-        dict = {'protein':uniprot_entry.name, 
+        dict = {'protein' : uniprot_entry.name, 
                 'organism': '; '.join([organism.organism for organism in uniprot_entry.organisms]),
                 'celltype':'-', 
                 'condition':'-', 
                 'location': '; '.join(waldo.uniprot.retrieve.retrieve_go_annotations(uniprot_name)), 
                 'references': '<br />'.join([paper.title for paper in uniprot_entry.references]), 
                 'evidence':'<br />'.join([comment.text for comment in uniprot_entry.comments]), 
-                'source':'<a href="http://www.uniprot.org">Uniprot</a>',
+                'source':'<a href="http://www.uniprot.org/uniprot/%s">Uniprot</a>' % uniprot_entry.accessions[0].accession,
                 }
         list.append(dict)
     if mgi_entry is not None:
@@ -134,7 +134,7 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
                 'location':'; '.join(waldo.mgi.retrieve.retrieve_go_annotations(mgi_id)),
                 'references':'<br />'.join(['<a href="http://www.ncbi.nlm.nih.gov/pubmed/%s">%s</a>' % (annot.pubmedid, annot.pubmedid) for annot in mgi_entry.annotations]),
                 'evidence': '<br />'.join([annot.evidence and annot.evidence or 'None' for annot in mgi_entry.annotations]),
-                'source':'<a href="http://www.informatics.jax.org/">MGI</a>',
+                'source':'<a href="http://www.informatics.jax.org/searchtool/Search.do?query=%s">MGI</a>' % mgi_id,
                 }
         list.append(dict)
     if locate_entry is not None:
@@ -145,18 +145,18 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
                 'location': '; '.join(waldo.locate.retrieve.retrieve_go_annotations(locate_id)),
                 'references':'<br />'.join([ref.title for ref in locate_entry.references]),
                 'evidence': '<br />'.join(['<a href="http://locate.imb.uq.edu.au/data_images/%s/%s"><img height="50" width="50" src="http://locate.imb.uq.edu.au/data_images/%s/%s" /></a>' % (img.filename[0:3], img.filename, img.filename[0:3], img.filename) for img in locate_entry.images]),
-                'source':'<a href="http://locate.imb.uq.edu.au/">LOCATE</a>',
+                'source':'<a href="http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s">LOCATE</a>' % locate_id,
                 }
         list.append(dict)
     if esldb_entry is not None:
-        dict = {'protein': esldb_entry.esldb_id,
+        dict = {'protein': esldb_id,
                 'organism': esldb_entry.species,
                 'celltype': '-',
                 'condition': '-',
                 'location': '<br />'.join(['<b>%s</b>: %s' % (annot.type, annot.value.split(';')[0]) for annot in esldb_entry.annotations]),
                 'references': '<br />'.join(['<a href="http://www.uniprot.org/uniprot/%s">%s</a>' % (entry.uniprot_entry, entry.uniprot_entry) for entry in esldb_entry.uniprot_entries]),
                 'evidence': '<br />'.join(['<a href="http://www.uniprot.org/uniprot/%s">%s</a>' % (homolog.uniprot_homolog, homolog.uniprot_homolog) for homolog in esldb_entry.uniprot_homologs]),
-                'source': '<a href="http://gpcr.biocomp.unibo.it/esldb/">eSLDB</a>',
+                'source': '<a href="http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s">eSLDB</a>' % esldb_id,
                 }
         list.append(dict)
     return list

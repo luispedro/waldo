@@ -23,6 +23,7 @@
 from __future__ import division
 from collections import defaultdict
 from os import path
+from sqlalchemy.sql import exists
 
 from waldo.translations.models import Translation
 import models
@@ -58,6 +59,7 @@ def load(dirname=None, create_session=None):
     session = create_session()
     loaded = _load_gene_annotation(path.join(dirname, 'gene_association.mgi'), session)
     _load_mrk_ensembl(path.join(dirname, 'MRK_ENSEMBL.rpt'), session)
+    _load_pubmed_ids(path.join(dirname, 'MRK_Reference.rpt'), session)
     return loaded
 
 def _load_gene_annotation(filename, session):
@@ -124,3 +126,23 @@ def _load_mrk_ensembl(filename, session):
         if (i % 1024) == 0:
             session.commit()
     session.commit()
+
+def _load_pubmed_ids(filename, session):
+    '''
+    For each line in the file, determine if the referenced MGI ID exists in SQLite.
+    If so, insert the associated PubMed IDs into SQLite.
+    '''
+    for line in file(filename):
+        mgi_id, \
+        mrk_symbol, \
+        mrk_name, \
+        mrk_synonym, \
+        pubmed_ids = line.split('\t')
+
+        # first, does mgi_id exist in our database?
+        if exists().where(models.Entry.mgi_id == mgi_id):
+            obj = session.query(models.Entry).filter(models.Entry.mgi_id == mgi_id)
+
+            # update the record to include the PubMed IDs
+            obj.pubmedids = pubmed_ids
+            session.commit()

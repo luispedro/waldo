@@ -31,19 +31,18 @@ class GOAnnotation(Base):
     mgi_go_id = Column(Integer, primary_key=True)
     mgi_id = Column(String(32), ForeignKey('mgi_entry.mgi_id'))
     go_id = Column(String(15), nullable=False)
-    pubmedid = Column(Integer(11))
     evidence = Column(String(3), nullable=True)
 
-    def __init__(self, mgi_id, go_id, pubmedid=None, evidence=None):
+    def __init__(self, mgi_id, go_id, evidence=None):
         self.mgi_id = mgi_id
         self.go_id = go_id
-        self.pubmedid = pubmedid
         self.evidence = evidence
 
 class Entry(Base):
     __tablename__ = 'mgi_entry'
     mgi_id = Column(String(32), nullable=False, primary_key=True)
     name = Column(String(32))
+    pubmedids = Column(String(100), nullable=True)
     annotations = relation(GOAnnotation)
 
     def __init__(self, mgi_id, name):
