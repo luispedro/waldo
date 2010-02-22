@@ -102,8 +102,8 @@ def _process_file(filename, dbtype, session):
         # lines in the file with the same eSLDB_code AND ensembl peptide ID
         # hence we have to track each one as it occurs
         if ensembl_peptide not in entries[eSLDB_code]:
-            session.add(Translation('ensembl:protein_id', ensembl_peptide, 'esldb:id', eSLDB_code))
-            session.add(Translation('esldb:id', eSLDB_code, 'ensembl:protein_id', ensembl_peptide))
+            session.add(Translation('ensembl:peptide_id', ensembl_peptide, 'esldb:id', eSLDB_code))
+            session.add(Translation('esldb:id', eSLDB_code, 'ensembl:peptide_id', ensembl_peptide))
             entries[eSLDB_code].append(ensembl_peptide)
 
         # commit this session's additions

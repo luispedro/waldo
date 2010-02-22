@@ -90,7 +90,7 @@ def load(dirname=None, create_session=None):
                     if prop.type == 'gene designation':
                         subnamespace = 'gene_id'
                     elif prop.type == 'protein sequence ID':
-                        subnamespace = 'protein_id'
+                        subnamespace = 'peptide_id'
                     else:
                         continue
                     t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)

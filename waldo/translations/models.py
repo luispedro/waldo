@@ -8,6 +8,18 @@ from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relation, backref
 from waldo.backend import Base
 
+known_namespaces = (
+    'ensembl:peptide_id',
+    'ensembl:gene_id',
+    'ensembl:transcript_id',
+    'mgi:id',
+    'mgi:symbol',
+    'mgi:name',
+    'uniprot:name',
+    'locate:id',
+    'esldb:id',
+    )
+
 class Translation(Base):
     '''
     Logically, a two-column table:
@@ -34,6 +46,8 @@ class Translation(Base):
 
         There are no uniqueness guarantees by design.
         '''
+        assert input_namespace in known_namespaces, 'waldo.translation: unknown namespace "%s"' % input_namespace
+        assert output_namespace in known_namespaces, 'waldo.translation: unknown namespace "%s"' % output_namespace
         self.input_namespace = input_namespace
         self.input_name = input_name
         self.output_namespace = output_namespace
