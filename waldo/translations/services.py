@@ -5,7 +5,7 @@
 
 from __future__ import division
 import waldo.backend
-from waldo.translations.models import Translation
+from waldo.translations.models import Translation, verify_namespace
 from sqlalchemy import and_
 
 def translate(name, input_namespace, output_namespace, session=None):
@@ -26,6 +26,8 @@ def translate(name, input_namespace, output_namespace, session=None):
     '''
     if session is None:
         session = waldo.backend.create_session()
+    verify_namespace(input_namespace)
+    verify_namespace(output_namespace)
     trans = session.query(Translation).filter(
                     and_(Translation.input_namespace == input_namespace,
                     Translation.input_name == name,

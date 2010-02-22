@@ -20,6 +20,16 @@ known_namespaces = (
     'esldb:id',
     )
 
+def verify_namespace(namespace):
+    '''
+    verify_namespace(namespace)
+
+    Checks whether namespace is known.
+    Raises an exception if it not.
+    '''
+    assert namespace in known_namespaces, \
+        'waldo.translation: unknown namespace "%s"' % namespace
+
 class Translation(Base):
     '''
     Logically, a two-column table:
@@ -46,8 +56,8 @@ class Translation(Base):
 
         There are no uniqueness guarantees by design.
         '''
-        assert input_namespace in known_namespaces, 'waldo.translation: unknown namespace "%s"' % input_namespace
-        assert output_namespace in known_namespaces, 'waldo.translation: unknown namespace "%s"' % output_namespace
+        verify_namespace(input_namespace)
+        verify_namespace(output_namespace)
         self.input_namespace = input_namespace
         self.input_name = input_name
         self.output_namespace = output_namespace
