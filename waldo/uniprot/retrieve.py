@@ -40,7 +40,7 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     -------
       name : Uniprot peptide name
     '''
-    return translate(ensembl_peptide_id, 'ensembl:protein_id', 'uniprot:name', session)
+    return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'uniprot:name', session)
 
 def retrieve_go_annotations(name, session=None):
     '''

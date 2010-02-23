@@ -39,7 +39,7 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     -------
       uid : LOCATE protein identifier
     '''
-    return translate(ensembl_peptide_id, 'ensembl:protein_id', 'locate:id', session)
+    return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'locate:id', session)
 
 def retrieve_go_annotations(id, session=None):
     '''

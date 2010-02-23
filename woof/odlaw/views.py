@@ -68,7 +68,7 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
         search_term_value = protname
 
     elif esldbid is not None:
-        results = _lcd(ensemblpeptide=translate(esldbid, 'esldb:id', 'ensembl:protein_id'))
+        results = _lcd(ensemblpeptide=translate(esldbid, 'esldb:id', 'ensembl:peptide_id'))
         search_term_type = 'eSLDB ID'
         search_term_value = esldbid
 
@@ -132,7 +132,7 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
                 'celltype':'-',
                 'condition':'-',
                 'location':'; '.join(waldo.mgi.retrieve.retrieve_go_annotations(mgi_id)),
-                'references':'<br />'.join(['<a href="http://www.ncbi.nlm.nih.gov/pubmed/%s">%s</a>' % (annot.pubmedid, annot.pubmedid) for annot in mgi_entry.annotations]),
+                'references': mgi_entry.pubmedids != None and '<br />'.join('<a href="http://www.ncbi.nlm.nih.gov/pubmed/%s">%s</a>' % (pubmedid, pubmedid) for pubmedid in mgi_entry.pubmedids.split('|')) or 'None',
                 'evidence': '<br />'.join([annot.evidence and annot.evidence or 'None' for annot in mgi_entry.annotations]),
                 'source':'<a href="http://www.informatics.jax.org/searchtool/Search.do?query=%s">MGI</a>' % mgi_id,
                 }

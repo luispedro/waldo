@@ -38,7 +38,7 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     -------
       mgi_id : MGI ID
     '''
-    return translate(ensembl_peptide_id, 'ensembl:protein_id', 'mgi:id', session)
+    return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'mgi:id', session)
 
 def retrieve_go_annotations(mgi_id, session=None):
     '''
