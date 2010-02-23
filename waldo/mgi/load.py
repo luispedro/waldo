@@ -23,7 +23,6 @@
 from __future__ import division
 from collections import defaultdict
 from os import path
-from sqlalchemy.sql import exists
 
 from waldo.translations.models import Translation
 import models
@@ -132,6 +131,7 @@ def _load_pubmed_ids(filename, session):
     For each line in the file, determine if the referenced MGI ID exists in SQLite.
     If so, insert the associated PubMed IDs into SQLite.
     '''
+    unique = []
     for line in file(filename):
         mgi_id, \
         mrk_symbol, \
@@ -140,8 +140,8 @@ def _load_pubmed_ids(filename, session):
         pubmed_ids = line.split('\t')
 
         # first, does mgi_id exist in our database?
-        if exists().where(models.Entry.mgi_id == mgi_id):
-            obj = session.query(models.Entry).filter(models.Entry.mgi_id == mgi_id)
+        obj = session.query(models.Entry).filter(models.Entry.mgi_id == mgi_id).first()
+        if obj is not None:
 
             # update the record to include the PubMed IDs
             obj.pubmedids = pubmed_ids
