@@ -9,12 +9,13 @@ import models
 from os import path
 from collections import defaultdict
 from waldo.translations.models import Translation
+from zipfile import ZipFile
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 
-_mouse = 'LOCATE_mouse.xml'
-_human = 'LOCATE_human.xml'
+_mouse = 'LOCATE_mouse_v6_20081121.xml.zip'
+_human = 'LOCATE_human_v6_20081121.xml.zip'
 
 def load(dirname=None, create_session=None):
     '''
@@ -49,7 +50,8 @@ def load(dirname=None, create_session=None):
 
 def _loadfile(filename, dbtype, session):
     count = 0
-    input = file(filename)
+    arr = filename.split('/')
+    input = ZipFile(filename).open(arr[len(arr) - 1].replace('.zip', ''))
 
     # LOCATE doesn't define a namespace, so we don't need prefix information ?
     for entry in amara.pushbind(input, u'LOCATE_protein'):
