@@ -23,6 +23,7 @@
 from __future__ import division
 from sqlalchemy import and_
 from waldo.backend import create_session
+from waldo.go.models import Term
 import models
 
 def is_cellular_component(go_id, session=None):
@@ -47,3 +48,24 @@ def is_cellular_component(go_id, session=None):
                     .count()
                 )
 
+def id_to_term(go_id, session=None):
+    '''
+    term = id_to_term(go_id, session={waldo.backend.create_session()})
+
+    For a GO ID, returns the corresponding term.
+
+    Parameters
+    ----------
+      go_id : A GO ID (e.g., GO:123456789)
+      session : An SQLAlchemy session
+
+    Returns
+    -------
+      term : A GO term (e.g. "mitochondrion")
+    '''
+    if session is None: session = create_session()
+    term = session.query(Term).filter(Term.id == go_id).first()
+    if term is None:
+        return None
+    else:
+        return term.name
