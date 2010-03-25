@@ -66,6 +66,7 @@ def id_to_term(go_id, session=None):
     if session is None: session = create_session()
     term = session.query(Term).filter(Term.id == go_id).first()
     if term is None:
-        return None
+        # if there's no mapping, return the original id
+        return go_id
     else:
         return term.name

@@ -8,6 +8,7 @@ from sqlalchemy import and_
 from waldo import backend
 from waldo.locate.models import Entry
 from waldo.translations.services import translate
+from waldo.go.go import id_to_term
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
@@ -99,15 +100,6 @@ def _splitGO(goids, curlist):
     retval = []
     ids = goids.split(';')
     for goid in ids:
-        if goid not in curlist: retval.append(goid)
+        term = id_to_term(goid)
+        if term not in curlist: retval.append(term)
     return list(set(retval))
-
-def _extractGO(elemlist, currentlist):
-    retval = []
-    for elem in elemlist:
-        for location in elem.locations:
-            goids = location.goid.split(';')
-            for goid in goids:
-                if goid not in currentlist:
-                    retval.append(goid)
-    return retval

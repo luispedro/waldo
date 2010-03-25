@@ -7,6 +7,7 @@ from __future__ import division
 import waldo.backend
 from waldo.mgi.models import Entry
 from waldo.translations.services import translate
+from waldo.go.go import id_to_term
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
@@ -56,7 +57,7 @@ def retrieve_go_annotations(mgi_id, session=None):
     '''
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.mgi_id == mgi_id).first()
-    return [go.go_id for go in entr.annotations]
+    return [id_to_term(go.go_id, session) for go in entr.annotations]
 
 def retrieve_entry(id, session=None):
     '''
