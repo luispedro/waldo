@@ -78,23 +78,28 @@ def _load_gene_annotation(filename, session):
                 if not line == '!gaf-version: 2.0':
                     raise IOError("waldo.go.load: Cannot parse. Wrong GAF version.\nHeader line: %s" % line)
             continue
-        DB, \
-         DB_object_id, \
-         DB_object_symbol, \
-         qualifier, \
-         go_id, \
-         db_ref, \
-         evidence_code, \
-         with_or_from, \
-         aspect, \
-         DB_object_name, \
-         DB_object_synonym, \
-         DB_object_type, \
-         taxon, \
-         date, \
-         assigned_by, \
-         annotation_cross_products, \
-         gene_products = line.split('\t')
+        
+        try:
+            DB, \
+            DB_object_id, \
+            DB_object_symbol, \
+            qualifier, \
+            go_id, \
+            db_ref, \
+            evidence_code, \
+            with_or_from, \
+            aspect, \
+            DB_object_name, \
+            DB_object_synonym, \
+            DB_object_type, \
+            taxon, \
+            date, \
+            assigned_by, \
+            annotation_cross_products, \
+            gene_products = line.split('\t')
+        except ValueError:
+            pass
+            # don't really need to worry about this
 
         if aspect == 'C':
             if DB_object_id not in entries:
