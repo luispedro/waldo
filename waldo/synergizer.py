@@ -21,7 +21,11 @@
 
 from __future__ import division
 import urllib2
-import json 
+#forces 2.5 compliance
+try:
+    import json 
+except ImportError:
+    import simplejson as json
 
 def jsonrpc(url, method, args):
     '''
