@@ -81,7 +81,8 @@ class Grouping:
                 continue
 
             if key is 'uniprot':
-                app = '%s,%s' % (';'.join(waldo.uniprot.retrieve.retrieve_go_annotations(self.dict[key].name)), 'http://www.uniprot.org/uniprot/%s' % self.dict[key].accessions[0].accession)
+                locs = waldo.uniprot.retrieve.retrieve_go_annotations(self.dict[key].name)
+                app = '%s,%s' % (len(locs) == 0 and 'Unknown' or ';'.join(locs), 'http://www.uniprot.org/uniprot/%s' % self.dict[key].accessions[0].accession)
             elif key is 'mgi':
                 app = '%s,%s' % (';'.join(waldo.mgi.retrieve.retrieve_go_annotations(self.dict[key].mgi_id)), 'http://www.informatics.jax.org/searchtool/Search.do?query=%s' % self.dict[key].mgi_id)
             elif key is 'locate':
