@@ -7,6 +7,7 @@ from __future__ import division
 from collections import defaultdict
 from os import path
 import models
+import waldo.synergizer
 from waldo.translations.models import Translation
 
 _basedir = path.dirname(path.abspath(__file__))
@@ -42,8 +43,8 @@ def load(dirname=None, create_session=None):
     session = create_session()
 
     # loop through the entries in the file
-    count = _process_file(path.join(dirname, _mouse), 'mouse', session)
-    count += _process_file(path.join(dirname, _human), 'human', session)
+    count = _process_file(path.join(dirname, _mouse), 'Mus musculus', session)
+    count += _process_file(path.join(dirname, _human), 'Homo sapiens', session)
     return count
 
 def _process_file(filename, dbtype, session):
@@ -105,6 +106,12 @@ def _process_file(filename, dbtype, session):
             session.add(Translation('ensembl:peptide_id', ensembl_peptide, 'esldb:id', eSLDB_code))
             session.add(Translation('esldb:id', eSLDB_code, 'ensembl:peptide_id', ensembl_peptide))
             entries[eSLDB_code].append(ensembl_peptide)
+
+            # also, translate the peptide IDs to gene IDs
+            toadd = waldo.synergizer.translate_ensembl_peptide_to_ensembl_gene([ensembl_peptide], dbtype)[ensembl_peptide]
+            if toadd is not None:
+                session.add(Translation('ensembl:gene_id', toadd, 'esldb:id', eSLDB_code))
+                session.add(Translation('esldb:id', eSLDB_code, 'ensembl:gene_id', toadd))
 
         # commit this session's additions
         session.commit()

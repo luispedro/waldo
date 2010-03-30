@@ -73,5 +73,38 @@ def translate_ensembl_gene_to_ensembl_peptide(ids, organism='Mus Musculus'):
             vs = None
         results[k] = vs
     return results
+
+def translate_ensembl_peptide_to_ensembl_gene(ids, organism='Mus Musculus'):
+    '''
+    results = translate_ensembl_peptide_to_ensembl_gene(ids, organism='Mus Musculus')
+
+    Translates ensembl peptide IDs to ensembl gene IDs.
+
+    Parameters
+    ----------
+      ids: List of strings to translate
+      organism: The organism (default: Mus Musculus)
+
+    Results
+    -------
+      result: A dict of gene IDs, the key of which in the list corresponds
+      to the peptide ID in the list of peptides. At this time, it is believed 
+      that a peptide ID maps to one gene ID.
+    '''
+    
+    data = {
+        'authority': 'ensembl',
+        'species'  : organism,
+        'domain'   : 'ensembl_peptide_id',
+        'range'    : 'ensembl_gene_id',
+        'ids'      : ids,
+    }
+    results = {}
+    for r in jsonrpc(_SYNERGIZER_URL,'translate',[data]):
+        k = r[0]
+        vs = r[1:]
+        results[k] = vs[0]
+    return results
     
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
+
