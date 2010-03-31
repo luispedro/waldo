@@ -88,7 +88,7 @@ class Grouping:
             elif key is 'locate':
                 app = '%s,%s' % (';'.join(waldo.locate.retrieve.retrieve_go_annotations(self.dict[key].locate_id)), 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s' % self.dict[key].locate_id)
             elif key is 'esldb':
-                app = '%s,%s' % (';'.join([annot.value.split(';')[0] for annot in self.dict[key].annotations]), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
+                app = '%s,%s' % (';'.join([re.split(',|;', annot.value) for annot in self.dict[key].annotations]), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
             elif key is 'hpa':
                 # IMPLEMENT ME
                 pass
