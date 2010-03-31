@@ -40,7 +40,7 @@ def from_ensembl_gene_id(ensembl_gene_id, session=None):
     -------
       uid : eSLDB peptide
     ''' 
-    return None
+    return translate(ensembl_gene_id, 'ensembl:gene_id', 'esldb:id', session)
 
 def retrieve_location_annotations(id, session=None):
     '''
