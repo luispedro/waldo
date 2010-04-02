@@ -81,14 +81,18 @@ class Grouping:
                 continue
 
             if key is 'uniprot':
-                locs = waldo.uniprot.retrieve.retrieve_go_annotations(self.dict[key].name)
-                app = '%s,%s' % (len(locs) == 0 and 'Unknown' or ';'.join(locs), 'http://www.uniprot.org/uniprot/%s' % self.dict[key].accessions[0].accession)
+                locs = self._processLocations(waldo.uniprot.retrieve.retrieve_go_annotations(self.dict[key].name))
+                app = '%s,%s' % (';'.join(locs), 'http://www.uniprot.org/uniprot/%s' % self.dict[key].accessions[0].accession)
             elif key is 'mgi':
-                app = '%s,%s' % (';'.join(waldo.mgi.retrieve.retrieve_go_annotations(self.dict[key].mgi_id)), 'http://www.informatics.jax.org/searchtool/Search.do?query=%s' % self.dict[key].mgi_id)
+                locs = self._processLocations(waldo.mgi.retrieve.retrieve_go_annotations(self.dict[key].mgi_id))
+                app = '%s,%s' % (';'.join(locs), 'http://www.informatics.jax.org/searchtool/Search.do?query=%s' % self.dict[key].mgi_id)
             elif key is 'locate':
-                app = '%s,%s' % (';'.join(waldo.locate.retrieve.retrieve_go_annotations(self.dict[key].locate_id)), 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s' % self.dict[key].locate_id)
+                locs = self._processLocations(waldo.locate.retrieve.retrieve_go_annotations(self.dict[key].locate_id))
+                app = '%s,%s' % (';'.join(locs), 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s' % self.dict[key].locate_id)
             elif key is 'esldb':
-                app = '%s,%s' % (';'.join([re.split(',|;', annot.value)[0] for annot in self.dict[key].annotations]), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
+                arg = [annot.value for annot in self.dict[key].annotations]
+                locs = self._processLocations(arg)
+                app = '%s,%s' % (';'.join(locs), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
             elif key is 'hpa':
                 # IMPLEMENT ME
                 pass
@@ -96,5 +100,30 @@ class Grouping:
             retval += ',' + app
         return retval
 
+    def _processLocations(self, locations):
+        '''
+        The purpose of this function is to remove duplicate entries, as well as
+        stripping out unnecessary punctuation.
+        
+        Input is a list of strings, as is the output.
+        '''
+        # first, examine if this is an empty list
+        if len(locations) == 0:
+            return ['Unknown']
+
+        retval = []
+        # loop through all the elements of the argument, stripping out punctuation
+        # and adding the element to the return list if it has not already
+        for location in locations:
+            # step 1: if there is any punctuation, split on it
+            items = re.split('[,.;:]+', location)
+            # for each item, add to the list if it does not already exist
+            for item in items:
+                item = item.strip() # peel off any trailing or prepended whitespace
+                if item not in retval and len(item) > 0: 
+                    retval.append(item) 
+        return retval
+
     def getWeb(self):
         pass
+
