@@ -16,6 +16,11 @@ _datadir = path.abspath(path.join(_basedir, '../../data'))
 _mouse = 'eSLDB_Mus_musculus.txt'
 _human = 'eSLDB_Homo_sapiens.txt'
 
+# number of ensembl ids to cache before converting them
+# larger number = more memory, fewer remote queries
+# smaller number = less memory, more remote queries
+_batch = 100
+
 def load(dirname=None, create_session=None):
     '''
     num_entries = load(dirname={data/}, create_session={backend.create_session})
@@ -50,6 +55,7 @@ def load(dirname=None, create_session=None):
 def _process_file(filename, dbtype, session):
     entries = defaultdict(str)
     count = 0
+    batchdict = {}
     for line in file(filename):
         count += 1
         line = line.strip()
@@ -108,11 +114,36 @@ def _process_file(filename, dbtype, session):
             entries[eSLDB_code].append(ensembl_peptide)
 
             # also, translate the peptide IDs to gene IDs
-            toadd = waldo.synergizer.translate_ensembl_peptide_to_ensembl_gene([ensembl_peptide], dbtype)[ensembl_peptide]
-            if toadd is not None:
-                session.add(Translation('ensembl:gene_id', toadd, 'esldb:id', eSLDB_code))
-                session.add(Translation('esldb:id', eSLDB_code, 'ensembl:gene_id', toadd))
+            if ensembl_peptide not in batchdict:
+                batchdict[ensembl_peptide] = []
+
+            # the peptide ID exists as a key, but is the corresponding eSLDB ID
+            # in the list?
+            if eSLDB_code not in batchdict[ensembl_peptide]:
+                batchdict[ensembl_peptide].append(eSLDB_code)
+
+            # now, do we perform the batch?
+            if len(batchdict) >= _batch:
+                _perform_synergizer(batchdict, dbtype, session)
+                batchdict = {}
 
         # commit this session's additions
         session.commit()
+
+    # are there any leftover batches to be done?
+    if len(batchdict) > 0:
+        _perform_synergizer(batchdict, dbtype, session)
+        batchdict = {}
+        session.commit()
+
     return len(entries)
+
+def _perform_synergizer(batchdict, dbtype, session):
+    toadd = waldo.synergizer.translate_ensembl_peptide_to_ensembl_gene(batchdict.keys(), dbtype)
+    if toadd is not None:
+        for peptide in batchdict.keys():
+            gene = toadd[peptide]
+            if gene is None: continue
+            for esldbid in batchdict[peptide]:
+                session.add(Translation('ensembl:gene_id', gene, 'esldb:id', esldbid))
+                session.add(Translation('esldb:id', esldbid, 'ensembl:gene_id', gene))

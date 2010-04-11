@@ -95,6 +95,7 @@ class Grouping:
                 app = '%s,%s' % (';'.join(locs), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
             elif key is 'hpa':
                 # IMPLEMENT ME
+                # app = '%s,%s' % (';'.join(locs), 'http://proteinatlas.org/tissue_profile.php?antibody_id=%s' % self.dict[key].hpa_id[-4:])
                 pass
 
             retval += ',' + app
