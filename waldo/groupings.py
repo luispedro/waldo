@@ -10,7 +10,7 @@ import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
 import waldo.esldb.retrieve
-#import waldo.hpa.retrieve
+import waldo.hpa.retrieve
 
 class Grouping:
 
@@ -54,21 +54,20 @@ class Grouping:
         mgi_id = waldo.mgi.retrieve.from_ensembl_gene_id(ensemblgene, session)
         locate_id = waldo.locate.retrieve.from_ensembl_gene_id(ensemblgene, session)
         esldb_id = waldo.esldb.retrieve.from_ensembl_gene_id(ensemblgene, session)
-        #hpa_id = waldo.hpa.retrieve.from_ensembl_gene_id(ensemblgene, session)
+        hpa_id = waldo.hpa.retrieve.from_ensembl_gene_id(ensemblgene, session)
 
         uniprot_entry = waldo.uniprot.retrieve.retrieve_entry(uniprot_id, session)
         mgi_entry = waldo.mgi.retrieve.retrieve_entry(mgi_id, session)
         locate_entry = waldo.locate.retrieve.retrieve_entry(locate_id, session)
         esldb_entry = waldo.esldb.retrieve.retrieve_entry(esldb_id, session)
-        #hpa_entry = waldo.hpa.retrieve.retrieve_entry(hpa_id, session)
+        hpa_entry = waldo.hpa.retrieve.retrieve_entry(hpa_id, session)
 
         # add each entry to the list
         self.dict['uniprot'] = uniprot_entry and uniprot_entry or None
         self.dict['mgi'] = mgi_entry and mgi_entry or None
         self.dict['locate'] = locate_entry and locate_entry or None
         self.dict['esldb'] = esldb_entry and esldb_entry or None
-        #if hpa_entry is not None:
-            #self.dict['hpa'] = hpa_entry
+        self.dict['hpa'] = hpa_entry and hpa_entry or None
 
     def getBatch(self):
         retval = '%s' % self.id_

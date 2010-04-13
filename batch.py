@@ -10,6 +10,7 @@ from waldo import mgi
 from waldo import uniprot
 from waldo import esldb
 from waldo import locate
+from waldo import hpa
 from waldo.groupings import Grouping
 
 if len(sys.argv) < 2:
