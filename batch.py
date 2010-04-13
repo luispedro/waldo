@@ -18,6 +18,8 @@ if len(sys.argv) < 2:
         '\tpython batch.py <inputfile> [outputfile]')
 
 output = None
+format = "ensemblid,locate_locations,locate_link,mgi_locations,mgi_link,esldb_locations,esldb_link,uniprot_locations,uniprot_link,hpa_locations,hpa_link"
+
 if len(sys.argv) == 3:
     try:
         output = open(sys.argv[2], "w")
@@ -25,6 +27,11 @@ if len(sys.argv) == 3:
         quit('When specifying an output file, please make sure the directory and ' + \
             'file is writeable.')
 
+    # print the format for the output
+    output.write(format + '\r\n')
+else:
+    print format
+    
 session = waldo.backend.create_session()
 for id in file(sys.argv[1]):
     if len(id) <= 1: continue

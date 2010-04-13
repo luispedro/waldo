@@ -18,6 +18,7 @@ known_namespaces = (
     'uniprot:name',
     'locate:id',
     'esldb:id',
+    'hpa:id',
     )
 
 def verify_namespace(namespace):

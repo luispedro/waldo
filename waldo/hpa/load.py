@@ -97,6 +97,8 @@ def load(dirname=None, create_session=None):
 
         # insert the necessary data into the relational database
         session.add(models.Entry(antibody, ensembl_gene, cell_line))
+        session.add(Translation('ensembl:gene_id', ensembl_gene, 'hpa:id', antibody))
+        session.add(Translation('hpa:id', antibody, 'ensembl:gene_id', ensembl_gene))
         session.commit()
         
         # increment the count
