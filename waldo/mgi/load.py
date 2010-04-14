@@ -116,17 +116,26 @@ def _load_gene_annotation(filename, session):
 
 def _load_mrk_ensembl(filename, session):
     for i,line in enumerate(file(filename)):
-        line = line.strip()
-        mgi_accession, marker_sym, marker_name, cm_pos, chromosome, ensembl_id = line.split('\t')
-        session.add_all([
-                Translation('ensembl:gene_id', ensembl_id, 'mgi:id', mgi_accession),
-                Translation('ensembl:gene_id', ensembl_id, 'mgi:symbol', marker_sym),
-                Translation('ensembl:gene_id', ensembl_id, 'mgi:name', marker_name),
-                Translation('mgi:id', mgi_accession, 'ensembl:gene_id', ensembl_id),
-                Translation('mgi:symbol', marker_sym, 'ensembl:gene_id', ensembl_id),
-                Translation('mgi:name', marker_name, 'ensembl:gene_id', ensembl_id),
-                ]
-                )
+        tokens = line.strip().split('\t')
+        mgi_accession, marker_sym, marker_name, cm_pos, chromosome, ensembl_gene_id = tokens[:6]
+        def add_synonym(namespace, name):
+            session.add_all([
+                    Translation(namespace, name, 'mgi:id', mgi_accession),
+                    Translation(namespace, name, 'mgi:symbol', marker_sym),
+                    Translation(namespace, name, 'mgi:name', marker_name),
+                    Translation('mgi:id', mgi_accession, namespace, name),
+                    Translation('mgi:symbol', marker_sym, namespace, name),
+                    Translation('mgi:name', marker_name, namespace, name),
+                    ])
+        if len(tokens) > 6:
+            transcript_ids = tokens[6]
+            for id in transcript_ids.split():
+                add_synonym('ensembl:transcript_id', id)
+        if len(tokens) > 7:
+            peptide_ids = tokens[7]
+            for id in peptide_ids.split():
+                add_synonym('ensembl:peptide_id', id)
+        add_synonym('ensembl:gene_id', ensembl_gene_id)
         if (i % 1024) == 0:
             session.commit()
     session.commit()
