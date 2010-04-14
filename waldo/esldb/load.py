@@ -54,10 +54,8 @@ def load(dirname=None, create_session=None):
 
 def _process_file(filename, dbtype, session):
     entries = defaultdict(str)
-    count = 0
     batchdict = {}
     for line in file(filename):
-        count += 1
         line = line.strip()
         if line.startswith('eSLDB code') or len(line.split('\t')) < 10:
             continue
@@ -147,3 +145,4 @@ def _perform_synergizer(batchdict, dbtype, session):
             for esldbid in batchdict[peptide]:
                 session.add(Translation('ensembl:gene_id', gene, 'esldb:id', esldbid))
                 session.add(Translation('esldb:id', esldbid, 'ensembl:gene_id', gene))
+
