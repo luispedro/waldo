@@ -45,9 +45,9 @@ def load(dirname=None, create_session=None):
     count = 0
     loc_names = []
     for row in csvreader:
-        if count is 0:
-            count = 1
-            loc_names = row[9:24]
+        count += 1
+        if count == 1:
+            loc_names = [n.replace('"','') for n in row[9:24]]
             continue
 
         # loop through the list of comma-separated elements on this row
@@ -85,22 +85,14 @@ def load(dirname=None, create_session=None):
         if_reliability_score_id = row
 
         locations = row[9:24]
-        num = 0
-        for location in range(0, len(locations)):
-            if locations[location] is "1":
-                session.add(models.Location(loc_names[location].replace('"', ''), antibody))
-                num += 1
-        if num is 0:
-            # unobserved...what do we do?
-            # FIXME
-            pass
+        for loc_flag,name in zip(locations, loc_names):
+            if loc_flag == "1":
+                session.add(models.Location(name, antibody))
 
-        # insert the necessary data into the relational database
         session.add(models.Entry(antibody, ensembl_gene, cell_line))
         session.add(Translation('ensembl:gene_id', ensembl_gene, 'hpa:id', antibody))
         session.add(Translation('hpa:id', antibody, 'ensembl:gene_id', ensembl_gene))
         session.commit()
         
-        # increment the count
-        count += 1
     return count - 1 # since the first row wasn't an entry
+
