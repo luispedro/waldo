@@ -94,7 +94,7 @@ class Grouping:
                 locs = self._processLocations(arg)
                 app = '%s,%s' % (';'.join(locs), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
             elif key is 'hpa':
-                locs = waldo.hpa.retrieve.retrieve_location_annotations(self.dict[key].hpa_id)
+                locs = self._processLocations(waldo.hpa.retrieve.retrieve_location_annotations(self.dict[key].hpa_id))
                 app = '%s,%s' % (';'.join([loc[4:] for loc in locs]), 'http://proteinatlas.org/tissue_profile.php?antibody_id=%s' % self.dict[key].hpa_id[-4:])
 
             retval += ',' + app
