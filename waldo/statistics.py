@@ -22,7 +22,7 @@
 
 from __future__ import division
 from collections import defaultdict
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 import waldo.backend
 import waldo.uniprot.models
 import waldo.mgi.models
@@ -31,13 +31,9 @@ import waldo.locate.models
 from waldo.translations.services import translate
 
 def esldbstats(session=None):
-    if session is None: session = waldo.backend.create_session()
-
-    # annotation type counts
-    annot_uniprot = 0
-    annot_similar = 0
-    annot_experiment = 0
-    annot_predict = 0
+    from waldo.esldb.models import Annotation, Entry, UniprotEntry
+    if session is None:
+        session = waldo.backend.create_session()
 
     # presence in uniprot
     specific_entry_only = 0
@@ -50,36 +46,24 @@ def esldbstats(session=None):
     ensembl_overlap_mgi = 0
     ensembl_overlap_locate = 0
 
-    # species counts
-    species = defaultdict(int)
+    q = session.query(Entry)
+    print 'Total eSLDB entries: %s' % q.count()
+    print
 
-    entries = session.query(waldo.esldb.models.Entry)
-    for entry in entries:
-        species[entry.species] += 1
-        for annotation in entry.annotations:
-            if annotation.type is 'experimental':
-                annot_experiment += 1
-            elif annotation.type is 'uniprot':
-                annot_uniprot += 1
-            elif annotation.type is 'similarity':
-                annot_similar += 1
-            elif annotation.type is 'predicted':
-                annot_predict += 1
+    q = session.query(Annotation.type, func.count(Annotation.type)).group_by(Annotation.type)
+    for t_count in q:
+        print 'Entries of type %s: %s' % t_count 
+    print
 
-        if len(entry.uniprot_entries) > 0 and len(entry.uniprot_homologs) > 0:
-            entry_and_homolog += 1
-        elif len(entry.uniprot_entries) > 0:
-            specific_entry_only += 1
-        elif len(entry.uniprot_homologs) > 0:
-            homolog_only += 1
-        else:
-            neither += 1 
+    q = session.query(Entry.species, func.count(Entry.species)).group_by(Entry.species)
+    for sp_count in q:
+        print 'Entries for species %s: %s' % sp_count
+    print
 
-    print 'Total eSLDB entries: %d' % entries.count()   
-    for key in species.keys():
-        print 'Total %s entries: %d' % (key, species[key])
-    print 'Entries with locations found by:\n\tUniprot: %d\n\tExperiment: %d\n\tSimilarity: %d\n\tPrediction: %d' % (annot_uniprot, annot_experiment, annot_similar, annot_predict)
-    print 'Entries with Uniprot verification:\n\tBy entry ID: %d\n\tBy homology: %d\n\tBy entry ID and homology: %d\n\tNeither: %d' % (specific_entry_only, homolog_only, entry_and_homolog, neither)
+    print 'Entries with uniprot association:'
+    q = session.query(Entry.esldb_id).join(UniprotEntry).filter(Entry.esldb_id == UniprotEntry.entry_id).group_by(Entry.esldb_id)
+    print '\tTotal: %s' % q.count()
+   
 
 def uniprotstats(session=None):
     if session is None: session = waldo.backend.create_session()
