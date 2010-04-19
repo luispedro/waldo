@@ -26,44 +26,8 @@ from sqlalchemy import and_, func
 import waldo.backend
 import waldo.uniprot.models
 import waldo.mgi.models
-import waldo.esldb.models
 import waldo.locate.models
 from waldo.translations.services import translate
-
-def esldbstats(session=None):
-    from waldo.esldb.models import Annotation, Entry, UniprotEntry
-    if session is None:
-        session = waldo.backend.create_session()
-
-    # presence in uniprot
-    specific_entry_only = 0
-    entry_and_homolog = 0
-    homolog_only = 0
-    neither = 0
-
-    # presence of ensembl ids in other databases
-    ensembl_overlap_uniprot = 0
-    ensembl_overlap_mgi = 0
-    ensembl_overlap_locate = 0
-
-    q = session.query(Entry)
-    print 'Total eSLDB entries: %s' % q.count()
-    print
-
-    q = session.query(Annotation.type, func.count(Annotation.type)).group_by(Annotation.type)
-    for t_count in q:
-        print 'Entries of type %s: %s' % t_count 
-    print
-
-    q = session.query(Entry.species, func.count(Entry.species)).group_by(Entry.species)
-    for sp_count in q:
-        print 'Entries for species %s: %s' % sp_count
-    print
-
-    print 'Entries with uniprot association:'
-    q = session.query(Entry.esldb_id).join(UniprotEntry).filter(Entry.esldb_id == UniprotEntry.entry_id).group_by(Entry.esldb_id)
-    print '\tTotal: %s' % q.count()
-   
 
 def uniprotstats(session=None):
     if session is None: session = waldo.backend.create_session()

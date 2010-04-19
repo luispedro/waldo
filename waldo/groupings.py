@@ -9,7 +9,6 @@ from waldo.translations.services import translate
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
-import waldo.esldb.retrieve
 import waldo.hpa.retrieve
 
 def _waldo_session():
@@ -38,9 +37,6 @@ class Grouping:
         elif re.search('MGI:[0-9]{7}', id) is not None:
             # mgi
             ensemblgene = translate(id, 'mgi:id', 'ensembl:gene_id', session)
-        elif re.search('(HS|MM)[0-9]{9}', id) is not None:
-            # esldb
-            ensemblgene = translate(id, 'esldb:id', 'ensembl:gene_id', session)
         elif re.search('[0-9]{7}', id) is not None:
             # locate
             ensemblgene = translate(id, 'locate:id', 'ensembl:gene_id', session)
@@ -55,20 +51,17 @@ class Grouping:
         uniprot_id = waldo.uniprot.retrieve.from_ensembl_gene_id(ensemblgene, session)
         mgi_id = waldo.mgi.retrieve.from_ensembl_gene_id(ensemblgene, session)
         locate_id = waldo.locate.retrieve.from_ensembl_gene_id(ensemblgene, session)
-        esldb_id = waldo.esldb.retrieve.from_ensembl_gene_id(ensemblgene, session)
         hpa_id = waldo.hpa.retrieve.from_ensembl_gene_id(ensemblgene, session)
 
         uniprot_entry = waldo.uniprot.retrieve.retrieve_entry(uniprot_id, session)
         mgi_entry = waldo.mgi.retrieve.retrieve_entry(mgi_id, session)
         locate_entry = waldo.locate.retrieve.retrieve_entry(locate_id, session)
-        esldb_entry = waldo.esldb.retrieve.retrieve_entry(esldb_id, session)
         hpa_entry = waldo.hpa.retrieve.retrieve_entry(hpa_id, session)
 
         # add each entry to the list
         self.dict['uniprot'] = uniprot_entry and uniprot_entry or None
         self.dict['mgi'] = mgi_entry and mgi_entry or None
         self.dict['locate'] = locate_entry and locate_entry or None
-        self.dict['esldb'] = esldb_entry and esldb_entry or None
         self.dict['hpa'] = hpa_entry and hpa_entry or None
 
     def getBatch(self):
@@ -89,10 +82,6 @@ class Grouping:
             elif key is 'locate':
                 locs = self._processLocations(waldo.locate.retrieve.retrieve_go_annotations(self.dict[key].locate_id))
                 app = '%s,%s' % (';'.join(locs), 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s' % self.dict[key].locate_id)
-            elif key is 'esldb':
-                arg = [annot.value for annot in self.dict[key].annotations]
-                locs = self._processLocations(arg)
-                app = '%s,%s' % (';'.join(locs), 'http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s' % self.dict[key].esldb_id)
             elif key is 'hpa':
                 locs = self._processLocations(waldo.hpa.retrieve.retrieve_location_annotations(self.dict[key].hpa_id))
                 app = '%s,%s' % (';'.join([loc[4:] for loc in locs]), 'http://proteinatlas.org/tissue_profile.php?antibody_id=%s' % self.dict[key].hpa_id[-4:])

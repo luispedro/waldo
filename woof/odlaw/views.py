@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
-import waldo.esldb.retrieve
 import waldo.predictions.retrieve
 from waldo.translations.services import translate
 import waldo.backend
@@ -23,12 +22,10 @@ def searchby(request):
             key = 'uniprotid'
         elif 'locateid' in request.GET:
             key = 'locateid'
-        elif 'esldbid' in request.GET:
-            key = 'esldbid'
         value = request.GET[key]
         return HttpResponseRedirect('/search/%s/%s' % (key, value))
 
-def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None, esldbid=None):
+def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None):
     predictions = None
     if ensemblgene is not None:
         results = _lcd(ensemblgene)
@@ -67,11 +64,6 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
         search_term_type = 'Protein name'
         search_term_value = protname
 
-    elif esldbid is not None:
-        results = _lcd(ensemblpeptide=translate(esldbid, 'esldb:id', 'ensembl:peptide_id'))
-        search_term_type = 'eSLDB ID'
-        search_term_value = esldbid
-
     #else: <- free text search
          
     return render_to_response(
@@ -100,10 +92,8 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
         uniprot_name = waldo.uniprot.retrieve.from_ensembl_gene_id(ensemblgene, session)
         mgi_id = waldo.mgi.retrieve.from_ensembl_gene_id(ensemblgene, session)
         locate_id = waldo.locate.retrieve.from_ensembl_gene_id(ensemblgene, session)
-        esldb_id = waldo.locate.retrieve.from_ensembl_gene_id(ensemblgene, session)
     else:
         uniprot_name = waldo.uniprot.retrieve.from_ensembl_peptide_id(ensemblpeptide, session)
-        esldb_id = waldo.esldb.retrieve.from_ensembl_peptide_id(ensemblpeptide, session)
         locate_id = waldo.locate.retrieve.from_ensembl_peptide_id(ensemblpeptide, session)
         mgi_id = waldo.mgi.retrieve.from_ensembl_peptide_id(ensemblpeptide, session)
 
@@ -111,7 +101,6 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
     uniprot_entry = waldo.uniprot.retrieve.retrieve_entry(uniprot_name, session)
     mgi_entry = waldo.mgi.retrieve.retrieve_entry(mgi_id, session)
     locate_entry = waldo.locate.retrieve.retrieve_entry(locate_id, session)
-    esldb_entry = waldo.esldb.retrieve.retrieve_entry(esldb_id, session)
 
     # for each object, put in correct format
     list = []
@@ -146,17 +135,6 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
                 'references':'<br />'.join([ref.title for ref in locate_entry.references]),
                 'evidence': '<br />'.join(['<a href="http://locate.imb.uq.edu.au/data_images/%s/%s"><img height="50" width="50" src="http://locate.imb.uq.edu.au/data_images/%s/%s" /></a>' % (img.filename[0:3], img.filename, img.filename[0:3], img.filename) for img in locate_entry.images]),
                 'source':'<a href="http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s">LOCATE</a>' % locate_id,
-                }
-        list.append(dict)
-    if esldb_entry is not None:
-        dict = {'protein': esldb_id,
-                'organism': esldb_entry.species,
-                'celltype': '-',
-                'condition': '-',
-                'location': '<br />'.join(['<b>%s</b>: %s' % (annot.type, annot.value.split(';')[0]) for annot in esldb_entry.annotations]),
-                'references': '<br />'.join(['<a href="http://www.uniprot.org/uniprot/%s">%s</a>' % (entry.uniprot_entry, entry.uniprot_entry) for entry in esldb_entry.uniprot_entries]),
-                'evidence': '<br />'.join(['<a href="http://www.uniprot.org/uniprot/%s">%s</a>' % (homolog.uniprot_homolog, homolog.uniprot_homolog) for homolog in esldb_entry.uniprot_homologs]),
-                'source': '<a href="http://gpcr.biocomp.unibo.it/cgi-bin/predictors/esldb/dettagli.cgi?codice=%s">eSLDB</a>' % esldb_id,
                 }
         list.append(dict)
     return list

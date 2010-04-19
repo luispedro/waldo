@@ -1,8 +1,5 @@
 from waldo import statistics
 
-def test_esldb_statistics():
-    statistics.esldbstats()
-
 def test_locate_statistics():
     statistics.locatestats()
 

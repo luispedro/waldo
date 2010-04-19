@@ -17,7 +17,6 @@ known_namespaces = (
     'mgi:name',
     'uniprot:name',
     'locate:id',
-    'esldb:id',
     'hpa:id',
     )
 

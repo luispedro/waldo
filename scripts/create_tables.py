@@ -26,7 +26,6 @@ import waldo.uniprot.models
 import waldo.go.models
 import waldo.mgi.models
 import waldo.locate.models
-import waldo.esldb.models
 import waldo.hpa.models
 import waldo.translations.models
 import waldo.predictions.models

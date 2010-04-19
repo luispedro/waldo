@@ -28,7 +28,7 @@ else:
     output = sys.stdout
 
 
-format = "ensemblid,locate_locations,locate_link,mgi_locations,mgi_link,esldb_locations,esldb_link,hpa_locations,hpa_link,uniprot_locations,uniprot_link\n"
+format = "ensemblid,locate_locations,locate_link,mgi_locations,mgi_link,hpa_locations,hpa_link,uniprot_locations,uniprot_link\n"
 output.write(format)
 for id in input:
     id = id.strip()

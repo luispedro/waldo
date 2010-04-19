@@ -7,12 +7,10 @@ import waldo.mgi.load
 import waldo.go.load
 import waldo.uniprot.load
 import waldo.locate.load
-import waldo.esldb.load
 import waldo.hpa.load
 
-waldo.mgi.load.load()
 waldo.go.load.load()
+waldo.mgi.load.load()
 waldo.uniprot.load.load()
 waldo.locate.load.load()
-waldo.esldb.load.load()
 waldo.hpa.load.load()
