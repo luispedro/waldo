@@ -45,4 +45,4 @@ def test_id_to_term():
     id = 'GO:00099999skl'
     term = 'repairosome'
     result = waldo.go.go.id_to_term(id) 
-    assert result is None
+    assert result == id
