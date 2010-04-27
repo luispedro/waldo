@@ -11,9 +11,7 @@ from waldo.translations.models import Translation
 _testdir = 'tests/data/'
 _testfile = _testdir + 'uniprot_sprot.xml.gz'
 
-def test_nr_entries():
-    nr_entries = len(re.findall('</entry>', gzip.GzipFile(_testfile).read()))
-
+def load_uniprot_test():
     engine = create_engine('sqlite://')
     metadata = waldo.uniprot.models.Base.metadata
     metadata.bind = engine
@@ -21,6 +19,12 @@ def test_nr_entries():
     sessionmaker_ = sessionmaker(engine)
     waldo.uniprot.load.load(_testdir, sessionmaker_)
     session = sessionmaker_()
+    return session
+
+def test_nr_entries():
+    nr_entries = len(re.findall('</entry>', gzip.GzipFile(_testfile).read()))
+    session = load_uniprot_test()
+
     assert session.query(waldo.uniprot.models.Entry).count() == nr_entries
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace ==  'uniprot:name')).count()
     assert waldo.uniprot.retrieve.from_ensembl_gene_id('ENSMUSG00000007564', session) == '2AAA_MOUSE'

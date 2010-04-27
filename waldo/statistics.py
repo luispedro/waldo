@@ -30,29 +30,14 @@ import waldo.locate.models
 from waldo.translations.services import translate
 
 def uniprotstats(session=None):
-    if session is None: session = waldo.backend.create_session()
-    entries = session.query(waldo.uniprot.models.Entry)
+    from waldo.uniprot.models import Entry, Reference, Accession, Comment
+    if session is None:
+        session = waldo.backend.create_session()
+    print 'Total Uniprot entries:', session.query(Entry).count()
+    print 'Unique accession numbers:', session.query(Accession.accession).distinct().count()
+    print 'Unique references:', session.query(Reference.key).distinct().count()
+    print 'Unique comment types:', session.query(Comment.type).distinct().count()
 
-    accessions = defaultdict(int)
-    references = defaultdict(int)
-    comments = defaultdict(int)
-
-    for entry in entries:
-        for accession in entry.accessions:
-            accessions[accession] += 1
-
-        for reference in entry.references:
-            references[key] += 1
-
-        for comment in entry.comments:
-            comments[comment.type] += 1
-
-        # what other statistics do we want from uniprot?
-
-    print 'Total Uniprot entries: %d' % entries.count()
-    print 'Unique accession #s: %d' % len(accessions)
-    print 'Unique references: %d' % len(references)
-    print 'Unique comment types: %d' % len(comments)
 
 def locatestats(session=None):
     if session is None: session = waldo.backend.create_session()
