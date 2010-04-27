@@ -7,7 +7,7 @@ import waldo.hpa.load
 import waldo.hpa.models
 from waldo.translations.models import Translation
 
-def test_esldb_load():
+def test_hpa_load():
     engine = create_engine('sqlite://')
     metadata = waldo.hpa.models.Base.metadata
     metadata.bind = engine
