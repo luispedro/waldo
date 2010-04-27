@@ -7,8 +7,8 @@ import waldo.locate.retrieve
 from waldo.translations.models import Translation
 
 _testdir = 'tests/data/'
-_testinput1 = _testdir + 'LOCATE_human.xml'
-_testinput2 = _testdir + 'LOCATE_mouse.xml'
+_testinput1 = _testdir + 'LOCATE_human_v6_20081121.xml'
+_testinput2 = _testdir + 'LOCATE_mouse_v6_20081121.xml'
 
 def test_num_entries():
     num_entries = len(re.findall('</LOCATE_protein>', file(_testinput1).read()))
