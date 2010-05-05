@@ -128,7 +128,7 @@ def _lcd(ensemblgene=None, ensemblpeptide=None):
         list.append(dict)
     if locate_entry is not None:
         dict = {'protein': '%s (%s)' % (locate_entry.accn, locate_entry.source_name),
-                'organism': locate_entry.dbtype,
+                'organism': locate_entry.organism,
                 'celltype': '-',
                 'condition': '-',
                 'location': '; '.join(waldo.locate.retrieve.retrieve_go_annotations(locate_id)),
