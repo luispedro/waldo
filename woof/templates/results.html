@@ -2,7 +2,7 @@
 {% block content %}
 
 <h2>Database Results</h2>
-<p>Searched by "{{ search_term_type }}" for "<em>{{ search_term_value }}</em>"
+<p>Searched by {{ search_term_type }}(<strong>{{ search_term_value }}</strong>)
 <table cellspacing="0" cellpadding="5" class="results">
 <tr>
   <th>Protein</th>
@@ -45,3 +45,4 @@
 {% endif %}
 
 {% endblock %}
+
