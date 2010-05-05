@@ -42,12 +42,12 @@ def load(dirname=None, create_session=None):
         create_session = waldo.backend.create_session
     session = create_session()
 
-    # load the mouse and human separately
     loaded = _loadfile(path.join(dirname, _mouse), 'Mus musculus', session)
     loaded += _loadfile(path.join(dirname, _human), 'Homo sapiens', session)
     return loaded
 
-def _loadfile(filename, dbtype, session):
+def _loadfile(filename, organism, session):
+    from models import Isoform, Image
     count = 0
     input = file(filename)
 
@@ -60,11 +60,8 @@ def _loadfile(filename, dbtype, session):
         # in place to make sure certain attributes do exist
 
         # add any isoforms that exist
-        isoforms = []
-        if hasattr(entry, 'transcript'):
-            transcript = entry.transcript
-            if hasattr(transcript.other_isoforms, 'isoform'):
-                isoforms = [models.Isoform(elem.class_, str(elem)) for elem in transcript.other_isoforms.isoform]
+        transcript = getattr(entry, 'transcript', None)
+        isoforms = [Isoform(elem.class_, str(elem)) for elem in getattr(transcript.other_isoforms, 'isoform', ())]
 
         # check the experimental data section for location information
         images = []
@@ -76,19 +73,23 @@ def _loadfile(filename, dbtype, session):
             # also load the image data
             reg_images = experimental.images
             coloc_images = experimental.coloc_images
+            def _str(obj):
+                if obj is None:
+                    return None
+                return str(obj)
             # are there any images?
             if hasattr(reg_images, 'rep_image'):
                 img = reg_images.rep_image
-                images.append(models.Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
-            if hasattr(reg_images, 'image'):
-                for img in reg_images.image:
-                    images.append(models.Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
+                images.append(Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
+
+            for img in getattr(reg_images, 'image', ()):
+                images.append(Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
             if hasattr(coloc_images, 'rep_coloc_image'):
                 img = coloc_images.rep_coloc_image
-                images.append(models.Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
-            if hasattr(coloc_images, 'coloc_image'):
-                for img in coloc_images.coloc_image:
-                    images.append(models.Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), str(getattr(img, 'channel1', None)), str(getattr(img, 'channel2', None)), str(img.coloc)))
+                images.append(Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
+
+            for img in getattr(coloc_images, 'coloc_image', ()):
+                images.append(Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
 
         # go through the annotations
         annots = []
@@ -124,27 +125,25 @@ def _loadfile(filename, dbtype, session):
         # now the external database references
         extrefs = []
         if hasattr(entry, 'xrefs'):
-            xrefs = entry.xrefs
-            if hasattr(xrefs, 'xref'):
-                for elem in xrefs.xref:
-                    extrefs.append(models.ExternalReference(elem.source.source_id, str(elem.source.source_name), str(elem.source.accn)))
-                    # check if our data is Ensembl-related
-                    value = str(elem.source.source_name)
-                    if value.startswith('Ensembl'):
-                        if value.startswith('Ensembl-Gene'):
-                            subnamespace = 'gene_id'
-                        elif value.startswith('Ensembl-Peptide'):
-                            subnamespace = 'peptide_id'
-                        t = Translation('ensembl:' + subnamespace, str(elem.source.accn), 'locate:id', entry.uid)
-                        session.add(t)
-                        t = Translation('locate:id', entry.uid, 'ensembl:%s' % subnamespace, str(elem.source.accn))
-                        session.add(t)
+            for elem in getattr(entry.xrefs, 'xref', ()):
+                extrefs.append(models.ExternalReference(elem.source.source_id, str(elem.source.source_name), str(elem.source.accn)))
+                # check if our data is Ensembl-related
+                value = str(elem.source.source_name)
+                if value.startswith('Ensembl'):
+                    if value.startswith('Ensembl-Gene'):
+                        namespace = 'ensembl:gene_id'
+                    elif value.startswith('Ensembl-Peptide'):
+                        namespace = 'ensembl:peptide_id'
+                    else:
+                        raise IOError('waldo.locate.load: Cannot handle source_name \'%s\'' % value)
+                    t = Translation(namespace, str(elem.source.accn), 'locate:id', entry.uid)
+                    session.add(t)
+                    t = Translation('locate:id', entry.uid, namespace, str(elem.source.accn))
+                    session.add(t)
 
-        # create the object we're really interested in
         protein = entry.protein
-        locate_entry = models.Entry(entry.uid, str(protein.source.source_name), protein.source.source_id, str(protein.source.accn), isoforms, predicts, refs, annots, expData, images, extrefs, dbtype)
+        locate_entry = models.Entry(entry.uid, str(protein.source.source_name), protein.source.source_id, str(protein.source.accn), isoforms, predicts, refs, annots, expData, images, extrefs, organism)
         session.add(locate_entry)
 
-        # finally
         session.commit()
     return count

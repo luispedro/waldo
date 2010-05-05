@@ -57,7 +57,7 @@ def retrieve_go_annotations(id, session=None):
       go_ids : list of go terms (of the form "GO:00...")
     '''
     if session is None: session = backend.create_session()
-    entry = session.query(Entry).filter(Entry.locate_id == id).first()
+    entry = session.query(Entry).filter(Entry.id == id).first()
 
     # parse out all the locations: in entr.locations, entr.predictions.location, 
     # entr.references.locations, and entr.annotations.locations
@@ -94,7 +94,7 @@ def retrieve_entry(id, session=None):
       entry : A models.Entry object
     '''
     if session is None: session = backend.create_session()
-    return session.query(Entry).filter(Entry.locate_id == id).first()
+    return session.query(Entry).filter(Entry.id == id).first()
 
 def _splitGO(goids, curlist):
     retval = []
