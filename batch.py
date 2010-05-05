@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>, Luis Pedro Coelho <lpc@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 import sys
 
 import waldo.backend
-from waldo.groupings import Grouping
+from waldo.retrieve_all import get_information
 
 session = waldo.backend.create_session()
 
@@ -22,7 +22,7 @@ if len(sys.argv) == 3:
         print >>sys.stderr, '''
 Error opening '%s': %s
 
-When specifying an output file, please make sure the directory and file is writeable.''' % (sys.argv[2], e)
+When specifying an output file, please make sure the directory and file are writeable.''' % (sys.argv[2], e)
         sys.exit(1)
 else:
     output = sys.stdout
@@ -34,8 +34,8 @@ for id in input:
     id = id.strip()
     if not id:
         continue
-    ids = Grouping(id.strip(), session)
-    output.write(ids.getBatch() + '\n')
+    output.write(get_information(id, session))
+    output.write('\n')
 
 if output is not sys.stdout:
     output.close()
