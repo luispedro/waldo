@@ -40,56 +40,25 @@ def uniprotstats(session=None):
 
 
 def locatestats(session=None):
+    from waldo.locate.models import Entry, ExternalReference, Annotation, Literature, Location, Isoform, Image, Prediction
     if session is None: session = waldo.backend.create_session()
-    entries = session.query(waldo.locate.models.Entry)
-
-    species = defaultdict(int)
-    protein_sources = defaultdict(int)
-    protein_accns = defaultdict(int)
-    predictions = defaultdict(int)
-    references = defaultdict(int)
-    extrefs = defaultdict(int)
-    extannots = defaultdict(int)
-
-    for entry in entries:
-        protein_sources[entry.source_name] += 1
-        protein_accns[entry.accn] += 1
-
-        for prediction in entry.predictions:
-            predictions[prediction.method] += 1
-
-        for reference in entry.references:
-            references[reference.accn] += 1
-
-        for annot in entry.annotations:
-            extannots[annot.source_name] += 1
-
-        for xref in entry.xrefs:
-            extrefs[xref.source_name] += 1
-
-    print 'Total LOCATE entries: %d' % entries.count()
-    for organism in species.keys():
-        print '\tTotal %s entries: %d' % (organism, species[organism])
-    print 'Protein data sources: %d' % len(protein_sources)
-    print 'Unique protein accession #s: %d' % len(protein_accns)
-    print 'Unique SCL prediction methods: %d' % len(predictions)
-    print 'Unique references cited: %d' % len(references)
-    print 'Unique external annotations: %d' % len(extannots)
-    print 'Unique external references: %d' % len(extrefs)
+    q = session.query
+    print 'Total LOCATE entries: %d' % q(Entry).count()
+    for organism_count in q(Entry.organism, func.count(Entry.organism)).group_by(Entry.organism):
+        print '\tTotal %s entries: %s' % organism_count
+    print
+    print 'Protein data sources: %s' % q(Entry.source_name).distinct().count()
+    print 'Unique protein accession numbers: %s' % q(Entry.accn).distinct().count()
+    print 'Unique SCL prediction methods: %s' % q(Prediction.method).distinct().count()
+    print 'Unique references cited: %s' % q(Literature.accn).distinct().count()
+    print 'Unique external annotations: %s' % q(Annotation.id).distinct().count()
+    print 'Unique external references: %s' % q(ExternalReference.source_name).distinct().count()
 
 def mgistats(session=None):
-    if session is None: session = waldo.backend.create_session()
-    entries = session.query(waldo.mgi.models.Entry)
-
-    # number of unique PubMed references
-    pubmedids = defaultdict(int)
-    evidence = defaultdict(int)
-
-    for entry in entries:
-        for annotation in entry.annotations:
-            pubmedids[annotation.pubmedid] += 1 
-            evidence[annotation.evidence] += 1
-
+    from waldo.uniprot.models import Entry, GOAnnotation
+    if session is None:
+        session = waldo.backend.create_session()
+    entries = session.query(Entry)
     print 'Total MGI entries: %d' % entries.count()
-    print 'Unique PubMed references: %d' % len(pubmedids)
-    print 'Unique Evidence identifiers: %d' % len(evidence)
+    print 'Unique PubMed references: %d' % session.query(Entry.pubmedids).distinct().count()
+    print 'Unique Evidence identifiers: %d' % session.query(GOAnnotation.evidence).distinct().count()
