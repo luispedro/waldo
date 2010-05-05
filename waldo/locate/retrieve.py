@@ -12,7 +12,7 @@ from waldo.go.go import id_to_term
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
-    name = from_ensembl_gene_id(ensembl_gene_id, session={backend.create_session()})
+    locate_id = from_ensembl_gene_id(ensembl_gene_id, session={backend.create_session()})
 
     Convert ensembl_gene_id to LOCATE uid.
 
@@ -22,13 +22,13 @@ def from_ensembl_gene_id(ensembl_gene_id, session=None):
       session : SQLAlchemy session to use (default: call backend.create_session())
     Returns
     -------
-      uid : LOCATE protein identifier
+      locate_id : LOCATE protein identifier
     '''
     return translate(ensembl_gene_id, 'ensembl:gene_id', 'locate:id', session)
 
 def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     '''
-    name = from_ensembl_peptide_id(ensembl_peptide_id, session={backend.create_session()})
+    locate_id = from_ensembl_peptide_id(ensembl_peptide_id, session={backend.create_session()})
 
     Convert ensembl_peptide_id to LOCATE uid.
 
@@ -38,9 +38,14 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
       session : SQLAlchemy session to use (default: call backend.create_session())
     Returns
     -------
-      uid : LOCATE protein identifier
+      locate_id : LOCATE protein identifier
     '''
     return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'locate:id', session)
+
+def _splitGO(goids):
+    goids = goids.split(';')
+    goids = map(id_to_term, goids)
+    return goids
 
 def retrieve_go_annotations(id, session=None):
     '''
@@ -50,7 +55,7 @@ def retrieve_go_annotations(id, session=None):
 
     Parameters
     ----------
-      id = LOCATE protein uid
+      id : LOCATE protein uid
       session : SQLAlchemy session to use (default: call backend.create_session())
     Returns
     -------
@@ -59,24 +64,22 @@ def retrieve_go_annotations(id, session=None):
     if session is None: session = backend.create_session()
     entry = session.query(Entry).filter(Entry.id == id).first()
 
-    # parse out all the locations: in entr.locations, entr.predictions.location, 
-    # entr.references.locations, and entr.annotations.locations
-    locations = []
+    locations = set()
     for location in entry.locations:
-        locations.extend(_splitGO(location.goid, locations)) 
+        locations.update(_splitGO(location.goid))
 
     for predict in entry.predictions:
-        locations.extend(_splitGO(predict.goid, locations))
+        locations.update(_splitGO(predict.goid))
 
     for reference in entry.references:
         for location in reference.locations:
-            locations.extend(_splitGO(location.goid, locations))
+            locations.update(_splitGO(location.goid))
 
     for annotation in entry.annotations:
         for location in annotation.locations:
-            locations.extend(_splitGO(location.goid, locations))
+            locations.update(_splitGO(location.goid))
 
-    return locations
+    return list(locations)
 
 def retrieve_entry(id, session=None):
     '''
@@ -96,10 +99,4 @@ def retrieve_entry(id, session=None):
     if session is None: session = backend.create_session()
     return session.query(Entry).filter(Entry.id == id).first()
 
-def _splitGO(goids, curlist):
-    retval = []
-    ids = goids.split(';')
-    for goid in ids:
-        term = id_to_term(goid)
-        if term not in curlist: retval.append(term)
-    return list(set(retval))
+
