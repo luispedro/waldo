@@ -76,3 +76,20 @@ def retrieve_entry(id, session=None):
     '''
     if session is None: session = waldo.backend.create_session()
     return session.query(Entry).filter(Entry.mgi_id == id).first()
+
+
+def gen_url(id):
+    '''
+    url = gen_url(id)
+
+    Generate URL for MGI id `id`
+
+    Parameters
+    ----------
+      id : MGI id
+    Returns
+    -------
+      url : web url of corresponding data page.
+    '''
+    return 'http://www.informatics.jax.org/searchtool/Search.do?query=' + id
+

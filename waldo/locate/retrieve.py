@@ -100,3 +100,18 @@ def retrieve_entry(id, session=None):
     return session.query(Entry).filter(Entry.id == id).first()
 
 
+def gen_url(id):
+    '''
+    url = gen_url(id)
+
+    Generate URL for locate id `id`
+
+    Parameters
+    ----------
+      id : locate id
+    Returns
+    -------
+      url : web url of corresponding data page.
+    '''
+    return 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=' + id
+

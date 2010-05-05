@@ -76,3 +76,20 @@ def retrieve_entry(id, session=None):
     '''
     if session is None: session = waldo.backend.create_session()
     return session.query(Entry).filter(Entry.hpa_id == id).first()
+
+
+def gen_url(id):
+    '''
+    url = gen_url(id)
+
+    Generate URL for HPA antibody id `id`
+
+    Parameters
+    ----------
+      id : HPA antibody id
+    Returns
+    -------
+      url : web url of corresponding data page.
+    '''
+    return 'http://proteinatlas.org/tissue_profile.php?antibody_id=' + id[-4:]
+

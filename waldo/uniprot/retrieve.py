@@ -78,3 +78,19 @@ def retrieve_entry(id, session=None):
     '''
     if session is None: session = waldo.backend.create_session()
     return session.query(Entry).filter(Entry.name == id).first()
+
+def gen_url(id):
+    '''
+    url = gen_url(id)
+
+    Generate URL for uniprot id `id`
+
+    Parameters
+    ----------
+      id : uniprot name or accession id
+    Returns
+    -------
+      url : web url of corresponding data page.
+    '''
+    return 'http://www.uniprot.org/uniprot/' + id
+
