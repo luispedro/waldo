@@ -7,6 +7,7 @@ from __future__ import division
 import waldo.backend
 from waldo.translations.models import Translation, verify_namespace
 from sqlalchemy import and_
+import re
 
 def translate(name, input_namespace, output_namespace, session=None):
     '''
@@ -24,6 +25,8 @@ def translate(name, input_namespace, output_namespace, session=None):
     -------
       name : result of translation or None.
     '''
+    if input_namespace == output_namespace:
+        return name
     if session is None:
         session = waldo.backend.create_session()
     verify_namespace(input_namespace)
@@ -35,3 +38,25 @@ def translate(name, input_namespace, output_namespace, session=None):
     if trans is None:
         return None
     return trans.output_name
+
+
+def get_id_namespace(any_id):
+    # ensembl gene id
+    if re.match(r'ENS(\w{3})?G[0-9]+', any_id) is not None:
+        return 'ensembl:gene_id'
+    # ensembl peptide ID
+    if re.match(r'ENS(\w{3})?P[0-9]+', any_id) is not None:
+        return 'ensembl:peptide_id'
+    # hpa
+    if re.match('HPA[0-9]{6}', any_id) is not None:
+        return 'hpa:id'
+    # mgi
+    if re.match('MGI:[0-9]{7}', any_id) is not None:
+        return 'mgi:id'
+    # uniprot
+    if re.match('[0-9A-Z_]{9,11}', any_id) is not None:
+        return 'uniprot:name'
+    # locate
+    if re.match('[0-9]{7}', any_id) is not None:
+        return 'locate:id'
+    raise ValueError("waldo.translate.get_id_namespace: Unrecognised format for any_id: '%s'" % any_id)
