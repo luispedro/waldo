@@ -109,8 +109,6 @@ def load(dirname=None, create_session=None):
         entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
-        if (loaded % 1024) == 0:
-            session.commit()
-    session.commit()
+        session.commit()
     return loaded
 

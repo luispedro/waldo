@@ -109,9 +109,7 @@ def _load_gene_annotation(filename, session):
                 loaded += 1
             annotation = models.GOAnnotation(DB_object_id, go_id, assigned_by)
             session.add(annotation)
-            if (loaded % 1024) == 0:
-                session.commit()
-    session.commit()
+            session.commit()
     return loaded
 
 def _load_mrk_ensembl(filename, session):
@@ -136,16 +134,13 @@ def _load_mrk_ensembl(filename, session):
             for id in peptide_ids.split():
                 add_synonym('ensembl:peptide_id', id)
         add_synonym('ensembl:gene_id', ensembl_gene_id)
-        if (i % 1024) == 0:
-            session.commit()
-    session.commit()
+        session.commit()
 
 def _load_pubmed_ids(filename, session):
     '''
     For each line in the file, determine if the referenced MGI ID exists in SQLite.
     If so, insert the associated PubMed IDs into SQLite.
     '''
-    unique = []
     for line in file(filename):
         mgi_id, \
         mrk_symbol, \
@@ -160,3 +155,4 @@ def _load_pubmed_ids(filename, session):
             # update the record to include the PubMed IDs
             obj.pubmedids = pubmed_ids
             session.commit()
+

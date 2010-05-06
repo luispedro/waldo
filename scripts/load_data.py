@@ -8,9 +8,19 @@ import waldo.go.load
 import waldo.uniprot.load
 import waldo.locate.load
 import waldo.hpa.load
+modules = [
+    waldo.go.load,
+    waldo.mgi.load,
+    waldo.uniprot.load,
+    waldo.locate.load,
+    waldo.hpa.load,
+    ]
 
-waldo.go.load.load()
-waldo.mgi.load.load()
-waldo.uniprot.load.load()
-waldo.locate.load.load()
-waldo.hpa.load.load()
+session = waldo.backend.create_session ()
+c = session.connection()
+
+# This is only valid for SQLite3, but it makes it much faster
+c.execute('''PRAGMA SYNCHRONOUS=OFF;''')
+for module in modules:
+    module.load(create_session=(lambda: session))
+
