@@ -33,6 +33,7 @@ class Term(Base):
     namespace = Column(String(64))
 
     def __init__(self, id, name, namespace):
+        assert id.startswith('GO:'), 'waldo.go.models: Invalid GO-ID'
         self.id = id
         self.name = name
         self.namespace = namespace
