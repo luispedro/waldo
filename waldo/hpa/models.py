@@ -13,7 +13,7 @@ class Location(Base):
     __tablename__  = 'hpa_location'
     loc_id = Column(Integer(11), primary_key=True)
     name = Column(String(30), nullable=False)
-    entry_id = Column(String(30), ForeignKey('hpa_ids.hpa_id'))
+    entry_id = Column(String(30), ForeignKey('hpa_ids.hpa_id'), index=True)
 
     def __init__(self, name, entryid):
         self.name = name

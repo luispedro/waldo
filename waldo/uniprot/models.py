@@ -31,7 +31,7 @@ class Accession(Base):
     # We cannot use accession as primary key because they are not unique.
     # Sometimes, one single accession number has been demerged into multiple entries.
     acc_name_id = Column(Integer, primary_key=True)
-    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
     accession = Column(String(8), nullable=False)
 
     def __init__(self, accession):
@@ -40,7 +40,7 @@ class Accession(Base):
 class GoAnnotation(Base):
     __tablename__ = 'uniprot_go_annotation'
     go_ann_id = Column(Integer, primary_key=True)
-    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
     go_id = Column(String(32))
 
     def __init__(self, go_id):
@@ -48,8 +48,8 @@ class GoAnnotation(Base):
 
 class Reference(Base):
     __tablename__ = 'uniprot_reference'
-    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
     refid = Column(Integer, primary_key=True)
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
     key = Column(String(64))
     type = Column(String(32))
     title = Column(String(512))
@@ -63,8 +63,8 @@ class Reference(Base):
 
 class Comment(Base):
     __tablename__ = 'uniprot_comment'
-    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
     commentid = Column(Integer, primary_key=True)
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
     type = Column(String(64))
     text = Column(String(512))
 
@@ -74,8 +74,8 @@ class Comment(Base):
 
 class Organism(Base):
     __tablename__ = 'uniprot_organism_entry'
-    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'))
     oid = Column(Integer, primary_key=True)
+    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
     organism = Column(String(64))
 
     def __init__(self, organism):

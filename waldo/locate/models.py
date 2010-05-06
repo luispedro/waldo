@@ -29,7 +29,7 @@ from waldo.backend import Base
 class Isoform(Base):
     __tablename__ = 'locate_isoforms'
     id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     isoform_class = Column(String(20))
     isoform_name = Column(String(30))
 
@@ -40,6 +40,7 @@ class Isoform(Base):
 class Image(Base):
     __tablename__ = 'locate_images'
     id = Column(Integer(11), primary_key=True)
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
     filename = Column(String(50))
     is_coloc = Column(Boolean)
@@ -74,6 +75,7 @@ class Image(Base):
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
     id = Column(Integer(11), primary_key=True)
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
     source_id = Column(Integer(11))
     method = Column(String(30))
@@ -89,6 +91,7 @@ class Prediction(Base):
 class Location(Base):
     __tablename__ = 'locate_locations'
     id = Column(Integer(11), primary_key=True)
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), nullable=True)
     literature_id = Column(Integer(11), ForeignKey('locate_literature.id'), nullable=True)
     externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.id'), nullable=True)
@@ -114,7 +117,7 @@ class Location(Base):
 class Literature(Base):
     __tablename__ = 'locate_literature'
     id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     author = Column(String(200))
     title = Column(String(200))
     citation = Column(String(100))
@@ -135,7 +138,7 @@ class Literature(Base):
 class Annotation(Base):
     __tablename__ = 'locate_annotations'
     id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     evidence = Column(String(50))
     source_id = Column(Integer(11))
     source_name = Column(String(50))
@@ -152,7 +155,7 @@ class Annotation(Base):
 class ExternalReference(Base):
     __tablename__ = 'locate_externalreferences'
     xref_id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
+    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))

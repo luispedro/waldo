@@ -28,7 +28,7 @@ from waldo.backend import Base
 class GOAnnotation(Base):
     __tablename__ = 'mgi_goannotation'
     mgi_go_id = Column(Integer, primary_key=True)
-    mgi_id = Column(String(32), ForeignKey('mgi_entry.mgi_id'))
+    mgi_id = Column(String(32), ForeignKey('mgi_entry.mgi_id'), index=True)
     go_id = Column(String(15), nullable=False)
     evidence = Column(String(3), nullable=True)
 
