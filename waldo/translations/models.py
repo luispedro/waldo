@@ -4,6 +4,7 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
+import sqlalchemy
 from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relation, backref
 from waldo.backend import Base
@@ -27,8 +28,8 @@ def verify_namespace(namespace):
     Checks whether namespace is known.
     Raises an exception if it not.
     '''
-    assert namespace in known_namespaces, \
-        'waldo.translation: unknown namespace "%s"' % namespace
+    if namespace not in known_namespaces:
+        raise ValueError('waldo.translation: unknown namespace "%s"' % namespace)
 
 class Translation(Base):
     '''
@@ -65,4 +66,10 @@ class Translation(Base):
 
     def __repr__(self):
         return '<Translation %s/%s ==> %s/%s>' % (self.input_namespace, self.input_name, self.output_namespace, self.output_name)
+
+translation_index = sqlalchemy.Index('translation_index',
+        Translation.input_namespace,
+        Translation.input_name,
+        Translation.output_namespace,
+        )
 
