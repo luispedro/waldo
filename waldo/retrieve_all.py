@@ -23,7 +23,7 @@ def get_information(id, session=None):
         for ls in locs:
             all_locs.extend([loc.strip() for loc in re.split('[,.;:]+', ls)])
         all_locs = list(set(all_locs))
-        all_locs = ';'.join(locs)
+        all_locs = ';'.join(all_locs)
         url = module.gen_url(spec_id)
         return '%s,%s' % (all_locs, url)
 
