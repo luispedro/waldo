@@ -57,6 +57,8 @@ def retrieve_go_annotations(mgi_id, session=None):
     '''
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.mgi_id == mgi_id).first()
+    if entr is None:
+        raise KeyError('waldo.mgi.retrieve_go_annotations: No entry for `%s`' % mgi_id)
     return [id_to_term(go.go_id, session) for go in entr.annotations]
 
 def retrieve_entry(id, session=None):
