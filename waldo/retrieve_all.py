@@ -13,7 +13,25 @@ import waldo.hpa.retrieve
 import waldo.backend
 
 
-def get_information(id, session=None):
+def get_information(protein_id, session=None):
+    '''
+    information = get_information(protein_id, session={backend.create_session()})
+
+    Returns all information on the protein identified by `protein_id`
+
+    Parameters
+    ----------
+    protein_id : string
+            protein ID in one of the formats accepted by Waldo
+    session : database connection, optional
+            database connection to use
+
+    Returns
+    -------
+    information : string
+            CSV representation of all information on `protein_id`
+    '''
+
     def get_data(module):
         spec_id = module.from_ensembl_gene_id(ensemblgene, session)
         if not spec_id:
@@ -29,7 +47,7 @@ def get_information(id, session=None):
 
     if session is None:
         session = waldo.backend.create_session()
-    ensemblgene = translate(id, get_id_namespace(id), 'ensembl:gene_id', session) 
+    ensemblgene = translate(protein_id, get_id_namespace(protein_id), 'ensembl:gene_id', session) 
 
     return ','.join([
         ensemblgene,
