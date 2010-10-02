@@ -41,7 +41,6 @@ class Image(Base):
     __tablename__ = 'locate_images'
     id = Column(Integer(11), primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
     filename = Column(String(50))
     is_coloc = Column(Boolean)
     celltype = Column(String(100))
@@ -65,18 +64,11 @@ class Image(Base):
         self.channel2 = channel2
         self.coloc = coloc
 
-        # Also a hack to get around the use of 'getattr' in loading
-        # FIXME 
-        if channel1 is 'None':
-            self.channel1 = None
-        if channel2 is 'None':
-            self.channel2 = None
 
 class Prediction(Base):
     __tablename__ = 'locate_predictions'
     id = Column(Integer(11), primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'))
     source_id = Column(Integer(11))
     method = Column(String(30))
     location = Column(String(50))
@@ -92,7 +84,6 @@ class Location(Base):
     __tablename__ = 'locate_locations'
     id = Column(Integer(11), primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), nullable=True)
     literature_id = Column(Integer(11), ForeignKey('locate_literature.id'), nullable=True)
     externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.id'), nullable=True)
     image_id = Column(Integer(11), ForeignKey('locate_images.id'), nullable=True)
