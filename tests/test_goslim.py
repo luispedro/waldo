@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import and_
 
-import waldo.goslim
+import waldo.goslim.goslim
 import waldo.goslim.load
 import waldo.goslim.models
 
@@ -25,4 +25,6 @@ def test_load():
         tokens = line.strip().split('\t')
         aspects.add(tokens[-2])
     assert len(aspects) == nr_aspects
-
+    session = sessionmaker_()
+    name = waldo.goslim.goslim.map_to_goslim('GO:0014709', 'mgi', session)
+    assert name == 'developmental processes'
