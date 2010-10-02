@@ -1,0 +1,42 @@
+GO_id	term	GOSlim_bin	aspect
+GO:0000001	mitochondrion inheritance	cell organization and biogenesis	P
+GO:0000007	low-affinity zinc ion transmembrane transporter activity	transporter activity	F
+GO:0000009	alpha-1,6-mannosyltransferase activity	other molecular function	F
+GO:0000018	regulation of DNA recombination	DNA metabolism	P
+GO:0000019	regulation of mitotic recombination	DNA metabolism	P
+GO:0000030	mannosyltransferase activity	other molecular function	F
+GO:0000031	mannosylphosphate transferase activity	other molecular function	F
+GO:0000042	protein targeting to Golgi	transport	P
+GO:0000045	autophagic vacuole assembly	stress response	P
+GO:0000045	autophagic vacuole assembly	other metabolic processes	P
+GO:0000109	nucleotide-excision repair complex	nucleus	C
+GO:0000110	nucleotide-excision repair factor 1 complex	nucleus	C
+GO:0000112	nucleotide-excision repair factor 3 complex	nucleus	C
+GO:0000113	nucleotide-excision repair factor 4 complex	nucleus	C
+GO:0000117	regulation of transcription involved in G2/M-phase of mitotic cell cycle	cell cycle and proliferation	P
+GO:0000117	regulation of transcription involved in G2/M-phase of mitotic cell cycle	RNA metabolism	P
+GO:0000118	histone deacetylase complex	nucleus	C
+GO:0000120	RNA polymerase I transcription factor complex	nucleus	C
+GO:0000125	PCAF complex	nucleus	C
+GO:0000126	transcription factor TFIIIB complex	nucleus	C
+GO:0000135	septin checkpoint	cell cycle and proliferation	P
+GO:0000136	alpha-1,6-mannosyltransferase complex	ER/Golgi	C
+GO:0000137	Golgi cis cisterna	ER/Golgi	C
+GO:0000138	Golgi trans cisterna	ER/Golgi	C
+GO:0000139	Golgi membrane	ER/Golgi	C
+GO:0000139	Golgi membrane	other membranes	C
+GO:0000140	acylglycerone-phosphate reductase activity	other molecular function	F
+GO:0000142	cellular bud neck contractile ring	cytoskeleton	C
+GO:0000144	cellular bud neck septin ring	cytoskeleton	C
+GO:0000145	exocyst	other cellular component	C
+GO:0004401	histidinol-phosphatase activity	other molecular function	F
+GO:0004953	icosanoid receptor activity	signal transduction activity	F
+GO:0005685	U1 snRNP	nucleus	C
+GO:0006198	cAMP catabolic process	other metabolic processes	P
+GO:0006683	galactosylceramide catabolic process	other metabolic processes	P
+GO:0009750	response to fructose stimulus	other biological processes	P
+GO:0010242	oxygen evolving activity	other molecular function	F
+GO:0010702	regulation of histolysis	death	P
+GO:0014709	positive regulation of somitomeric trunk muscle development	developmental processes	P
+GO:0015407	monosaccharide-transporting ATPase activity	transporter activity	F
+GO:0031205	endoplasmic reticulum Sec complex	other membranes	C

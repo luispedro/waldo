@@ -8,6 +8,9 @@ wget -N ftp://ftp.informatics.jax.org/pub/reports/gene_association.mgi
 wget -N ftp://ftp.informatics.jax.org/pub/reports/MRK_ENSEMBL.rpt
 wget -N ftp://ftp.informatics.jax.org/pub/reports/MRK_Reference.rpt
 
+# MGI GO SLIM
+wget -N http://www.informatics.jax.org/gotools/data/input/map2MGIslim.txt
+
 # GO
 wget -N http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.obo
 
@@ -22,3 +25,4 @@ unzip LOCATE_human_v6_20081121.xml.zip
 
 # This is a FASTA file of mouse protein sequences
 wget -N ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/pep/Mus_musculus.NCBIM37.56.pep.all.fa.gz
+
