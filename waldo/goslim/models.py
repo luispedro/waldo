@@ -47,7 +47,7 @@ class SlimTerm(Base):
 class SlimMapping(Base):
     __tablename__ = 'go_slim_map'
     id = Column(Integer, primary_key=True)
-    full_id = Column(String(24), ForeignKey(GOTerm.id))
+    full_id = Column(String(24), ForeignKey(GOTerm.id), index=True)
     slim_id = Column(String(24), ForeignKey(SlimTerm.id))
 
     def __init__(self, full_id, slim_id):
