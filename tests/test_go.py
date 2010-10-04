@@ -35,8 +35,18 @@ def test_is_cellular_component():
     assert result is not None
     assert result == term
 
+    result = waldo.go.go.term_to_id(term, session)
+    assert result is not None
+    assert result == id
+
     id = 'GO:00099999skl'
     term = 'repairosome'
     result = waldo.go.go.id_to_term(id, session)
     assert result == id
+
+    id = 'GO:00099999skl'
+    term = 'repairosome'
+    result = waldo.go.go.term_to_id(id, session)
+    assert result == id
+
 

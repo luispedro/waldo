@@ -70,3 +70,30 @@ def id_to_term(go_id, session=None):
         return go_id
     else:
         return term.name
+
+def term_to_id(go_term, session=None):
+    '''
+    go_id = term_to_id(go_term, session={waldo.backend.create_session()})
+
+    For a GO term, returns the corresponding ID.
+
+    If no ID is found, returns the original term.
+
+    Parameters
+    ----------
+    term : string
+        A GO term (e.g. "mitochondrion")
+    session : SQLAlchemy session, optional
+
+    Returns
+    -------
+    go_id : string
+        A GO ID (e.g., GO:123456789)
+    '''
+    if session is None: session = create_session()
+    term = session.query(Term).filter(Term.name == go_term).first()
+    if term is None:
+        # if there's no mapping, return the original id
+        return go_term
+    return term.id
+
