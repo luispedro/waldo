@@ -29,6 +29,7 @@ _paths = [
     path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '.',
     ]
+database_file = 'waldo.sqlite3'
 for _basep in _paths:
     _fullp = path.join(_basep, 'waldo.sqlite3')
     if path.exists(_fullp):
