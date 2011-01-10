@@ -26,3 +26,5 @@ unzip LOCATE_human_v6_20081121.xml.zip
 # This is a FASTA file of mouse protein sequences
 wget -N ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/pep/Mus_musculus.NCBIM37.56.pep.all.fa.gz
 
+# HPA
+wget -N http://www.proteinatlas.org/download/subcellular_location.csv.zip
