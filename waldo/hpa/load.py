@@ -22,12 +22,16 @@ def load(dirname=None, create_session=None):
 
     Parameters
     ----------
-      dirname : Base directory containing the annotations file
-      create_session : Callable object which returns an sqlalchemy session
+    dirname : str, optional
+        Base directory containing the annotations file (default: 'data/')
+    create_session : callable, optional
+        Callable object which returns an sqlalchemy session (default:
+        waldo.backend.create_session)
 
     Returns
     -------
-      num_entries : Number of entries loaded into the local database
+    num_entries : integer
+        Number of entries loaded into the local database
 
     References
     ----------
