@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
+# Copyright (C) 2009-2011, Luis Pedro Coelho <lpc@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,16 +24,22 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from os import path
+import logging
+
+logging = logging.getLogger('backend')
 
 _paths = [
     path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '.',
+    '/var/lib/waldo',
     ]
 database_file = 'waldo.sqlite3'
 for _basep in _paths:
     _fullp = path.join(_basep, 'waldo.sqlite3')
     if path.exists(_fullp):
         database_file = _fullp
+        logging.info('Using database: %s' % database_file)
+        break
 
 Base = declarative_base()
 engine = create_engine('sqlite:///' + database_file, echo=False)
