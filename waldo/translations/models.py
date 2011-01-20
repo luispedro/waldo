@@ -17,6 +17,7 @@ known_namespaces = (
     'mgi:symbol',
     'mgi:name',
     'uniprot:name',
+    'uniprot:accession',
     'locate:id',
     'hpa:id',
     )

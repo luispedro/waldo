@@ -101,6 +101,12 @@ def load(dirname=None, create_session=None):
                 id = dbref.id
                 if waldo.go.is_cellular_component(id):
                     go_annotations.append( models.GoAnnotation(id) )
+        for acc in accessions:
+            session.add(Translation(
+                            'uniprot:accession',
+                            acc,
+                            'uniprot:name',
+                            name))
         organisms = []
         for organism in getattr(entry, 'organism', ()):
             for orgname in organism.name:
