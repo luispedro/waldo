@@ -9,6 +9,7 @@ import waldo.goslim.load
 import waldo.uniprot.load
 import waldo.locate.load
 import waldo.hpa.load
+import waldo.sequences.load
 modules = [
     waldo.go.load,
     waldo.mgi.load,
@@ -16,6 +17,7 @@ modules = [
     waldo.locate.load,
     waldo.hpa.load,
     waldo.goslim.load,
+    waldo.sequences.load,
     ]
 
 session = waldo.backend.create_session ()

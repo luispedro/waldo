@@ -29,6 +29,7 @@ import waldo.locate.models
 import waldo.hpa.models
 import waldo.translations.models
 import waldo.predictions.models
+import waldo.sequences.models
 
 waldo.backend.create_tables()
 
