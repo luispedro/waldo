@@ -30,6 +30,10 @@ classifiers = [
 'Topic :: Scientific/Engineering',
 'Intended Audience :: Science/Research',
 ]
+install_requires = [
+    'sqlalchemy',
+    'amara',
+    ]
 
 setuptools.setup(name = 'Waldo',
       version = 'hadrian',
@@ -42,6 +46,7 @@ setuptools.setup(name = 'Waldo',
       classifiers = classifiers,
       url = '',
       packages = setuptools.find_packages(exclude='tests'),
+      install_requires=install_requires,
       test_suite = 'nose.collector',
       )
 
