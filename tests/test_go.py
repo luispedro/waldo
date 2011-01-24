@@ -18,16 +18,9 @@ def test_is_cellular_component():
 
     assert session.query(waldo.go.models.Term).count() == nr_entries
 
-    assert waldo.go.go.is_cellular_component('GO:0000015')
-    assert waldo.go.go.is_cellular_component('GO:0000108')
-    assert not waldo.go.go.is_cellular_component('GO:0000107')
-
-    assert waldo.go.go.is_cellular_component('GO:0000015')
-    assert waldo.go.go.is_cellular_component('GO:0000108')
-    assert not waldo.go.go.is_cellular_component('GO:0000107')
-
-
-
+    assert waldo.go.go.is_cellular_component('GO:0000015', session)
+    assert waldo.go.go.is_cellular_component('GO:0000108', session)
+    assert not waldo.go.go.is_cellular_component('GO:0000107', session)
 
     id = 'GO:0000015'
     term = 'phosphopyruvate hydratase complex'
