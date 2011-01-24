@@ -32,11 +32,11 @@ classifiers = [
 ]
 install_requires = [
     'sqlalchemy',
-    'amara',
+    'amara==1.2',
     ]
 
 setuptools.setup(name = 'Waldo',
-      version = 'hadrian',
+      version = '0.1',
       description = 'Protein Subcellular Location Information Package',
       long_description = long_description,
       author = 'Luis Pedro Coelho and Shannon Quinn',
