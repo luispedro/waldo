@@ -60,7 +60,7 @@ SECRET_KEY = 'p^xbwj4cqcl@k#oj$y)189&^z#_v_q5smzk^-o0pc9=2#@768e'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+#    'django.template.loaders.eggs.load_template_source',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,13 +78,14 @@ TEMPLATE_DIRS = (
     _BASE_DIR + '/templates',
 )
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.admindocs',
-
-    'odlaw',
-)
+    'django.contrib.admin',
+    
+    'woof.odlaw'
+]
 

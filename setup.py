@@ -48,5 +48,6 @@ setuptools.setup(name = 'Waldo',
       packages = setuptools.find_packages(exclude='tests'),
       install_requires=install_requires,
       test_suite = 'nose.collector',
+      package_data={'woof': ['templates/*.html', 'media/css/*.css']}
       )
 
