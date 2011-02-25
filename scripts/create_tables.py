@@ -24,6 +24,7 @@ import waldo.backend
 
 import waldo.uniprot.models
 import waldo.go.models
+import waldo.goslim.models
 import waldo.mgi.models
 import waldo.locate.models
 import waldo.hpa.models
