@@ -19,12 +19,6 @@ def test_subcellular_retrieve():
     waldo.subcellular.load.load(_testdir, sessionmaker_)
     session = sessionmaker_()
     locations = waldo.subcellular.retrieve.retrieve_location_annotations(ensembl, session)
-    print locations
     assert len(locations) == 2
-    #subcellularid = translate(ensembl, 'ensembl:gene_id', 'subcellular:id', session)
-    #assert subcellularid == uid
-    #ret = waldo.subcellular.retrieve.from_ensembl_gene_id(ensembl, session)
-    #assert ret == uid
-    #goids = waldo.subcellular.retrieve.retrieve_location_annotations(ret, session)
 
 test_subcellular_retrieve()

@@ -18,6 +18,5 @@ def test_subcellular_load():
     nr_entries = waldo.subcellular.load.load(_testinput, sessionmaker_)
     session = sessionmaker_ ()
     loaded = session.query(waldo.subcellular.models.Entry).count()
-    print "count = ", nr_entries, "session thing = ", loaded
 
     assert loaded == nr_entries
