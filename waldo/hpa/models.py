@@ -10,17 +10,17 @@ from sqlalchemy.ext.declarative import declarative_base
 from waldo.backend import Base
 
 class Location(Base):
-    __tablename__  = 'subcellular_location'
+    __tablename__  = 'hpa_location'
     loc_id = Column(Integer(11), primary_key=True)
     name = Column(String(30), nullable=False)
-    entry_id = Column(String(30), ForeignKey('subcellular_ids.ensembl_id'), index=True)
+    entry_id = Column(String(30), ForeignKey('hpa_ids.ensembl_id'), index=True)
 
     def __init__(self, name, entryid):
         self.name = name
         self.entry_id = entryid
 
 class Entry(Base):
-    __tablename__ = 'subcellular_ids'
+    __tablename__ = 'hpa_ids'
     entry_id = Column(Integer(11), primary_key=True)
     species = Column(String(30))
     ensembl_id = Column(String(50), nullable=False)

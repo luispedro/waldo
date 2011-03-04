@@ -24,7 +24,6 @@ def retrieve_location_annotations(id, session=None):
       locations : A list of locations
     '''
     entry = retrieve_entry(id, session)
-    print "FOUND: ", entry.ensembl_id
     return [location.name for location in entry.locations]
 
 def retrieve_entry(id, session=None):
@@ -43,7 +42,6 @@ def retrieve_entry(id, session=None):
       entry : A models.Entry object
     '''
     if session is None: session = waldo.backend.create_session()
-    print session.query(Entry), id
     return session.query(Entry).filter(Entry.ensembl_id == id).first()
 
 def gen_url(id):
