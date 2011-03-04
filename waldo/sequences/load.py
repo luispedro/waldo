@@ -8,10 +8,13 @@ from __future__ import division
 from waldo.sequences import fasta
 from waldo.sequences import models
 from os import path
+import os
+import fnmatch
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
-_inputfilename = 'Mus_musculus.NCBIM37.60.pep.all.fa.gz'
+_inputfilename = ''
+_inputfilepattern = 'Mus_musculus.NCBIM37.*.pep.all.fa.gz'
 
 def load(dirname=None, create_session=None):
     '''
@@ -32,6 +35,10 @@ def load(dirname=None, create_session=None):
         Nr. of entries loaded
     '''
     if dirname is None: dirname = _datadir
+    for file in os.listdir(dirname):
+        if fnmatch.fnmatch(file, _inputfilepattern):
+            _inputfilename = file
+            break
     filename = path.join(dirname, _inputfilename)
     if create_session is None:
         from waldo import backend
