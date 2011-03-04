@@ -9,54 +9,22 @@ from sqlalchemy import and_
 from waldo.hpa.models import Entry
 from waldo.translations.services import translate
 
-def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
-    '''
-    name = from_ensembl_peptide_id(ensembl_peptide_id, session={backend.create_session()})
-
-    Convert ensembl_peptide_id to HPA antibody ID.
-
-    Parameters
-    ----------
-      ensembl_peptide_id : Ensembl peptide ID
-      session : SQLAlchemy session to use (default: call backend.create_session())
-    Returns
-    -------
-      id : HPA antibody
-    '''
-    return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'hpa:id', session)
-
-def from_ensembl_gene_id(ensembl_gene_id, session=None):
-    '''
-    name = from_ensembl_gene_id(ensembl_gene_id, session={backend.create_session()})
-
-    Convert ensembl_gene_id to HPA antibody ID.
-
-    Parameters
-    ----------
-      ensembl_gene_id : Ensembl gene ID
-      session : SQLAlchemy session to use (default: call backend.create_session())
-
-    Returns
-    -------
-      id : HPA antibody
-    ''' 
-    return translate(ensembl_gene_id, 'ensembl:gene_id', 'hpa:id', session)
-
 def retrieve_location_annotations(id, session=None):
     '''
     locations = retrieve_location_annotations(id, session={backend.create_session()})
 
-    Retrieve HPA location annotations based on HPA identifier
+    Retrieve location annotations based on Ensembl identifier
 
     Parameters
     ----------
-      id : HPA antibody ID
+      id : Ensembl ID
       session : SQLAlchemy session to use (default: call backend.create_session())
     Returns
     -------
-      locations : A list of locations in the format specified by HPA (loc_*)
+      locations : A list of locations
     '''
     entry = retrieve_entry(id, session)
+    print "FOUND: ", entry.ensembl_id
     return [location.name for location in entry.locations]
 
 def retrieve_entry(id, session=None):
@@ -67,7 +35,7 @@ def retrieve_entry(id, session=None):
 
     Parameters
     ----------
-      id : HPA antibody ID
+      id : Ensembl antibody ID
       session : SQLAlchemy session to use (default: create a new one)
 
     Returns
@@ -75,18 +43,18 @@ def retrieve_entry(id, session=None):
       entry : A models.Entry object
     '''
     if session is None: session = waldo.backend.create_session()
-    return session.query(Entry).filter(Entry.hpa_id == id).first()
-
+    print session.query(Entry), id
+    return session.query(Entry).filter(Entry.ensembl_id == id).first()
 
 def gen_url(id):
     '''
     url = gen_url(id)
 
-    Generate URL for HPA antibody id `id`
+    Generate URL for Ensembl antibody id `id`
 
     Parameters
     ----------
-      id : HPA antibody id
+      id : Ensembl antibody id
     Returns
     -------
       url : web url of corresponding data page.
