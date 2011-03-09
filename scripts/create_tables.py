@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
+# Copyright (C) 2009-2011, Luis Pedro Coelho <lpc@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,7 +22,6 @@
 
 import waldo.backend
 
-import waldo.subcellular.models
 import waldo.uniprot.models
 import waldo.go.models
 import waldo.goslim.models
