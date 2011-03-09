@@ -19,13 +19,13 @@ wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebas
 
 # LOCATE
 wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_mouse_v6_20081121.xml.zip
-unzip LOCATE_mouse_v6_20081121.xml.zip
+unzip -u LOCATE_mouse_v6_20081121.xml.zip
 wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_human_v6_20081121.xml.zip
-unzip LOCATE_human_v6_20081121.xml.zip
+unzip -u LOCATE_human_v6_20081121.xml.zip
 
 # This is a FASTA file of mouse protein sequences
 wget -N ftp://ftp.ensembl.org/pub/current/fasta/mus_musculus/pep/Mus_musculus.NCBIM37.*.pep.all.fa.gz
 
 # HPA
 wget -N http://www.proteinatlas.org/download/subcellular_location.csv.zip
-unzip subcellular_location.csv.zip
+unzip -u subcellular_location.csv.zip
