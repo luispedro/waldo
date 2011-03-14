@@ -13,7 +13,6 @@ import glob
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
-_inputfilename = ''
 
 def load(dirname=None, create_session=None):
     '''
@@ -34,8 +33,8 @@ def load(dirname=None, create_session=None):
         Nr. of entries loaded
     '''
     if dirname is None: dirname = _datadir
-    _inputfilename = glob.glob(path.join(dirname,'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
-    filename = path.join(_inputfilename)
+    inputfilename = glob.glob(path.join(dirname,'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
+    filename = path.join(inputfilename)
     if create_session is None:
         from waldo import backend
         create_session = backend.create_session
