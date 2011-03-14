@@ -6,7 +6,7 @@ import waldo.nog
 import waldo.nog.load
 from waldo.nog.load import _accept_species
 import waldo.nog.models
-from waldo.translations.models import Translation
+from waldo.nog.retrieve import retrieve_orthologs
 
 def test_species():
     assert _accept_species('Mus Musculus', 'ENSMUSP00000083761')
@@ -28,3 +28,8 @@ def test_nog_load():
 
     assert loaded == nr_entries
     assert loaded == 108
+
+    orts = retrieve_orthologs('ENSP00000267102', session)
+    assert 'ENSMUSP00000023736' in orts
+    assert 'ENSMUSP00000073855' not in orts
+
