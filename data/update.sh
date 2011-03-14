@@ -29,3 +29,6 @@ wget -N ftp://ftp.ensembl.org/pub/current/fasta/mus_musculus/pep/Mus_musculus.NC
 # HPA
 wget -N http://www.proteinatlas.org/download/subcellular_location.csv.zip
 unzip -u subcellular_location.csv.zip
+
+# NOG
+wget -N http://eggnog.embl.de/download/maNOG.mapping.txt.gz
