@@ -10,6 +10,7 @@ import waldo.uniprot.load
 import waldo.locate.load
 import waldo.hpa.load
 import waldo.sequences.load
+import waldo.nog.load
 modules = [
     waldo.go.load,
     waldo.mgi.load,
@@ -18,6 +19,7 @@ modules = [
     waldo.hpa.load,
     waldo.goslim.load,
     waldo.sequences.load,
+    waldo.nog.load,
     ]
 
 session = waldo.backend.create_session ()
