@@ -6,6 +6,8 @@ uniprot_sprot.xml.gz
 MRK_ENSEMBL.rpt
 LOCATE_human_v6_20081121.xml.zip
 LOCATE_mouse_v6_20081121.xml.zip
+LOCATE_human_v6_20081121.xml
+LOCATE_mouse_v6_20081121.xml
 DBML_readme.txt
 DBMLoc.dat
 LOCATE_human.xml
@@ -16,7 +18,7 @@ uniprot.xsd
 truncate.py
 MRK_Reference.rpt
 gene_ontology.1_2.obo.gz
-Mus_musculus.NCBIM37.60.pep.all.fa.gz
+Mus_musculus.NCBIM37.*.pep.all.fa.gz
 map2MGIslim.txt
 subcellular_location.csv
 subcellular_location.csv.zip

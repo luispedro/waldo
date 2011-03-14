@@ -34,7 +34,7 @@ def load(dirname=None, create_session=None):
         Nr. of entries loaded
     '''
     if dirname is None: dirname = _datadir
-    _inputfilename = glob.glob(dirname + 'Mus_musculus.NCBIM37.*.pep.all.fa.gz')[0]
+    _inputfilename = glob.glob(path.join(dirname,'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
     filename = path.join(_inputfilename)
     if create_session is None:
         from waldo import backend
