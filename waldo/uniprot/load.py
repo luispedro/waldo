@@ -67,6 +67,8 @@ def load(dirname=None, create_session=None):
         comments = [models.Comment(c.type, unicode(c).strip()) for c in getattr(entry, 'comments', [])]
         references = []
         go_annotations = []
+        evidence_codes = []
+
         for ref in entry.reference:
             try:
                 key = ref.key
@@ -91,6 +93,8 @@ def load(dirname=None, create_session=None):
                         subnamespace = 'gene_id'
                     elif prop.type == 'protein sequence ID':
                         subnamespace = 'peptide_id'
+                    elif prop.type == 'evidence':
+                        evidence_codes.append(models.Evidence(prop.value))
                     else:
                         continue
                     t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)
@@ -99,6 +103,10 @@ def load(dirname=None, create_session=None):
                     session.add(t)
             elif dbref.type == 'Go':
                 id = dbref.id
+                for prop in dbref.property:
+                    if prop.type == 'evidence':
+                        evidence_codes.append(models.Evidence(prop.value, id))
+
                 if waldo.go.is_cellular_component(id):
                     go_annotations.append( models.GoAnnotation(id) )
         for acc in accessions:
@@ -112,7 +120,7 @@ def load(dirname=None, create_session=None):
             for orgname in organism.name:
                 if orgname.type == u'scientific':
                     organisms.append(unicode(orgname))
-        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms)
+        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms, evidence_codes)
         session.add(entry)
         loaded += 1
         session.commit()
