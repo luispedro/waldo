@@ -30,4 +30,4 @@ def test_nr_entries():
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace ==  'uniprot:name')).count()
     assert waldo.uniprot.retrieve.from_ensembl_gene_id('ENSMUSG00000007564', session) == '2AAA_MOUSE'
     assert 'GO:0005829' in waldo.uniprot.retrieve.retrieve_go_annotations('2AAA_MOUSE', session)
-    assert test_entry.evidence[1].go_id == 'GO:0000159'
+    assert 'IDA:MGI' in [test_entry.go_annotations[i].evidence_code for i in range(2)]

@@ -42,9 +42,11 @@ class GoAnnotation(Base):
     go_ann_id = Column(Integer, primary_key=True)
     uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
     go_id = Column(String(32))
+    evidence_code = Column(String(32))
 
-    def __init__(self, go_id):
+    def __init__(self, go_id, evidence_code):
         self.go_id = go_id
+        self.evidence_code = evidence_code
 
 class Reference(Base):
     __tablename__ = 'uniprot_reference'
@@ -81,17 +83,6 @@ class Organism(Base):
     def __init__(self, organism):
         self.organism = organism
 
-class Evidence(Base):
-    __tablename__ = 'uniprot_evidence_codes'
-    evidenceid = Column(Integer, primary_key=True)
-    uniprot_name = Column(String(32), ForeignKey('uniprot_entry.name'), index=True)
-    evidence_code = Column(String(64))
-    go_id = Column(String(32))
-
-    def __init__(self, evidence_code, go_id):
-        self.evidence_code = evidence_code
-        self.go_id = go_id
-
 class Entry(Base):
     __tablename__ = 'uniprot_entry'
     name = Column(String(32), nullable=False, primary_key=True)
@@ -101,10 +92,9 @@ class Entry(Base):
     go_annotations = relation(GoAnnotation)
     sequence = Column(Text)
     organisms = relation(Organism)
-    evidence = relation(Evidence)
 
 
-    def __init__(self, name, accessions, comments, references, go_annotations, sequence, organisms, evidence):
+    def __init__(self, name, accessions, comments, references, go_annotations, sequence, organisms):
         self.name = name
         if type(accessions[0]) in (str, unicode):
             accessions = map(Accession, accessions)
@@ -117,7 +107,6 @@ class Entry(Base):
         self.go_annotations = go_annotations
         self.sequence = sequence
         self.organisms = organisms
-        self.evidence = evidence
 
     def __repr__(self):
         return '<Uniprot Entry: %s>' % self.name

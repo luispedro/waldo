@@ -67,7 +67,6 @@ def load(dirname=None, create_session=None):
         comments = [models.Comment(c.type, unicode(c).strip()) for c in getattr(entry, 'comments', [])]
         references = []
         go_annotations = []
-        evidence_codes = []
 
         for ref in entry.reference:
             try:
@@ -93,8 +92,6 @@ def load(dirname=None, create_session=None):
                         subnamespace = 'gene_id'
                     elif prop.type == 'protein sequence ID':
                         subnamespace = 'peptide_id'
-                    elif prop.type == 'evidence':
-                        evidence_codes.append(models.Evidence(prop.value))
                     else:
                         continue
                     t = Translation('ensembl:'+subnamespace, prop.value, 'uniprot:name', name)
@@ -103,12 +100,13 @@ def load(dirname=None, create_session=None):
                     session.add(t)
             elif dbref.type == 'Go':
                 id = dbref.id
+                evidence_code = ''
                 for prop in dbref.property:
                     if prop.type == 'evidence':
-                        evidence_codes.append(models.Evidence(prop.value, id))
+                        evidence_code = prop.value;
 
                 if waldo.go.is_cellular_component(id):
-                    go_annotations.append( models.GoAnnotation(id) )
+                    go_annotations.append( models.GoAnnotation(id, evidence_code) )
         for acc in accessions:
             session.add(Translation(
                             'uniprot:accession',
@@ -120,7 +118,7 @@ def load(dirname=None, create_session=None):
             for orgname in organism.name:
                 if orgname.type == u'scientific':
                     organisms.append(unicode(orgname))
-        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms, evidence_codes)
+        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
         session.commit()
