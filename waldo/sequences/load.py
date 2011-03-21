@@ -7,6 +7,7 @@
 from __future__ import division
 from waldo.sequences import fasta
 from waldo.sequences import models
+from waldo.translations.models import Translation
 from os import path
 import os
 import glob
@@ -41,7 +42,17 @@ def load(dirname=None, create_session=None):
     session = create_session()
     nr_loaded = 0
     for seq in fasta.read(filename):
-        peptide = seq.header.split()[0]
+        htokens = seq.header.split()
+        peptide = htokens[0]
+        gene = htokens[3]
+        assert gene.startswith('gene:'), 'waldo.sequences.load'
+        gene = gene[len('gene:'):]
+        session.add(
+            Translation(
+                'ensembl:gene_id',
+                gene,
+                'ensembl:peptide_id',
+                peptide))
         aaseq = seq.sequence
         seq = models.EnsemblSequence(peptide, aaseq)
         session.add(seq)
