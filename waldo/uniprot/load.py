@@ -61,6 +61,12 @@ def load(dirname=None, create_session=None):
         input = file(filename)
     loaded = 0
     for entry in amara.pushbind(input, '//uniprot:entry', prefixes=uniprot_nss):
+        organisms = []
+        for organism in getattr(entry, 'organism', ()):
+            for orgname in organism.name:
+                if orgname.type == u'scientific':
+                    organisms.append(unicode(orgname))
+        
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
         sequence = unicode(entry.sequence)
@@ -74,7 +80,7 @@ def load(dirname=None, create_session=None):
                 type = ref.citation.type
                 title = unicode(ref.citation.title).strip()
                 authors = []
-                for p in ref.authorList.person:
+                for p in ref.citation.authorList.person:
                     authors.append(p.name)
                 authors = " AND ".join(authors)
                 references.append( models.Reference(key, type, title, authors) )
@@ -113,11 +119,6 @@ def load(dirname=None, create_session=None):
                             acc,
                             'uniprot:name',
                             name))
-        organisms = []
-        for organism in getattr(entry, 'organism', ()):
-            for orgname in organism.name:
-                if orgname.type == u'scientific':
-                    organisms.append(unicode(orgname))
         entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
