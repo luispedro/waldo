@@ -28,3 +28,5 @@ def test_load():
     session = sessionmaker_()
     name = waldo.goslim.goslim.map_to_goslim('GO:0014709', 'mgi', session)
     assert name == 'developmental processes'
+    nonexistent = waldo.goslim.goslim.map_to_goslim('GO:99999', 'mgi', session)
+    assert nonexistent is None
