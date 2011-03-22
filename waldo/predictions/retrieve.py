@@ -5,7 +5,7 @@
 
 from __future__ import division
 import waldo.backend
-from waldo.predictions.models import Prediction 
+from waldo.predictions.models import Prediction
 
 def retrieve_predictions(ensembl_gene_id, session=None):
     '''
