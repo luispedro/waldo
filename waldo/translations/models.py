@@ -28,6 +28,19 @@ def verify_namespace(namespace):
 
     Checks whether namespace is known.
     Raises an exception if it not.
+
+    Parameters
+    ----------
+    namespace : str
+        Possible namespace
+
+    Raises
+    ------
+    ValueError
+
+    Returns
+    -------
+    None
     '''
     if namespace not in known_namespaces:
         raise ValueError('waldo.translation: unknown namespace "%s"' % namespace)

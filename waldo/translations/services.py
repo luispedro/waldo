@@ -17,13 +17,19 @@ def translate(name, input_namespace, output_namespace, session=None):
 
     Parameters
     ----------
-      name : input name
-      input_namespace : namespace to translate from
-      output_namespace : namespace to translate to
-      session : SQLAlchemy session to use (default: call backend.create_session())
+    name : str
+        input name
+    input_namespace : str
+        namespace to translate from (must be a known namespace)
+    output_namespace : str
+        namespace to translate to (must be a known namespace)
+    session : SQLAlchemy sesion object
+        SQLAlchemy session to use (default: call backend.create_session())
+
     Returns
     -------
-      name : result of translation or None.
+    name : str or None
+        result of translation or None if not found.
     '''
     if input_namespace == output_namespace:
         return name
