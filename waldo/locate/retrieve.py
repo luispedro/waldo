@@ -34,17 +34,20 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
 
     Parameters
     ----------
-      ensembl_peptide_id : Ensembl peptide ID
-      session : SQLAlchemy session to use (default: call backend.create_session())
+    ensembl_peptide_id : str
+        Ensembl peptide ID
+    session : SQLAlchemy session object
+        session to use (default: call backend.create_session())
+
     Returns
     -------
-      locate_id : LOCATE protein identifier
+    locate_id : str
+        LOCATE protein identifier
     '''
     return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'locate:id', session)
 
 def _splitGO(goids):
     goids = goids.split(';')
-    goids = map(id_to_term, goids)
     return goids
 
 def retrieve_go_annotations(id, session=None):
@@ -55,11 +58,15 @@ def retrieve_go_annotations(id, session=None):
 
     Parameters
     ----------
-      id : LOCATE protein uid
-      session : SQLAlchemy session to use (default: call backend.create_session())
+    id : str
+        LOCATE protein uid
+    session : SQLAlchemy session object, optional
+        session to use (default: call backend.create_session())
+
     Returns
     -------
-      go_ids : list of go terms (of the form "GO:00...")
+    go_ids : list of str
+        go terms (of the form "GO:00...")
     '''
     if session is None: session = backend.create_session()
     entry = session.query(Entry).filter(Entry.id == id).first()

@@ -8,7 +8,6 @@ import waldo.backend
 from sqlalchemy import and_
 from waldo.uniprot.models import Entry
 from waldo.translations.services import translate
-from waldo.go.go import id_to_term
 
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
@@ -51,15 +50,19 @@ def retrieve_go_annotations(name, session=None):
 
     Parameters
     ----------
-      name : uniprot name
-      session : SQLAlchemy session to use (default: call backend.create_session())
+    name : str
+        uniprot name
+    session : SQLAlchemy session object, optional
+        session to use (default: call backend.create_session())
+
     Returns
     -------
-      go_ids : list of go terms (of the form "GO:00...")
+    go_ids : list of str
+        go terms (of the form "GO:00...")
     '''
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
-    return [id_to_term(go.go_id, session) for go in entr.go_annotations]
+    return [go.go_id for go in entr.go_annotations]
 
 def retrieve_entry(id, session=None):
     '''
