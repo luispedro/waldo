@@ -8,7 +8,6 @@ from sqlalchemy import and_
 from waldo import backend
 from waldo.nog.models import NogEntry
 from waldo.translations.services import translate
-from waldo.go.go import id_to_term
 
 def retrieve_orthologs(ensembl_id, session=None):
     '''

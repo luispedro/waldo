@@ -46,11 +46,12 @@ def map_to_goslim(go_id, set_name, session=None):
     if session is None:
         from waldo.backend import create_session
         session = create_session()
-    return (session.query(SlimTerm)
+    entry = (session.query(SlimTerm)
                     .join(SlimMapping)
                     .join(SlimSet)
-                    .filter(SlimSet.id == set_name) 
+                    .filter(SlimSet.id == set_name)
                     .filter(SlimMapping.full_id == go_id)
-                    .first()
-                    .name)
+                    .first())
+    if entry is None: return None
+    return entry.name
 
