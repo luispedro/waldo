@@ -10,6 +10,27 @@ from waldo.uniprot.models import Entry
 from waldo.translations.services import translate
 from waldo.go.go import id_to_term
 
+_translate = {
+        'EXP' : 'Inferred from Experiment', 
+        'IDA' : 'Inferred from Direct Assay',
+        'IPI' : 'Inferred from Physical Interation',
+        'IMP' : 'Inferred from Mutant Phenotype',
+        'IGI' : 'Inferred from Genetic Interaction',
+        'IEP' : 'Inferred from Expression Pattern',
+        'ISS' : 'Inferred from Sequence or Structural Similarity',
+        'ISA' : 'Inferred from Sequence Alignment',
+        'ISO' : 'Inferred from Sequence Orthology',
+        'ISM' : 'Inferred from Sequence Model',
+        'IGC' : 'Inferred from Genomic Context',
+        'RCA' : 'Inferred from Reviewed Computational Analysis',
+        'TAS' : 'Traceable Author Statement',
+        'NAS' : 'Non-traceable Author Statement',
+        'IC'  : 'Inferred by Curator',
+        'ND'  : 'No biological Data available',
+        'IEA' : 'Inferred from Electronic Annotation',
+        'NR'  : 'Not Recorded'
+}
+
 def from_ensembl_gene_id(ensembl_gene_id, session=None):
     '''
     name = from_ensembl_gene_id(ensembl_gene_id, session={backend.create_session()})
@@ -94,3 +115,20 @@ def gen_url(id):
     '''
     return 'http://www.uniprot.org/uniprot/' + id
 
+def translate_evidence_code(code):
+    '''
+    desc = translate_evidence_code(code)
+
+    Translate an evidence and its source into a more readable description
+
+    Parameters
+    ----------
+      code : "evidence code:source" parsed from Uniprot database.
+
+    Returns
+    -------
+      desc : sentence describing the evidence code and its source.
+
+    '''
+    vals = code.split(':')
+    return _translate.get(vals[0], 'Evidence code Unknown') + ' from ' + vals[1]
