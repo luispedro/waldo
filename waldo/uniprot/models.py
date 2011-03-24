@@ -56,12 +56,14 @@ class Reference(Base):
     type = Column(String(32))
     title = Column(String(512))
     authors = Column(String(512))
+    dbRef = Column(String(64))
 
-    def __init__(self, key, type, title, authors):
+    def __init__(self, key, type, title, authors, dbRef):
         self.type = type
         self.key = key
         self.title = title
         self.authors = authors
+        self.dbRef = dbRef
 
 class Comment(Base):
     __tablename__ = 'uniprot_comment'
