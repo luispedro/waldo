@@ -66,7 +66,6 @@ def load(dirname=None, create_session=None):
             for orgname in organism.name:
                 if orgname.type == u'scientific':
                     organisms.append(unicode(orgname))
-        
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
         sequence = unicode(entry.sequence)
@@ -83,7 +82,17 @@ def load(dirname=None, create_session=None):
                 for p in ref.citation.authorList.person:
                     authors.append(p.name)
                 authors = " AND ".join(authors)
-                references.append( models.Reference(key, type, title, authors) )
+                
+                #Look for DOI first, if it is not present look for PubMed
+                dbRefs = filter(lambda x : x.type == "DOI", ref.citation.dbReference)
+                dbRefString = ''
+                if(len(dbRefs) != 0):
+                    dbRefString = "%s:%s" % (dbRefs[0].type, dbRefs[0].id)
+                else:
+                    dbRefs = filter(lambda x : x.type == "PubMed", ref.citation.dbReference)
+                    if(len(dbRefs) != 0):
+                        dbRefString = "%s:%s" % (dbRefs[0].type, dbRefs[0].id)
+                references.append( models.Reference(key, type, title, authors, dbRefString) )
             except AttributeError:
                 pass # This means that this was a reference without a title or key, which we don't care about
 
