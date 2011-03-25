@@ -33,6 +33,7 @@ from waldo.translations.models import Translation
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'uniprot_sprot.xml.gz'
+_organism_set = set([u'Mus musculus'])
 
 def load(dirname=None, create_session=None):
     '''
@@ -66,6 +67,11 @@ def load(dirname=None, create_session=None):
             for orgname in organism.name:
                 if orgname.type == u'scientific':
                     organisms.append(unicode(orgname))
+                    
+        organisms = list(set(organisms) & _organism_set)
+        if(len(organisms) == 0):
+            continue
+
         accessions = [unicode(acc) for acc in entry.accession]
         name = unicode(entry.name)
         sequence = unicode(entry.sequence)
