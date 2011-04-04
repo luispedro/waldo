@@ -32,7 +32,7 @@ classifiers = [
 ]
 install_requires = [
     'sqlalchemy',
-    'amara==1.2',
+    'lxml',
     ]
 
 setuptools.setup(name = 'Waldo',
