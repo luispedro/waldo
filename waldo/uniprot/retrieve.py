@@ -8,6 +8,8 @@ import waldo.backend
 from sqlalchemy import and_
 from waldo.uniprot.models import Entry
 from waldo.translations.services import translate
+import urllib
+from lxml import etree
 
 _translate = {
         'EXP' : 'Inferred from Experiment', 
@@ -135,3 +137,21 @@ def translate_evidence_code(code):
     '''
     vals = code.split(':')
     return _translate.get(vals[0], 'Evidence code Unknown') + ' from ' + vals[1]
+
+def retrieve_pubmed_abstract(pmid):
+    '''
+    abstract = retrieve_pubmed_abstract(pmid
+
+    Retrieves the abstract for a paper given by the PubMed id pmid
+
+    Parameters
+    ----------
+      pmid : a pubmed id
+
+    Returns
+    -------
+      abstract : the abstract associated with the PubMed id's paper
+    '''
+    page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?id=%s&db=pubmed&rettype=abstract" % pmid)
+    abstract = page.read()
+    return abstract.partition('<pre>')[2].partition('</pre>')[0]
