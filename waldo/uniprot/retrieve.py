@@ -9,7 +9,6 @@ from sqlalchemy import and_
 from waldo.uniprot.models import Entry
 from waldo.translations.services import translate
 import urllib
-from lxml import etree
 
 _translate = {
         'EXP' : 'Inferred from Experiment', 
