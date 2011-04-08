@@ -37,7 +37,6 @@ def test_nr_entries():
     doi_abs = waldo.uniprot.retrieve.retrieve_doi_abstract("10.1101/gr.2596504")
     assert doi_abs.endswith(doi_test)
     assert None == waldo.uniprot.retrieve.retrieve_doi_abstract("not a doi code")
-    print waldo.uniprot.retrieve.retrieve_pubmed_abstract("not a pubmed id")
 
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace ==  'uniprot:name')).count()
     assert waldo.uniprot.retrieve.from_ensembl_gene_id('ENSMUSG00000007564', session) == '2AAA_MOUSE'
