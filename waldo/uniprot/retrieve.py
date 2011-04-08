@@ -9,6 +9,7 @@ from sqlalchemy import and_
 from waldo.uniprot.models import Entry
 from waldo.translations.services import translate
 import urllib
+from lxml import etree
 
 _translate = {
         'EXP' : 'Inferred from Experiment', 
@@ -154,3 +155,12 @@ def retrieve_pubmed_abstract(pmid):
     page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?id=%s&db=pubmed&rettype=abstract" % pmid)
     abstract = page.read()
     return abstract.partition('<pre>')[2].partition('</pre>')[0]
+
+def retrieve_doi_abstract(doi):
+    page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%s[aid]" % doi)
+    xml = page.read()
+    root = etree.fromstring(xml)
+    if(root.find('Count').text == '0'):
+        return None
+    pmid = root.find('IdList').iterchildren().next().text
+    return retrieve_pubmed_abstract(pmid)
