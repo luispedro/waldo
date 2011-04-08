@@ -140,13 +140,13 @@ def translate_evidence_code(code):
 
 def retrieve_pubmed_abstract(pmid):
     '''
-    abstract = retrieve_pubmed_abstract(pmid
+    abstract = retrieve_pubmed_abstract(pmid)
 
     Retrieves the abstract for a paper given by the PubMed id pmid
 
     Parameters
     ----------
-      pmid : a pubmed id
+      pmid : a Pubmed id
 
     Returns
     -------
@@ -154,9 +154,22 @@ def retrieve_pubmed_abstract(pmid):
     '''
     page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?id=%s&db=pubmed&rettype=abstract" % pmid)
     abstract = page.read()
-    return abstract.partition('<pre>')[2].partition('</pre>')[0]
+    return abstract.partition('<pre>')[2].partition('</pre>')[0].rstrip()
 
 def retrieve_doi_abstract(doi):
+    '''
+    abstract = retrieve_doi_abstract(doi)
+
+    Retrieves the abstract for a paper given by the DOI id doi by looking up its Pubmed id
+
+    Parameters
+    ----------
+      doi : a DOI code
+
+    Returns
+    -------
+      abstract : the abstract associated with the DOI codes's paper, or none if no matching Pubmed id is found
+    '''
     page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%s[aid]" % doi)
     xml = page.read()
     root = etree.fromstring(xml)
