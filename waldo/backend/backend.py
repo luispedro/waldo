@@ -54,4 +54,9 @@ def create_tables():
     Creates all tables in database.
     '''
     metadata.create_all()
+    conn = engine.connect()
+    #drop the old uniprot organism entry, and create a virtual one with fts3
+    conn.execute("drop table uniprot_organism_entry")
+    conn.execute("create virtual table uniprot_organism_entry using fts3 (oid INTEGER NOT NULL, uniprot_name VARCHAR(32), organism VARCHAR(64), PRIMARY KEY (oid), FOREIGN KEY(uniprot_name) REFERENCES uniprot_entry (name))")
+    conn.execute("create index ix_uniprot_organism_entry_uniprot_name ON uniprot_organism_entry (uniprot_name)") 
 
