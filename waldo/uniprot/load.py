@@ -68,9 +68,10 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                 if subitem.get('type') == u'scientific':
                     organisms.append(unicode(subitem.text))
 
-        organisms = list(set(organisms) & organism_set)
-        if(len(organisms) == 0):
-            continue
+        if(len(organism_set) != 0) :
+            organisms = list(set(organisms) & organism_set)
+            if(len(organisms) == 0):
+                continue
 
         accessions = [unicode(acc.text) for acc in element.iterchildren(_p+'accession')]
         name = unicode(element.findtext(_p+'name'))
@@ -127,8 +128,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                 for prop in dbref.findall(_p+'property'):
                     if prop.get('type') == 'evidence':
                         evidence_code = prop.get('value');
-
-                if waldo.go.is_cellular_component(id):
+                if waldo.go.is_cellular_component(id, session):
                     go_annotations.append(models.GoAnnotation(id, evidence_code))
 
         element.clear()
