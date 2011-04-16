@@ -87,6 +87,26 @@ def retrieve_go_annotations(name, session=None):
     entr = session.query(Entry).filter(Entry.name == name).first()
     return [go.go_id for go in entr.go_annotations]
 
+def retrieve_name_matches(term, session=None):
+    '''
+        entries = retrieve_name_matches(term, session={backend.create_session()})
+
+        Retrieve Uniprot entries that match the given term, using full text search on the 
+        human readable protein names.
+
+        Parameters
+        ----------
+          term : a human readable protein name (or part of a name)
+          session : SQLAlchemy session to use (default: create a new one)
+
+        Returns
+        -------
+          entries : a list of model.Entry objects with matching readable names.
+    '''
+    if session is None: session = waldo.backed.create_session()
+    return session.execute('select * from uniprot_entry where rname match "*' + term + '*"').fetchall()
+
+
 def retrieve_entry(id, session=None):
     '''
     entry = retrieve_entry(id, session={backend.create_session()})

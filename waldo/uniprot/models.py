@@ -88,6 +88,7 @@ class Organism(Base):
 class Entry(Base):
     __tablename__ = 'uniprot_entry'
     name = Column(String(32), nullable=False, primary_key=True)
+    rname = Column(String(128), nullable=False)
     accessions = relation(Accession)
     references = relation(Reference)
     comments = relation(Comment)
@@ -96,8 +97,9 @@ class Entry(Base):
     organisms = relation(Organism)
 
 
-    def __init__(self, name, accessions, comments, references, go_annotations, sequence, organisms):
+    def __init__(self, name, rname, accessions, comments, references, go_annotations, sequence, organisms):
         self.name = name
+        self.rname = rname
         if type(accessions[0]) in (str, unicode):
             accessions = map(Accession, accessions)
         if organisms and type(organisms[0]) in (str, unicode):

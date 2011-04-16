@@ -19,6 +19,15 @@ def load_uniprot_test():
     metadata = waldo.uniprot.models.Base.metadata
     metadata.bind = engine
     metadata.create_all()
+
+    conn = engine.connect()
+    conn.execute("drop table uniprot_entry")
+    conn.execute("CREATE VIRTUAL TABLE uniprot_entry USING fts3 (" +
+            "name VARCHAR(32) NOT NULL, " + 
+            "rname VARCHAR(128) NOT NULL, " +
+            "sequence TEXT, " +
+            "PRIMARY KEY (name))")
+
     sessionmaker_ = sessionmaker(engine)
     print waldo.go.load.load(_testdir, sessionmaker_)
     waldo.uniprot.load.load(_testdir, sessionmaker_, set([]))
@@ -44,3 +53,6 @@ def test_nr_entries():
     assert 'IDA:MGI' in [test_entry.go_annotations[0].evidence_code]
     assert 'Inferred from Direct Assay from MGI' == waldo.uniprot.retrieve.translate_evidence_code('IDA:MGI')
     assert session.query(waldo.uniprot.models.Entry).count() == nr_entries
+    entries = waldo.uniprot.retrieve.retrieve_name_matches('subunit', session)
+    for ent in entries:
+        assert ent.rname.find("subunit") != -1

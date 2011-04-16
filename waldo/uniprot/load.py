@@ -75,6 +75,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
 
         accessions = [unicode(acc.text) for acc in element.iterchildren(_p+'accession')]
         name = unicode(element.findtext(_p+'name'))
+        rname = element.find(_p + 'protein').find(_p+'recommendedName').find(_p + 'fullName').text
         sequence = unicode(element.findtext(_p+'sequence'))
         comments = [models.Comment(c.get('type'), unicode(c.findtext(_p+'text'))) for c in element.iterchildren(_p+'comment')]
         references = []
@@ -82,8 +83,6 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
 
         for ref in element.iterchildren(_p+'reference'):
             for subel in ref.iterchildren():
-                #if(subel.tag == _p+'key'):
-                #    key = subel.text
                 if(subel.tag == _p+'citation'):
                     key = ref.get('key')
                     type = subel.get('type')
@@ -141,7 +140,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                             acc,
                             'uniprot:name',
                             name))
-        entry = models.Entry(name, accessions, comments, references, go_annotations, sequence, organisms)
+        entry = models.Entry(name, rname, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
         session.commit()
