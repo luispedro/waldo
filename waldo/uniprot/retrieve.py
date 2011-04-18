@@ -103,9 +103,8 @@ def retrieve_name_matches(term, session=None):
         -------
           entries : a list of model.Entry objects with matching readable names.
     '''
-    if session is None: session = waldo.backed.create_session()
-    return session.execute('select * from uniprot_entry where rname match "*' + term + '*"').fetchall()
-
+    if session is None: session = waldo.backend.create_session()
+    return session.query(Entry).from_statement('select * from uniprot_entry where rname match "*' + term + '*"').all()
 
 def retrieve_entry(id, session=None):
     '''
