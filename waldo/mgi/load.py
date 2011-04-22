@@ -107,7 +107,7 @@ def _load_gene_annotation(filename, session):
                 entries.add(DB_object_id)
                 session.add(entry)
                 loaded += 1
-            annotation = models.GOAnnotation(DB_object_id, go_id, assigned_by)
+            annotation = models.GOAnnotation(DB_object_id, go_id, evidence_code, assigned_by)
             session.add(annotation)
             session.commit()
     return loaded

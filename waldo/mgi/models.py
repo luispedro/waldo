@@ -30,11 +30,13 @@ class GOAnnotation(Base):
     mgi_go_id = Column(Integer, primary_key=True)
     mgi_id = Column(String(32), ForeignKey('mgi_entry.mgi_id'), index=True)
     go_id = Column(String(15), nullable=False)
+    evidence_code = Column(String(3), nullable=True)
     evidence = Column(String(3), nullable=True)
 
-    def __init__(self, mgi_id, go_id, evidence=None):
+    def __init__(self, mgi_id, go_id, evidence_code, evidence=None):
         self.mgi_id = mgi_id
         self.go_id = go_id
+        self.evidence_code = evidence_code
         self.evidence = evidence
 
 class Entry(Base):

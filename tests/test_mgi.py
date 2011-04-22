@@ -5,6 +5,7 @@ from sqlalchemy import and_
 import waldo.mgi
 import waldo.mgi.load
 import waldo.mgi.models
+import waldo.mgi.retrieve
 from waldo.translations.models import Translation
 
 def load_mgi_test():
@@ -27,6 +28,8 @@ def test_mgi_load():
     assert loaded == nr_entries
     # MGI:1915545 is in the file but does not have a cellular component
     assert not session.query(waldo.mgi.models.Entry).filter(waldo.mgi.models.Entry.mgi_id == 'MGI:1915545').count()
+
+    assert 'IEA' in [annot.evidence_code for annot in waldo.mgi.retrieve.retrieve_entry('MGI:1918918', session).annotations]
 
     for namespace in ('mgi:name', 'mgi:id', 'mgi:symbol'):
         assert session.query(Translation).filter(
