@@ -5,6 +5,7 @@ import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
 import waldo.predictions.retrieve
+import waldo.subcellular.retrieve
 from waldo.translations.services import translate
 import waldo.backend
 
@@ -59,7 +60,7 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
         search_term_value = locateid
 
     elif protname is not None:
-        results = []
+        results = _search_name(protname)
         search_term_type = 'Protein name'
         search_term_value = protname
 
@@ -73,6 +74,28 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
                     'all_results' : results,
                     'predictions' : predictions,
                 })
+
+def _search_name(name):
+    session = waldo.backend.create_session()
+    uniprot_entries = waldo.uniprot.retrieve.retrieve_name_matches(name, session)
+    res = []
+    if uniprot_entries is not None:
+        for uniprot_entry in uniprot_entries:
+            if(uniprot_entry is None):
+                continue
+            res.append({
+                    'protein' : uniprot_entry.name,
+                    'organism': '; '.join([organism.organism for organism in uniprot_entry.organisms]),
+                    'celltype':'-',
+                    'condition':'-',
+                    'location': '; '.join([go_annot.go_id for go_annot in uniprot_entry.go_annotations]),
+                    'references': '<br />'.join([paper.title for paper in uniprot_entry.references]),
+                    'evidence':'<br />'.join([comment.text for comment in uniprot_entry.comments]),
+                    'evidence_code' : '<br />'.join([waldo.uniprot.retrieve.translate_evidence_code(go_annot.evidence_code) for go_annot in uniprot_entry.go_annotations]),
+                    'source':'<a href="%s">Uniprot</a>' % waldo.uniprot.retrieve.gen_url(uniprot_entry.name),
+                    })
+
+    return res
 
 def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
     '''
@@ -109,9 +132,10 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
                 'organism': '; '.join([organism.organism for organism in uniprot_entry.organisms]),
                 'celltype':'-',
                 'condition':'-',
-                'location': '; '.join(waldo.uniprot.retrieve.retrieve_go_annotations(uniprot_name)),
+                'location': '; '.join([go_annot.go_id for go_annot in uniprot_entry.go_annotations]),
                 'references': '<br />'.join([paper.title for paper in uniprot_entry.references]),
                 'evidence':'<br />'.join([comment.text for comment in uniprot_entry.comments]),
+                'evidence_code' : '<br />'.join([go_annot.evidence_code for go_annot in uniprot_entry.go_annotations]),
                 'source':'<a href="%s">Uniprot</a>' % waldo.uniprot.retrieve.gen_url(uniprot_name),
                 })
     if mgi_entry is not None:
@@ -123,6 +147,7 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
                 'location':'; '.join(waldo.mgi.retrieve.retrieve_go_annotations(mgi_id)),
                 'references': mgi_entry.pubmedids != None and '<br />'.join('<a href="http://www.ncbi.nlm.nih.gov/pubmed/%s">%s</a>' % (pubmedid, pubmedid) for pubmedid in mgi_entry.pubmedids.split('|')) or 'None',
                 'evidence': '<br />'.join([annot.evidence and annot.evidence or 'None' for annot in mgi_entry.annotations]),
+                'evidence_code' : '-',
                 'source':'<a href="%s">MGI</a>' % waldo.mgi.retrieve.gen_url(mgi_entry.mgi_id),
                 })
     if locate_entry is not None:
@@ -134,6 +159,7 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
                 'location': '; '.join(waldo.locate.retrieve.retrieve_go_annotations(locate_id)),
                 'references':'<br />'.join([ref.title for ref in locate_entry.references]),
                 'evidence': '<br />'.join(['<a href="http://locate.imb.uq.edu.au/data_images/%s/%s"><img height="50" width="50" src="http://locate.imb.uq.edu.au/data_images/%s/%s" /></a>' % (img.filename[0:3], img.filename, img.filename[0:3], img.filename) for img in locate_entry.images]),
+                'evidence_code' : '-',
                 'source':'<a href="%s">LOCATE</a>' % waldo.locate.retrieve.gen_url(locate_id),
                 })
     return res
