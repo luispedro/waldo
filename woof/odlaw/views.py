@@ -5,9 +5,12 @@ import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
 import waldo.predictions.retrieve
-import waldo.subcellular.retrieve
+import waldo.sequences.retrieve
+import waldo.nog.retrieve
 from waldo.translations.services import translate
 import waldo.backend
+import json
+import json_entry
 
 def searchby(request):
     if request.method == 'GET':
@@ -63,8 +66,6 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
         results = _search_name(protname)
         search_term_type = 'Protein name'
         search_term_value = protname
-
-    #else: <- free text search
 
     return render_to_response(
                 'results.html',
@@ -163,3 +164,26 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
                 'source':'<a href="%s">LOCATE</a>' % waldo.locate.retrieve.gen_url(locate_id),
                 })
     return res
+
+def get_json(request, id=None):
+    entry = None
+    session = waldo.backend.create_session()
+
+    op = request.path_info.split('/')[2]
+    print op
+    if op == 'location' :
+        entry = waldo.locate.retrieve.retrieve_entry(id, session)
+    elif op == 'uniprot' :
+        entry = waldo.uniprot.retrieve.retrieve_entry(id, session)
+    elif op == 'sequences' : 
+        entry = waldo.sequences.retrieve.peptide_sequence(id, session)
+    elif op == 'nog' :
+        entry = waldo.nog.retrieve.retrieve_orthologs(id, session)
+    elif op == 'predictions' :
+        entry = waldo.predictions.retrieve.retrieve_predictions(id, session)
+    elif op == 'mgi' :
+        entry = waldo.mgi.retrieve.retrieve_entry(id, session)
+
+
+
+    return render_to_response('json.html', {'json' : json.dumps(entry, cls=json_entry.EntryEncoder)})
