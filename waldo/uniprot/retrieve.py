@@ -9,7 +9,6 @@ from sqlalchemy import and_
 from waldo.uniprot.models import Entry
 from waldo.translations.services import translate
 import urllib
-from lxml import etree
 
 _translate = {
         'EXP' : 'Inferred from Experiment', 
@@ -189,6 +188,7 @@ def retrieve_doi_abstract(doi):
     -------
       abstract : the abstract associated with the DOI codes's paper, or none if no matching Pubmed id is found
     '''
+    from lxml import etree
     page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%s[aid]" % doi)
     xml = page.read()
     root = etree.fromstring(xml)
