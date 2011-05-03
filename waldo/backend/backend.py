@@ -34,6 +34,8 @@ _paths = [
     '/var/lib/waldo',
     ]
 database_file = 'waldo.sqlite3'
+use_fts3 = True
+
 for _basep in _paths:
     _fullp = path.join(_basep, 'waldo.sqlite3')
     if path.exists(_fullp):
@@ -55,12 +57,13 @@ def create_tables():
     '''
     metadata.create_all()
     conn = engine.connect()
-    #drop the old uniprot organism entry, and create a virtual one with fts3
-    conn.execute("drop table uniprot_entry")
-    conn.execute("CREATE VIRTUAL TABLE uniprot_entry USING fts3 (" +
-            "name VARCHAR(32) NOT NULL, " + 
-            "rname VARCHAR(128) NOT NULL, " +
-            "sequence TEXT, " +
-            "PRIMARY KEY (name))")
+    if use_fts3:
+        #drop the old uniprot organism entry, and create a virtual one with fts3
+        conn.execute("drop table uniprot_entry")
+        conn.execute("""CREATE VIRTUAL TABLE uniprot_entry USING fts3 (
+                VARCHAR(32) NOT NULL,
+                rname VARCHAR(128) NOT NULL,
+                sequence TEXT,
+                PRIMARY KEY (name))""")
 
 
