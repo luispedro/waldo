@@ -43,11 +43,18 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
 
     Parameters
     ----------
-      dirname : Directory containing the XML Uniprot file
-      create_session : a callable object that returns an sqlalchemy session
+    dirname : str, optional
+        Directory containing the XML Uniprot file
+    create_session : callable, optional
+        a callable object that returns an sqlalchemy session
+    organism_set : set of str, optional
+        If not None, only organisms in this set will be loaded. Defaults to
+        ['Mus Musculus']
+
     Returns
     -------
-      nr_loaded : Nr. of entries loaded
+    nr_loaded : int
+        Nr. of entries loaded
     '''
     if dirname is None: dirname = _datadir
     filename = path.join(dirname, _inputfilename)
@@ -68,9 +75,8 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                 if subitem.get('type') == u'scientific':
                     organisms.append(unicode(subitem.text))
 
-        if(len(organism_set) != 0) :
-            organisms = list(set(organisms) & organism_set)
-            if(len(organisms) == 0):
+        if organism_set is not None:
+            if not len(set(organisms) & organism_set):
                 continue
 
         accessions = [unicode(acc.text) for acc in element.iterchildren(_p+'accession')]
@@ -130,6 +136,8 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                 if waldo.go.is_cellular_component(id, session):
                     go_annotations.append(models.GoAnnotation(id, evidence_code))
 
+        # We need to cleanup. Otherwise, we end up with so many nodes in memory
+        # that that causes a problem.
         element.clear()
         while element.getprevious() is not None:
             del element.getparent()[0]
