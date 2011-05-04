@@ -64,9 +64,9 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     '''
     return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'uniprot:name', session)
 
-def retrieve_go_annotations(name, session=None):
+def retrieve_go_annotations(name, session=None, return_evidence=False):
     '''
-    go_ids = retrieve_go_annotations(name, session={backend.create_session()})
+    go_ids = retrieve_go_annotations(name, session={backend.create_session()}, return_evidence=False)
 
     Retrieve GO ids by uniprot name.
 
@@ -76,14 +76,19 @@ def retrieve_go_annotations(name, session=None):
         uniprot name
     session : SQLAlchemy session object, optional
         session to use (default: call backend.create_session())
+    return_evidence : boolean, False
+        Whether to return evidence
 
     Returns
     -------
-    go_ids : list of str
-        go terms (of the form "GO:00...")
+    go_ids : list of str or (str,str)
+        go terms (of the form "GO:00..."). If ``return_evidence``, then pairs
+        are returned, where the second element is the evidence code.
     '''
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
+    if return_evidence:
+        return [(go.go_id, go.evidence_code) for go in entr.go_annotations]
     return [go.go_id for go in entr.go_annotations]
 
 def retrieve_name_matches(term, session=None):
