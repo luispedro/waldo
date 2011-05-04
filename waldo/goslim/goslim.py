@@ -40,7 +40,7 @@ def map_to_goslim(go_id, set_name, session=None):
 
     Returns
     -------
-    go_slim_term : string
+    go_slim_term : str or None
         GO Slim Term corresponding to input `go_id`
     '''
     if session is None:
