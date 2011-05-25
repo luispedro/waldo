@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
+# Copyright (C) 2009-2011, Luis Pedro Coelho <lpc@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -11,7 +11,7 @@ from waldo.translations.services import translate
 import urllib
 
 _translate = {
-        'EXP' : 'Inferred from Experiment', 
+        'EXP' : 'Inferred from Experiment',
         'IDA' : 'Inferred from Direct Assay',
         'IPI' : 'Inferred from Physical Interation',
         'IMP' : 'Inferred from Mutant Phenotype',
@@ -39,11 +39,15 @@ def from_ensembl_gene_id(ensembl_gene_id, session=None):
 
     Parameters
     ----------
-      ensembl_gene_id : Ensembl gene ID
-      session : SQLAlchemy session to use (default: call backend.create_session())
+    ensembl_gene_id : str
+        Ensembl gene ID
+    session : SQLAlchemy session
+        Session to use (default: call backend.create_session())
+
     Returns
     -------
-      name : uniprot gene name
+    name : str
+        uniprot gene name
     '''
     return translate(ensembl_gene_id, 'ensembl:gene_id', 'uniprot:name', session)
 
@@ -55,12 +59,15 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
 
     Parameters
     ----------
-      ensembl_peptide_id : Ensembl protein ID
-      session : SQLAlchemy session to use (default: create a new one)
+    ensembl_peptide_id : str
+        Ensembl protein ID
+    session : SQLAlchemy session
+        Session to use (default: create a new one)
 
     Returns
     -------
-      name : Uniprot peptide name
+    name : str
+        Uniprot peptide name
     '''
     return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'uniprot:name', session)
 
@@ -93,19 +100,22 @@ def retrieve_go_annotations(name, session=None, return_evidence=False):
 
 def retrieve_name_matches(term, session=None):
     '''
-        entries = retrieve_name_matches(term, session={backend.create_session()})
+    entries = retrieve_name_matches(term, session={backend.create_session()})
 
-        Retrieve Uniprot entries that match the given term, using full text search on the 
-        human readable protein names.
+    Retrieve Uniprot entries that match the given term, using full text search
+    on the human readable protein names.
 
-        Parameters
-        ----------
-          term : a human readable protein name (or part of a name)
-          session : SQLAlchemy session to use (default: create a new one)
+    Parameters
+    ----------
+    term : str
+        A human readable protein name (or part of a name)
+    session : SQLAlchemy session, optional
+        SQLAlchemy session to use (default: create a new one)
 
-        Returns
-        -------
-          entries : a list of model.Entry objects with matching readable names.
+    Returns
+    -------
+    entries : list of waldo.uniprot.model.Entry
+        Objects whose readable names match
     '''
     if session is None: session = waldo.backend.create_session()
     return session.query(Entry).from_statement('select * from uniprot_entry where rname match "*' + term + '*"').all()
@@ -118,12 +128,14 @@ def retrieve_entry(id, session=None):
 
     Parameters
     ----------
-      id : Uniprot-specific identifier
-      session: SQLAlchemy session to use (default: create a new one)
+    id : str
+        Uniprot-specific identifier (i.e., Uniprot Name)
+    session: SQLAlchemy session
+        Session to use to use (default: create a new one)
 
     Returns
     -------
-      entry : models.Entry object
+    entry : waldo.uniprot.models.Entry
     '''
     if session is None: session = waldo.backend.create_session()
     return session.query(Entry).filter(Entry.name == id).first()
@@ -136,10 +148,13 @@ def gen_url(id):
 
     Parameters
     ----------
-      id : uniprot name or accession id
+    id : str
+        uniprot name or accession id
+
     Returns
     -------
-      url : web url of corresponding data page.
+    url : str
+        web url of corresponding data page.
     '''
     return 'http://www.uniprot.org/uniprot/' + id
 
@@ -151,12 +166,13 @@ def translate_evidence_code(code):
 
     Parameters
     ----------
-      code : "evidence code:source" parsed from Uniprot database.
+    code : str
+        "evidence code:source" parsed from Uniprot database.
 
     Returns
     -------
-      desc : sentence describing the evidence code and its source.
-
+    desc : str
+        phrase describing the evidence code and its source.
     '''
     vals = code.split(':')
     return _translate.get(vals[0], 'Evidence code Unknown') + ' from ' + vals[1]
@@ -165,15 +181,17 @@ def retrieve_pubmed_abstract(pmid):
     '''
     abstract = retrieve_pubmed_abstract(pmid)
 
-    Retrieves the abstract for a paper given by the PubMed id pmid
+    Retrieves the abstract for a paper given by the PubMed id `pmid`
 
     Parameters
     ----------
-      pmid : a Pubmed id
+    pmid : str
+        A Pubmed id
 
     Returns
     -------
-      abstract : the abstract associated with the PubMed id's paper
+    abstract : str
+        The abstract associated with the PubMed id's paper
     '''
     page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?id=%s&db=pubmed&rettype=abstract" % pmid)
     abstract = page.read()
@@ -185,13 +203,17 @@ def retrieve_doi_abstract(doi):
 
     Retrieves the abstract for a paper given by the DOI id doi by looking up its Pubmed id
 
+    This function queries the Entrez database online.
+
     Parameters
     ----------
-      doi : a DOI code
+    doi : str
+        a DOI code
 
     Returns
     -------
-      abstract : the abstract associated with the DOI codes's paper, or none if no matching Pubmed id is found
+    abstract : str
+        The abstract associated with the DOI codes's paper, or None if no matching Pubmed id is found.
     '''
     from lxml import etree
     page = urllib.urlopen("http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=%s[aid]" % doi)
@@ -201,3 +223,4 @@ def retrieve_doi_abstract(doi):
         return None
     pmid = root.find('IdList').iterchildren().next().text
     return retrieve_pubmed_abstract(pmid)
+
