@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 import re
 import gzip
 
+import waldo.backend
 import waldo.uniprot.load
 import waldo.uniprot.models
 import waldo.uniprot.retrieve
@@ -21,22 +22,23 @@ def load_uniprot_test():
     metadata.create_all()
 
     conn = engine.connect()
-    conn.execute("drop table uniprot_entry")
-    conn.execute("CREATE VIRTUAL TABLE uniprot_entry USING fts3 (" +
-            "name VARCHAR(32) NOT NULL, " + 
-            "rname VARCHAR(128) NOT NULL, " +
-            "sequence TEXT, " +
-            "PRIMARY KEY (name))")
+    if waldo.backend.use_fts3:
+        conn.execute("drop table uniprot_entry")
+        conn.execute("CREATE VIRTUAL TABLE uniprot_entry USING fts3 (" +
+                "name VARCHAR(32) NOT NULL, " +
+                "rname VARCHAR(128) NOT NULL, " +
+                "sequence TEXT, " +
+                "PRIMARY KEY (name))")
 
     sessionmaker_ = sessionmaker(engine)
-    print waldo.go.load.load(_testdir, sessionmaker_)
-    waldo.uniprot.load.load(_testdir, sessionmaker_, set([]))
+    loaded = waldo.uniprot.load.load(_testdir, sessionmaker_, None)
     session = sessionmaker_()
-    return session
+    return session, loaded
 
 def test_nr_entries():
     nr_entries = len(re.findall('</entry>', gzip.GzipFile(_testfile).read()))
-    session = load_uniprot_test()
+    session,loaded = load_uniprot_test()
+    assert loaded == nr_entries
     test_entry = waldo.uniprot.retrieve.retrieve_entry('2AAA_MOUSE', session)
     pubmed_test = "PMID: 17239238 [PubMed - indexed for MEDLINE]"
     doi_test = "PMID: 15489334 [PubMed - indexed for MEDLINE]"
@@ -56,3 +58,4 @@ def test_nr_entries():
     entries = waldo.uniprot.retrieve.retrieve_name_matches('subunit', session)
     for ent in entries:
         assert ent.rname.find("subunit") != -1
+

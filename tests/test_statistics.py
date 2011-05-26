@@ -5,7 +5,7 @@ from test_uniprot_load import load_uniprot_test
 #    statistics.locatestats()
 
 def test_uniprot_statistics():
-    session = load_uniprot_test() 
+    session,_ = load_uniprot_test()
     statistics.uniprotstats(session)
 
 #def test_mgi_statistics():
