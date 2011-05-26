@@ -33,21 +33,28 @@ _paths = [
     '.',
     '/var/lib/waldo',
     ]
-database_file = 'waldo.sqlite3'
-use_fts3 = True
-
-for _basep in _paths:
-    _fullp = path.join(_basep, 'waldo.sqlite3')
-    if path.exists(_fullp):
-        database_file = _fullp
-        logging.info('Using database: %s' % database_file)
-        break
+use_fts3 = False
 
 Base = declarative_base()
-engine = create_engine('sqlite:///' + database_file, echo=False)
-metadata = Base.metadata
-metadata.bind = engine
-create_session = sessionmaker(bind=engine)
+_engine = None
+_create_session = None
+
+def init(database_file=None):
+    global _engine
+    if database_file is None:
+        for _basep in _paths:
+            _fullp = path.join(_basep, 'waldo.sqlite3')
+            if path.exists(_fullp):
+                database_file = _fullp
+                logging.info('Using database: %s' % database_file)
+                break
+    _engine = create_engine('sqlite:///' + database_file, echo=False)
+    _create_session = sessionmaker(bind=_engine)
+
+def create_session():
+    if _create_session is None:
+        init()
+    return _create_session()
 
 def create_tables():
     '''
@@ -55,8 +62,10 @@ def create_tables():
 
     Creates all tables in database.
     '''
+    metadata = Base.metadata
+    metadata.bind = _engine
     metadata.create_all()
-    conn = engine.connect()
+    conn = _engine.connect()
     if use_fts3:
         #drop the old uniprot organism entry, and create a virtual one with fts3
         conn.execute("drop table uniprot_entry")
