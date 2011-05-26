@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2011, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-import amara
+from lxml import etree
 import models
 from os import path
 from collections import defaultdict
@@ -24,17 +24,19 @@ def load(dirname=None, create_session=None):
 
     Parameters
     ----------
-      dirname : System folder containing database files
-      create_session : Callable object which returns an sqlalchemy session
+    dirname : str, optional
+        System folder containing database files.
+    create_session : callable, optional
+        Callable object which returns an sqlalchemy session
 
     Returns
     -------
-      num_entries : Number of entries loaded into the local database
+    num_entries : int
+        Number of entries loaded into the local database
 
     References
     ----------
-        To download database files:
-        http://locate.imb.uq.edu.au/downloads.shtml
+    To download database files: http://locate.imb.uq.edu.au/downloads.shtml
     '''
     if dirname is None: dirname = _datadir
     if create_session is None:
@@ -48,102 +50,112 @@ def load(dirname=None, create_session=None):
 
 def _loadfile(filename, organism, session):
     from models import Isoform, Image
-    count = 0
+    nr_entries = 0
     input = file(filename)
 
-    # LOCATE doesn't define a namespace, so we don't need prefix information ?
-    for entry in amara.pushbind(input, u'LOCATE_protein'):
-        count += 1
+    def load_location(loc):
+        return models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None))
+    def load_image(img, is_coloc):
+        return Image(
+                    img.findtext('filename'),
+                    is_coloc,
+                    img.findtext('celltype'),
+                    img.findtext('magnification'),
+                    img.findtext('tag'),
+                    img.findtext('epitope'),
+                    img.findtext('channel'),
+                    img.findtext('channel1'),
+                    img.findtext('channel2'),
+                    img.findtext('coloc'))
 
-        # even though data are listed in the XML schema as being required,
-        # in reality this seems not to be the case. As such, many checks are
-        # in place to make sure certain attributes do exist
-
-        # add any isoforms that exist
-        transcript = getattr(entry, 'transcript', None)
-        isoforms = [Isoform(elem.class_, str(elem)) for elem in getattr(transcript.other_isoforms, 'isoform', ())]
-
-        # check the experimental data section for location information
+    for _, entry in etree.iterparse(input, tag=u'LOCATE_protein'):
+        protein_source = None
+        annots = []
+        predicts = []
+        refs = []
+        extrefs = []
         images = []
         expData = []
-        if hasattr(entry, 'experimental_data'):
-            experimental = entry.experimental_data
-            if hasattr(experimental, 'locations'):
-                expData = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in experimental.locations.location]
-            # also load the image data
-            reg_images = experimental.images
-            coloc_images = experimental.coloc_images
-            def _str(obj):
-                if obj is None:
-                    return None
-                return str(obj)
-            # are there any images?
-            if hasattr(reg_images, 'rep_image'):
-                img = reg_images.rep_image
-                images.append(Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
-
-            for img in getattr(reg_images, 'image', ()):
-                images.append(Image(str(img.filename), False, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
-            if hasattr(coloc_images, 'rep_coloc_image'):
-                img = coloc_images.rep_coloc_image
-                images.append(Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
-
-            for img in getattr(coloc_images, 'coloc_image', ()):
-                images.append(Image(str(img.filename), True, str(img.celltype), str(img.magnification), str(img.tag), str(img.epitope), str(img.channel), _str(getattr(img, 'channel1', None)), _str(getattr(img, 'channel2', None)), str(img.coloc)))
-
-        # go through the annotations
-        annots = []
-        if hasattr(entry, 'externalannot'):
-             annotations = entry.externalannot
-             if hasattr(annotations, 'reference'):
-                for elem in annotations.reference:
-                    locations = [] 
-                    if hasattr(elem, 'locations'):
-                        locations = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
-                    annots.append(models.Annotation(str(elem.evidence), elem.source[1].source_id, str(elem.source[1].source_name), str(elem.source[1].accn), locations))
-
-        # now the subcellular location predictions
-        predicts = []
-        if hasattr(entry, 'scl_prediction'):
-            predictions = entry.scl_prediction
-            if hasattr(predictions, 'source'):
-                try:
-                    predicts = [models.Prediction(elem.source_id, str(elem.method), str(elem.location), str(elem.goid)) for elem in predictions.source]
-                except AttributeError:
-                    pass
-                    # thankfully, we don't care in this situation
-
-        # next, the literature citations
-        refs = []
-        if hasattr(entry, 'literature'):
-            literature = entry.literature 
-            if hasattr(literature, 'reference'):
-                for elem in literature.reference:
-                    locations = [models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None)) for loc in elem.locations.location]
-                    refs.append(models.Literature(str(elem.author), str(elem.title), str(elem.citation), elem.source.source_id, str(elem.source.source_name), str(elem.source.accn), locations))
-        
-        # now the external database references
-        extrefs = []
-        if hasattr(entry, 'xrefs'):
-            for elem in getattr(entry.xrefs, 'xref', ()):
-                extrefs.append(models.ExternalReference(elem.source.source_id, str(elem.source.source_name), str(elem.source.accn)))
-                # check if our data is Ensembl-related
-                value = str(elem.source.source_name)
-                if value.startswith('Ensembl'):
-                    if value.startswith('Ensembl-Gene'):
-                        namespace = 'ensembl:gene_id'
-                    elif value.startswith('Ensembl-Peptide'):
-                        namespace = 'ensembl:peptide_id'
-                    else:
-                        raise IOError('waldo.locate.load: Cannot handle source_name \'%s\'' % value)
-                    t = Translation(namespace, str(elem.source.accn), 'locate:id', entry.uid)
-                    session.add(t)
-                    t = Translation('locate:id', entry.uid, namespace, str(elem.source.accn))
-                    session.add(t)
-
-        protein = entry.protein
-        locate_entry = models.Entry(entry.uid, str(protein.source.source_name), protein.source.source_id, str(protein.source.accn), isoforms, predicts, refs, annots, expData, images, extrefs, organism)
-        session.add(locate_entry)
-
+        for sub in entry:
+            if sub.tag == 'transcript':
+                isoforms = [Isoform(oi.get('class'), oi.text) for oi in sub.findall('other_isoforms/isoform')]
+            elif sub.tag == 'experimental_data':
+                expData = map(load_location, sub.iterfind('locations/location'))
+                for img in sub.iterfind('images/rep_image|images/image'):
+                    images.append(load_image(img, False))
+                for img in sub.iterfind('coloc_images/rep_coloc_image|coloc_images/coloc_image'):
+                    images.append(load_image(img, True))
+            elif sub.tag == 'externalannot':
+                for annotation in sub.iterfind('reference'):
+                    evidence = sub.findtext('evidence')
+                    locations = map(load_location, sub.iterfind('locations/location'))
+                    source = annotation.find('source[1]')
+                    annots.append(models.Annotation(evidence,
+                            source.get('source_id'),
+                            source.findtext('source_name'),
+                            source.findtext('accn'),
+                            locations))
+            elif sub.tag == 'scl_prediction':
+                for source in sub:
+                    if source.tag != 'source': continue
+                    predicts.append(models.Prediction(
+                                        source.get('source_id'),
+                                        source.findtext('method'),
+                                        source.findtext('location'),
+                                        source.findtext('goid')))
+            elif sub.tag == 'literature':
+                for ref in sub:
+                    if ref.tag != 'reference': continue
+                    locations = map(load_location, sub.iterfind('locations/location'))
+                    source = ref.find('source')
+                    refs.append(models.Literature(
+                                ref.findtext('author'),
+                                ref.findtext('title'),
+                                ref.findtext('citation'),
+                                source.get('source_id'),
+                                source.findtext('source_name'),
+                                source.findtext('accn'),
+                                locations))
+            elif sub.tag == 'xrefs':
+                for xref in sub.iterfind('xref'):
+                    source = xref.find('source')
+                    name = source.findtext('source_name')
+                    accn = source.findtext('accn')
+                    extrefs.append(models.ExternalReference(source.get('source_id'), name, accn))
+                    # check if ref is to Ensembl-*
+                    if name.startswith('Ensembl'):
+                        if name.startswith('Ensembl-Gene'):
+                            namespace = 'ensembl:gene_id'
+                        elif name.startswith('Ensembl-Peptide'):
+                            namespace = 'ensembl:peptide_id'
+                        else:
+                            raise IOError('waldo.locate.load: Cannot handle source_name \'%s\'' % name)
+                        t = Translation(namespace, accn, 'locate:id', entry.get('uid'))
+                        session.add(t)
+                        t = Translation('locate:id', entry.get('uid'), namespace, accn)
+                        session.add(t)
+            elif sub.tag == 'protein':
+                protein_source = sub.find('source')
+        session.add(models.Entry(
+                        entry.get('uid'),
+                        protein_source.findtext('source_name'),
+                        protein_source.get('source_id'),
+                        protein_source.findtext('accn'),
+                        isoforms,
+                        predicts,
+                        refs,
+                        annots,
+                        expData,
+                        images,
+                        extrefs,
+                        organism))
+        nr_entries += 1
         session.commit()
-    return count
+
+        # We need to cleanup. Otherwise, we end up with so many nodes in memory
+        # that that causes a problem.
+        entry.clear()
+        while entry.getprevious() is not None:
+            del entry.getparent()[0]
+
+    return nr_entries
