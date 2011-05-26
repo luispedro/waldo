@@ -16,6 +16,7 @@ _testdir = 'tests/data/'
 _testfile = _testdir + 'uniprot_sprot.xml.gz'
 
 def load_uniprot_test():
+    from tests.test_go import load_go
     engine = create_engine('sqlite://')
     metadata = waldo.uniprot.models.Base.metadata
     metadata.bind = engine
@@ -31,6 +32,7 @@ def load_uniprot_test():
                 "PRIMARY KEY (name))")
 
     sessionmaker_ = sessionmaker(engine)
+    load_go(sessionmaker_)
     loaded = waldo.uniprot.load.load(_testdir, sessionmaker_, None)
     session = sessionmaker_()
     return session, loaded
@@ -55,7 +57,8 @@ def test_nr_entries():
     assert 'IDA:MGI' in [test_entry.go_annotations[0].evidence_code]
     assert 'Inferred from Direct Assay from MGI' == waldo.uniprot.retrieve.translate_evidence_code('IDA:MGI')
     assert session.query(waldo.uniprot.models.Entry).count() == nr_entries
-    entries = waldo.uniprot.retrieve.retrieve_name_matches('subunit', session)
-    for ent in entries:
-        assert ent.rname.find("subunit") != -1
+    if waldo.backend.use_fts3:
+        entries = waldo.uniprot.retrieve.retrieve_name_matches('subunit', session)
+        for ent in entries:
+            assert ent.rname.find("subunit") != -1
 

@@ -4,6 +4,9 @@ from waldo.go.models import Term
 import waldo.go.load
 import waldo.go.go
 
+def load_go(sessionmaker):
+    return waldo.go.load.load('tests/data/', sessionmaker)
+
 def test_is_cellular_component():
     engine = create_engine('sqlite://')
     metadata = waldo.go.models.Base.metadata
@@ -12,7 +15,7 @@ def test_is_cellular_component():
     sessionmaker_ = sessionmaker(engine)
     session = sessionmaker_ ()
 
-    nr_entries = waldo.go.load.load('tests/data/', sessionmaker_)
+    nr_entries = load_go(sessionmaker_)
     expected = 976 - 79 # instances of "[Term]" - instances of is_obsolete
     assert nr_entries == expected
 
