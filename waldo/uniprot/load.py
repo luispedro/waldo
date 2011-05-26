@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
+# Copyright (C) 2009-2011, Luis Pedro Coelho <lpc@cmu.edu>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,7 +35,7 @@ _datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'uniprot_sprot.xml.gz'
 _p = '{http://uniprot.org/uniprot}'
 
-def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus'])):
+def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo Sapiens'])):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session})
 
@@ -49,7 +49,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
         a callable object that returns an sqlalchemy session
     organism_set : set of str, optional
         If not None, only organisms in this set will be loaded. Defaults to
-        ['Mus Musculus']
+        ['Mus Musculus', 'Homo Sapiens']
 
     Returns
     -------
@@ -93,7 +93,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                     key = ref.get('key')
                     type = subel.get('type')
                     title = subel.findtext(_p+'title')
-                    if(title == None or key == None):
+                    if title is None or key is None:
                         continue
                     authors = []
                     for author in subel.iterchildren(_p+'authorList'):
@@ -102,11 +102,11 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
 
                     dbrefs = filter(lambda x : x.get('type') == 'DOI', subel.findall(_p+'dbReference'))
                     dbRefString = ''
-                    if(len(dbrefs) != 0):
+                    if len(dbrefs):
                         dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
                     else:
                         dbrefs = filter(lambda x : x.get('type') == 'PubMed', subel.findall(_p+'dbReference'))
-                        if(len(dbrefs) != 0):
+                        if len(dbrefs):
                             dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
                     references.append(models.Reference(key, type, title, authors, dbRefString))
 
@@ -137,7 +137,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus']))
                     go_annotations.append(models.GoAnnotation(id, evidence_code))
 
         # We need to cleanup. Otherwise, we end up with so many nodes in memory
-        # that that causes a problem.
+        # that we run out.
         element.clear()
         while element.getprevious() is not None:
             del element.getparent()[0]
