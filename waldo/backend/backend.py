@@ -40,14 +40,17 @@ _engine = None
 _create_session = None
 
 def init(database_file=None):
-    global _engine
+    global _engine, _create_session
+    basename = 'waldo.sqlite3'
     if database_file is None:
-        for _basep in _paths:
-            _fullp = path.join(_basep, 'waldo.sqlite3')
-            if path.exists(_fullp):
-                database_file = _fullp
+        for basep in _paths:
+            fullp = path.join(basep, basename)
+            if path.exists(fullp):
+                database_file = fullp
                 logging.info('Using database: %s' % database_file)
                 break
+        else:
+            database_file = path.join(_paths[0], basename)
     _engine = create_engine('sqlite:///' + database_file, echo=False)
     _create_session = sessionmaker(bind=_engine)
 

@@ -33,5 +33,6 @@ import waldo.predictions.models
 import waldo.sequences.models
 import waldo.nog.models
 
+waldo.backend.init()
 waldo.backend.create_tables()
 
