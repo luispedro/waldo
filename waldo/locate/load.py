@@ -49,14 +49,18 @@ def load(dirname=None, create_session=None):
     return loaded
 
 def _loadfile(filename, organism, session):
-    from models import Isoform, Image
     nr_entries = 0
     input = file(filename)
 
     def load_location(loc):
-        return models.Location(loc.goid, getattr(loc, 'tier1', None), getattr(loc, 'tier2', None), getattr(loc, 'tier3', None))
+        return models.Location(
+                    loc.get('goid'),
+                    loc.findtext('tier1'),
+                    loc.findtext('tier2'),
+                    loc.findtext('tier3'))
+
     def load_image(img, is_coloc):
-        return Image(
+        return models.Image(
                     img.findtext('filename'),
                     is_coloc,
                     img.findtext('celltype'),
@@ -78,7 +82,7 @@ def _loadfile(filename, organism, session):
         expData = []
         for sub in entry:
             if sub.tag == 'transcript':
-                isoforms = [Isoform(oi.get('class'), oi.text) for oi in sub.findall('other_isoforms/isoform')]
+                isoforms = [models.Isoform(oi.get('class'), oi.text) for oi in sub.findall('other_isoforms/isoform')]
             elif sub.tag == 'experimental_data':
                 expData = map(load_location, sub.iterfind('locations/location'))
                 for img in sub.iterfind('images/rep_image|images/image'):

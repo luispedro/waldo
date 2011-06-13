@@ -2126,4 +2126,343 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       <scores>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</scores>
     </memo>
   </LOCATE_protein>
+  <LOCATE_protein uid="6000072" date_created="2007-04-02" date_updated="2007-12-11">
+    <protein>
+      <organism>Mouse</organism>
+      <class>cytoplasmic</class>
+      <protein_function>cyclin-dependent kinase 9</protein_function>
+      <synonyms></synonyms>
+      <source source_id="23">
+        <source_name>RefSeq Protein</source_name>
+        <accn>NP_570930</accn>
+      </source>
+      <protein_sequence>MAKQYDSVECPFCDEVTKYEKLAKIGQGTFGEVFKAKHRQTGQKVALKKVLMENEKEGFPITALREIKILQLLKHENVVNLIEICRTKASPYNRCKGSIYLVFDFCEHDLAGLLSNVLVKFTLSEIKRVMQMLLNGLYYIHRNKILHRDMKAANVLITRDGVLKLADFGLARAFSLAKNSQPNRYTNRVVTLWYRPPELLLGERDYGPPIDLWGAGCIMAEMWTRSPIMQGNTEQHQLALISQLCGSITPEVWPNVDKYELFEKLELVKGQKRKVKDRLKAYVRDPYALDLIDKLLVLDPAQRIDSDDALNHDFFWSDPMPSDLKGMLSTHLTSMFEYLAPPRRKGSQITQQSTNQSRNPATTNQTEFERVF</protein_sequence>
+    </protein>
+    <transcript>
+      <other_isoforms>
+        <isoform class="cytoplasmic">mPA12622.2</isoform>
+        <isoform class="cytoplasmic">mPA12622.3</isoform>
+      </other_isoforms>
+      <transcript_sequence>CGGAAGTGGCCGTGGAGGCGGAAGTGGCGCGGCCGCGGAGGGGCCTGGAGTGTGGCGGGACCGGGAGCGGCGGGAGCTGCGGCTGGGGGCGGCGGCGGCGGCGGCGGCGGAGGCGCGCTGGAGGTGGCCATGGCCAAGCAGTACGACTCGGTGGAATGCCCGTTCTGCGATGAGGTCACCAAGTACGAGAAACTTGCCAAGATCGGCCAAGGCACATTCGGGGAAGTCTTTAAAGCCAAGCACCGTCAGACGGGCCAGAAGGTGGCTCTGAAGAAAGTGTTGATGGAGAATGAGAAGGAGGGGTTCCCCATCACAGCCTTGAGGGAAATCAAGATTCTACAGCTCCTAAAACATGAGAATGTGGTGAACCTAATTGAGATTTGTCGGACCAAAGCCTCACCGTATAACCGCTGCAAGGGCAGCATCTATCTGGTGTTTGACTTCTGTGAGCATGACCTTGCTGGGCTGCTGAGCAACGTCTTAGTCAAGTTCACGTTGTCTGAGATCAAGAGAGTGATGCAGATGCTGCTGAACGGCCTCTACTACATCCACAGGAACAAGATCCTGCACAGGGACATGAAGGCTGCGAATGTGCTCATTACCCGGGATGGGGTCCTGAAGCTGGCAGATTTTGGGCTGGCCCGTGCCTTCAGCCTAGCTAAGAATAGCCAGCCCAACCGATACACCAACCGTGTGGTGACATTGTGGTACCGGCCTCCGGAGCTGCTGCTCGGAGAGCGGGACTACGGCCCGCCCATTGACCTTTGGGGTGCTGGGTGCATCATGGCAGAGATGTGGACTCGTAGCCCTATCATGCAGGGTAACACAGAGCAGCACCAGCTCGCCCTCATCAGCCAGCTCTGTGGCTCCATCACCCCAGAGGTGTGGCCAAACGTAGACAAGTATGAGCTGTTTGAAAAGCTGGAACTTGTGAAGGGCCAGAAGCGGAAGGTGAAGGACCGTCTGAAGGCCTACGTGCGCGACCCCTATGCTCTGGACCTCATTGACAAGCTGCTGGTGCTGGACCCCGCGCAGCGGATTGACAGTGACGATGCCCTCAACCACGACTTCTTCTGGTCGGACCCCATGCCCTCGGACCTCAAGGGCATGCTGTCTACTCACTTGACGTCTATGTTTGAGTACCTGGCACCGCCACGGCGGAAGGGCAGCCAGATCACCCAGCAGTCCACCAACCAGAGCAGAAATCCCGCCACCACCAACCAGACGGAATTTGAACGTGTCTTCTGAGGCCGGAACTGGCCGGTGTTGTTCTTAGGTTAGGAGTGGATTGCTTCCTTTGCATGGAACATGTGACATGATGGGACATTTGAGATTTTCTCCTCCAGTACATATTAACTCCCACCCTGGCACTGGGAACAGCTGCCTGAGTGGGCTGGGGTGGAGCTATCCTGCCTGCCCCTCTCTGGAGGTCTCAGCGTGGACACAAAGTGAGGTGGGAGAGGCTCACCCACTGTGACTTTCTAAGAACTACTTGCATGGTGGGAGGAAGGCACAGGTCCCTCGCCATCGCCAGCTCTTCCTCTGGATGAGAGTTTGAGGGACAGAGGCGCCTCCAAAATGGGCTACTTTTGGTCTGGACCTTAGGGGCGTGGGGCTGTGTGAACTCCTGGTTCCTTTAAAAGGAGAATTTTATTTTGTTTTGTTAAGTTTAGAGACATTCCTGGACGCAGTTTGATTGGTTAAATTAAAAGTTGGTTATTTTTTTCCAGTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</transcript_sequence>
+      <strand>-</strand>
+    </transcript>
+    <experimental_data>
+      <images>
+        <rep_image>
+          <filename>222021H03_01_60X_HeLa_R.JPG</filename>
+          <celltype>HeLa</celltype>
+          <channel1></channel1>
+          <channel2></channel2>
+          <magnification>60X</magnification>
+          <coloc></coloc>
+          <tag>N-terminal</tag>
+          <epitope>myc</epitope>
+          <channel>Cy3</channel>
+        </rep_image>
+        <image>
+          <filename>222021H03_02_60X_HeLa.JPG</filename>
+          <celltype>HeLa</celltype>
+          <channel1></channel1>
+          <channel2></channel2>
+          <magnification>60X</magnification>
+          <coloc></coloc>
+          <tag>N-terminal</tag>
+          <epitope>myc</epitope>
+          <channel>Cy3</channel>
+        </image>
+        <image>
+          <filename>222021H03_03_60X_HeLa.JPG</filename>
+          <celltype>HeLa</celltype>
+          <channel1></channel1>
+          <channel2></channel2>
+          <magnification>60X</magnification>
+          <coloc></coloc>
+          <tag>N-terminal</tag>
+          <epitope>myc</epitope>
+          <channel>Cy3</channel>
+        </image>
+      </images>
+      <coloc_images>
+        <!-- no coloc_images -->
+      </coloc_images>
+      <locations>
+        <location goid="GO:0005634;GO:0005737">
+          <tier1>Nuclear</tier1>
+        </location>
+        <location goid="GO:0005634;GO:0005737">
+          <tier1>Cytoplasmic</tier1>
+        </location>
+      </locations>
+    </experimental_data>
+    <literature>
+      <reference>
+        <author>Leung AK, Trinkle-Mulcahy L, Lam YW, Andersen JS, Mann M, Lamond AI</author>
+        <title>NOPdb: Nucleolar Proteome Database. </title>
+        <citation>Nucleic Acids Res. 2006 Jan 1;34(Database issue):D218-20</citation>
+        <organism>Human</organism>
+        <locations>
+          <location goid="GO:0005634;GO:0005730">
+            <tier1>Nucleus</tier1>
+            <tier2>Nucleolus</tier2>
+          </location>
+        </locations>
+        <notes></notes>
+        <date_analyzed>2006-07-07</date_analyzed>
+        <source source_id="3">
+          <source_name>PubMed</source_name>
+          <accn>16381850</accn>
+        </source>
+      </reference>
+    </literature>
+    <externalannot>
+      <reference>
+        <pmid>0</pmid>
+        <source></source>
+        <evidence>IDA</evidence>
+        <locations>
+          <location goid="GO:0005634">
+            <tier1>nucleus</tier1>
+          </location>
+        </locations>
+        <source source_id="4">
+          <source_name>MGI ID</source_name>
+          <accn>1328368</accn>
+        </source>
+      </reference>
+      <reference>
+        <pmid>0</pmid>
+        <source></source>
+        <evidence>RCA</evidence>
+        <locations>
+          <location goid="GO:0005634">
+            <tier1>nucleus</tier1>
+          </location>
+        </locations>
+        <source source_id="4">
+          <source_name>MGI ID</source_name>
+          <accn>1328368</accn>
+        </source>
+      </reference>
+    </externalannot>
+    <scl_prediction>
+      <source source_id="33">
+        <method>CELLO</method>
+        <location>nucleus</location>
+        <goid>GO:0005634</goid>
+        <evaluation>3.38</evaluation>
+      </source>
+      <source source_id="38">
+        <method>MultiLoc</method>
+        <location>cytoplasm</location>
+        <goid>GO:0005737</goid>
+        <evaluation>0.92</evaluation>
+      </source>
+      <source source_id="38">
+        <method>MultiLoc</method>
+        <location>mitochondrion</location>
+        <goid>GO:0005739</goid>
+        <evaluation>0.04</evaluation>
+      </source>
+      <source source_id="38">
+        <method>MultiLoc</method>
+        <location>peroxisome</location>
+        <goid>GO:0005777</goid>
+        <evaluation>0.02</evaluation>
+      </source>
+      <source source_id="35">
+        <method>Proteome_Analyst</method>
+        <location>nucleus</location>
+        <goid>GO:0005634</goid>
+        <evaluation>0.99</evaluation>
+      </source>
+      <source source_id="35">
+        <method>Proteome_Analyst</method>
+        <location>cytoplasm</location>
+        <goid>GO:0005737</goid>
+        <evaluation>0.99</evaluation>
+      </source>
+      <source source_id="35">
+        <method>Proteome_Analyst</method>
+        <location>endoplasmic reticulum</location>
+        <goid>GO:0005783</goid>
+        <evaluation>0.00</evaluation>
+      </source>
+      <source source_id="34">
+        <method>pTarget</method>
+        <location>cytoplasm</location>
+        <goid>GO:0005737</goid>
+        <evaluation>87.60</evaluation>
+      </source>
+      <source source_id="37">
+        <method>WoLFPSORT</method>
+        <location>nucleus</location>
+        <goid>GO:0005634</goid>
+        <evaluation>32.00</evaluation>
+      </source>
+    </scl_prediction>
+    <motifs>
+      <motif motif_id="22393">
+        <motif_name>56112</motif_name>
+        <motif_description>Protein kinase-like (PK-like)</motif_description>
+        <motif_type>DOMAIN</motif_type>
+        <source source_id="11">
+          <source_name>SCOP</source_name>
+        </source>
+        <position>10-362</position>
+        <status>is_predicted</status>
+      </motif>
+      <motif motif_id="24648">
+        <motif_name>PF00069</motif_name>
+        <motif_description>Pkinase</motif_description>
+        <motif_type>DOMAIN</motif_type>
+        <source source_id="10">
+          <source_name>PFAM</source_name>
+        </source>
+        <position>19-315</position>
+        <status>is_predicted</status>
+      </motif>
+      <motif motif_id="24650">
+        <motif_name>PF07714</motif_name>
+        <motif_description>Pkinase_Tyr</motif_description>
+        <motif_type>DOMAIN</motif_type>
+        <source source_id="10">
+          <source_name>PFAM</source_name>
+        </source>
+        <position>19-315</position>
+        <status>is_predicted</status>
+      </motif>
+    </motifs>
+    <xrefs>
+      <xref>
+        <source source_id="4">
+          <source_name>MGI ID</source_name>
+          <accn>1328368</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="5">
+          <source_name>MGI Symbol</source_name>
+          <accn>Cdk9</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="6">
+          <source_name>GNF SymAtlas</source_name>
+          <accn>107951</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="17">
+          <source_name>Entrez Gene</source_name>
+          <accn>107951</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>AAH03901</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>AAK15706</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>CAM16620</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>BAE25312</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>AAK15699</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>BAC40824</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>BAE25055</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>BAE25966</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="21">
+          <source_name>Entrez Protein</source_name>
+          <accn>BAE34054</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="47">
+          <source_name>UniProtKB-SwissProt</source_name>
+          <accn>Q99J95</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="51">
+          <source_name>UniProt/SPTrEMBL</source_name>
+          <accn>CDK9_MOUSE</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="55">
+          <source_name>Ensembl-Peptide Mouse</source_name>
+          <accn>ENSMUSP00000009699</accn>
+        </source>
+      </xref>
+      <xref>
+        <source source_id="59">
+          <source_name>iHOP</source_name>
+          <accn>107951</accn>
+        </source>
+      </xref>
+    </xrefs>
+    <memo>
+      <methods>
+        <TMHMM>
+          <position>No_TM</position>
+        </TMHMM>
+        <SVMTM>
+          <position>No_TM</position>
+        </SVMTM>
+        <HMMTOP>
+          <position>No_TM</position>
+        </HMMTOP>
+        <MEMSAT>
+          <position>No_TM</position>
+        </MEMSAT>
+        <DAS>
+          <position>No_TM</position>
+        </DAS>
+      </methods>
+      <signalp>
+        <score>0.01</score>
+        <has_signalp threshold="0.63">N</has_signalp>
+      </signalp>
+      <nterm_conflict></nterm_conflict>
+      <nterm_resolved>No_Terminator</nterm_resolved>
+      <num_tmd>0</num_tmd>
+      <tmd>No_TM</tmd>
+      <scores>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</scores>
+    </memo>
+  </LOCATE_protein>
 </LOCATE_doc>
