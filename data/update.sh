@@ -32,3 +32,7 @@ unzip -u subcellular_location.csv.zip
 
 # NOG
 wget -N http://eggnog.embl.de/download/maNOG.mapping.txt.gz
+
+# Refseq name mappings
+wget -N ftp://ftp.ncbi.nih.gov/gene/DATA/gene2ensembl.gz
+
