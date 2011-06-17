@@ -11,6 +11,7 @@ import waldo.locate.load
 import waldo.hpa.load
 import waldo.sequences.load
 import waldo.nog.load
+import waldo.refseq.load
 modules = [
     waldo.go.load,
     waldo.mgi.load,
@@ -20,6 +21,7 @@ modules = [
     waldo.goslim.load,
     waldo.sequences.load,
     waldo.nog.load,
+    waldo.refseq.load
     ]
 
 session = waldo.backend.create_session ()

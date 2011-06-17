@@ -1,0 +1,93 @@
+
+# -*- coding: utf-8 -*-
+# Copyright (C) 2011, Luis Pedro Coelho <lpc@cmu.edu>
+# vim: set ts=4 sts=4 sw=4 expandtab smartindent:
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+#  all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#  THE SOFTWARE.
+
+from __future__ import division
+from os import path
+import gzip
+
+import waldo.go
+from waldo.translations.models import Translation
+
+_basedir = path.dirname(path.abspath(__file__))
+_datadir = path.abspath(path.join(_basedir, '../../data'))
+_inputfilename = 'gene2ensembl.gz'
+
+def load(dirname=None, create_session=None, mouse_only=True):
+    '''
+    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, mouse_only=True)
+
+    Parameters
+    ----------
+    load : str, optional
+        Directory containing the gene2ensembl.gz file
+    create_session : callable, optional
+        a callable that returns an sqlalchemy session
+    mouse_only : bool, optional
+        whether to only load mouse data
+        Currently, only ``mouse_only=True`` is implemented!
+
+    Returns
+    -------
+    nr_loaded : int
+        Nr. of entries loaded
+    '''
+    if dirname is None: dirname = _datadir
+    filename = path.join(dirname, _inputfilename)
+    if create_session is None:
+        from waldo import backend
+        create_session = backend.create_session
+    session = create_session()
+    input = gzip.GzipFile(filename)
+    header = input.readline()
+
+    if not mouse_only:
+        raise NotImplementedError('waldo.refseq.load: Cannot load non-mouse entries')
+
+    nr_loaded = 0
+    for line in input:
+        tax_id, \
+        gene_id, \
+        ensembl_gene, \
+        rna_accession, \
+        emsembl_trans, \
+        protein_accession, \
+        ensembl_peptide = line.strip().split('\t')
+        if ensembl_peptide.find('ENSMUSP') == -1:
+            continue
+        protein_accession, version = protein_accession.split('.')
+        session.add(Translation(
+                    'ensembl:peptide_id', ensembl_peptide,
+                    'refseq:accession', protein_accession))
+        session.add(Translation(
+                    'refseq:accession', protein_accession,
+                    'ensembl:peptide_id', ensembl_peptide))
+        session.add(Translation(
+                    'ensembl:gene_id', ensembl_gene,
+                    'refseq:accession', protein_accession))
+        session.add(Translation(
+                    'refseq:accession', protein_accession,
+                    'ensembl:gene_id', ensembl_gene))
+        session.commit()
+        nr_loaded += 1
+    return nr_loaded
+
