@@ -22,7 +22,6 @@
 
 from __future__ import division
 from lxml import etree
-import re
 import models
 from os import path
 import gzip
@@ -37,7 +36,7 @@ _p = '{http://uniprot.org/uniprot}'
 
 def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo Sapiens'])):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session})
+    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo Sapiens'})
 
     Load uniprot XML into database
 
