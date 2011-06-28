@@ -38,7 +38,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo Sapiens'})
 
-    Load uniprot XML into database
+    Load uniprot into database
 
     Parameters
     ----------
@@ -53,18 +53,21 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
     Returns
     -------
     nr_loaded : int
-        Nr. of entries loaded
+        Nr. of entries loaded. This double counts entries that are parsed both
+        from SwissProt and from the ID mapping.
     '''
     if dirname is None: dirname = _datadir
-    filename = path.join(dirname, _inputfilename)
     if create_session is None:
         from waldo import backend
         create_session = backend.create_session
     session = create_session()
-    if filename.endswith('.gz'):
-        input = gzip.GzipFile(filename)
-    else:
-        input = file(filename)
+    loaded = _load_uniprot_sprot(dirname, session, organism_set)
+    loaded += _load_idmapping(dirname, session, organism_set)
+    return loaded
+
+
+def _load_uniprot_sprot(dirname, session, organism_set):
+    input = gzip.GzipFile(path.join(dirname, _inputfilename))
     loaded = 0
 
     for event, element in etree.iterparse(input, tag=_p+'entry'):
@@ -110,23 +113,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
                     references.append(models.Reference(key, type, title, authors, dbRefString))
 
         for dbref in element.iterchildren(_p+'dbReference'):
-            if dbref.get('type') == 'Ensembl':
-                t = Translation('ensembl:transcript_id', dbref.get('id'), 'uniprot:name', name)
-                session.add(t)
-                t = Translation('uniprot:name', name, 'ensembl:transcript_id', dbref.get('id'))
-                session.add(t)
-                for prop in dbref.findall(_p+'property'):
-                    if prop.get('type') == 'gene designation':
-                        subnamespace = 'gene_id'
-                    elif prop.get('type') == 'protein sequence ID':
-                        subnamespace = 'peptide_id'
-                    else:
-                        continue
-                    t = Translation('ensembl:%s' % subnamespace, prop.get('value'), 'uniprot:name', name)
-                    session.add(t)
-                    t = Translation('uniprot:name', name, 'ensembl:%s' % subnamespace, prop.get('value'))
-                    session.add(t)
-            elif dbref.get('type') == 'Go':
+            if dbref.get('type') == 'Go':
                 id = dbref.get('id')
                 evidence_code = ''
                 for prop in dbref.findall(_p+'property'):
@@ -141,14 +128,89 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
         while element.getprevious() is not None:
             del element.getparent()[0]
 
-        for acc in accessions:
-            session.add(Translation(
-                            'uniprot:accession',
-                            acc,
-                            'uniprot:name',
-                            name))
         entry = models.Entry(name, rname, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
         session.commit()
     return loaded
+
+def _ensembl_guess(ensgene):
+    if ensgene.startswith('ENSMUS'):
+        return u'Mus Musculus'
+    return '<unknown>'
+
+def _load_idmapping(dirname, session, organism_set):
+    input = gzip.GzipFile(path.join(dirname, 'idmapping_selected.tab.gz'))
+    loaded = 0
+    seen_IDs = set()
+    for line in input:
+        UniProtKB_AC, \
+            UniProtKB_ID, \
+            GeneID_EntrezGene, \
+            RefSeq, \
+            GI, \
+            PDB, \
+            GO, \
+            IPI, \
+            UniRef100, \
+            UniRef90, \
+            UniRef50, \
+            UniParc, \
+            PIR, \
+            NCBI_taxon, \
+            MIM, \
+            UniGene, \
+            PubMed, \
+            EMBL, \
+            EMBL_CDS, \
+            Ensembl, \
+            Ensembl_TRS, \
+            Ensembl_PRO, \
+            Additional_PubMed = line[:-1].split('\t')
+        if organism_set is not None and \
+            _ensembl_guess(Ensembl) not in organism_set:
+            continue
+
+
+        session.add(Translation(
+                'uniprot:accession',
+                UniProtKB_AC,
+                'uniprot:name',
+                UniProtKB_ID))
+        session.add(Translation(
+                'uniprot:accession',
+                UniProtKB_AC,
+                'ensembl:gene_id',
+                Ensembl))
+        session.add(Translation(
+                'uniprot:accession',
+                UniProtKB_AC,
+                'ensembl:peptide_id',
+                Ensembl_PRO))
+        if not UniProtKB_ID in seen_IDs:
+            session.add(Translation(
+                    'uniprot:name',
+                    UniProtKB_ID,
+                    'ensembl:gene_id',
+                    Ensembl))
+            session.add(Translation(
+                    'uniprot:name',
+                    UniProtKB_ID,
+                    'ensembl:peptide_id',
+                    Ensembl_PRO))
+            session.add(Translation(
+                    'ensembl:peptide_id',
+                    Ensembl_PRO,
+                    'uniprot:name',
+                    UniProtKB_ID))
+            session.add(Translation(
+                    'ensembl:gene_id',
+                    Ensembl,
+                    'uniprot:name',
+                    UniProtKB_ID))
+            seen_IDs.add(UniProtKB_ID)
+        session.commit()
+        loaded += 1
+    return loaded
+
+
