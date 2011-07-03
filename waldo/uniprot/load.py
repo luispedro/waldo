@@ -34,9 +34,9 @@ _datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'uniprot_sprot.xml.gz'
 _p = '{http://uniprot.org/uniprot}'
 
-def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo Sapiens'])):
+def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo sapiens'])):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo Sapiens'})
+    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo sapiens'})
 
     Load uniprot into database
 
@@ -48,7 +48,7 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
         a callable object that returns an sqlalchemy session
     organism_set : set of str, optional
         If not None, only organisms in this set will be loaded. Defaults to
-        ['Mus Musculus', 'Homo Sapiens']
+        ['Mus musculus', 'Homo sapiens']
 
     Returns
     -------
@@ -134,9 +134,11 @@ def _load_uniprot_sprot(dirname, session, organism_set):
         session.commit()
     return loaded
 
-def _ensembl_guess(ensgene):
-    if ensgene.startswith('ENSMUS'):
-        return u'Mus Musculus'
+def _name_guess(name):
+    if name.endswith('_MOUSE'):
+        return u'Mus musculus'
+    if name.endswith('_HUMAN'):
+        return u'Homo sapiens'
     return '<unknown>'
 
 def _load_idmapping(dirname, session, organism_set):
@@ -168,9 +170,8 @@ def _load_idmapping(dirname, session, organism_set):
             Ensembl_PRO, \
             Additional_PubMed = line[:-1].split('\t')
         if organism_set is not None and \
-            _ensembl_guess(Ensembl) not in organism_set:
+            _name_guess(UniProtKB_ID) not in organism_set:
             continue
-
 
         session.add(Translation(
                 'uniprot:accession',
