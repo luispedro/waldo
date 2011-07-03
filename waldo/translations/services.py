@@ -45,6 +45,33 @@ def translate(name, input_namespace, output_namespace, session=None):
         return None
     return trans.output_name
 
+def translate_hops(name, namespaces, session=None):
+    '''
+    name = translate_hops(name, namespaces, session={backend.create_session()})
+
+    Translate through several namespaces (from namespaces[0] to namespaces[1]
+    to namespaces[2] ... namespaces[-1]).
+
+    Parameters
+    ----------
+    name : str
+        input name
+    namespaces : list of str
+        namespaces to use. First namespace will be the namespace of the
+        ``name`` argument.
+    session : SQLAlchemy sesion object
+        SQLAlchemy session to use (default: call backend.create_session())
+
+    Returns
+    -------
+    name : str or None
+        result of translation or None if not found.
+    '''
+    while len(namespaces) > 1 and name is not None:
+        name = translate(name, namespaces[0], namespaces[1], session)
+        namespaces.pop(0)
+    return name
+
 
 def get_id_namespace(any_id):
     # ensembl gene id
