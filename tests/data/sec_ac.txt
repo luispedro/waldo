@@ -1,0 +1,36 @@
+
+----------------------------------------------------------------------------
+        UniProt Protein Knowledgebase
+        Swiss Institute of Bioinformatics (SIB); Geneva, Switzerland
+        European Bioinformatics Institute (EBI); Hinxton, United Kingdom
+        Protein Information Resource (PIR); Washington DC, USA
+----------------------------------------------------------------------------
+
+Description: Secondary accession numbers: index
+Name:        SEC_AC.TXT
+Release:     28-Jun-2011
+
+----------------------------------------------------------------------------
+
+This file lists all secondary accession numbers in UniProtKB (Swiss-Prot and
+TrEMBL), together with their corresponding current primary accession number(s).
+Accession numbers become secondary when entries are merged or split. When two
+entries are merged into one, the accession numbers from both entries are stored
+for the new entry.
+
+If an existing entry is split into two or more entries (a rare occurrence),
+the original accession numbers are retained in all the derived entries and a
+new primary accession number is added to all the entries.
+
+An accession number is dropped only when the data to which it was assigned have
+been completely removed from the database. Accession numbers deleted from
+Swiss-Prot are listed in the document file delac_sp.txt and those deleted
+from TrEMBL are listed in delac_tr.txt.
+
+Secondary AC                  Primary AC
+____________                  __________ 
+A0A111                        P64943
+A0A112                        P64941
+A0A113                        Q10704
+A0A131                        O90631
+P77264                        P0AAA3

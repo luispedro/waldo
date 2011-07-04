@@ -71,7 +71,7 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     '''
     return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'uniprot:name', session)
 
-def retrieve_go_annotations(name, session=None, return_evidence=False):
+def retrieve_go_annotations(name, session=None, return_evidence=False, only_cellular_component=True):
     '''
     go_ids = retrieve_go_annotations(name, session={backend.create_session()}, return_evidence=False)
 
@@ -94,9 +94,14 @@ def retrieve_go_annotations(name, session=None, return_evidence=False):
     '''
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
+    annotations = entr.go_annotations
+    if only_cellular_component:
+        def is_cellular_component(g):
+            return waldo.go.is_cellular_component(g.go_id, session)
+        annotations = filter(is_cellular_component, annotations)
     if return_evidence:
-        return [(go.go_id, go.evidence_code) for go in entr.go_annotations]
-    return [go.go_id for go in entr.go_annotations]
+        return [(go.go_id, go.evidence_code) for go in annotations]
+    return [go.go_id for go in annotations]
 
 def retrieve_name_matches(term, session=None):
     '''

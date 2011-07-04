@@ -60,7 +60,7 @@ class Translation(Base):
 
     trans_id = Column(Integer, primary_key=True)
     input_namespace = Column(String(32))
-    input_name = Column(String(32))
+    input_name = Column(String(32), index=True)
     output_namespace = Column(String(32))
     output_name = Column(String(32))
 

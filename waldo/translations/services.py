@@ -31,8 +31,6 @@ def translate(name, input_namespace, output_namespace, session=None):
     name : str or None
         result of translation or None if not found.
     '''
-    if input_namespace == output_namespace:
-        return name
     if session is None:
         session = waldo.backend.create_session()
     verify_namespace(input_namespace)
@@ -42,6 +40,8 @@ def translate(name, input_namespace, output_namespace, session=None):
                     Translation.input_name == name,
                     Translation.output_namespace ==  output_namespace)).first()
     if trans is None:
+        if input_namespace == output_namespace:
+            return name
         return None
     return trans.output_name
 

@@ -63,8 +63,15 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
     session = create_session()
     loaded = _load_uniprot_sprot(dirname, session, organism_set)
     loaded += _load_idmapping(dirname, session, organism_set)
+    loaded += _load_sec_ac(dirname, session)
     return loaded
 
+def _cleanup(element):
+    # We need to cleanup. Otherwise, we end up with so many nodes in memory
+    # that we run out.
+    element.clear()
+    while element.getprevious() is not None:
+        del element.getparent()[0]
 
 def _load_uniprot_sprot(dirname, session, organism_set):
     input = gzip.GzipFile(path.join(dirname, _inputfilename))
@@ -79,6 +86,7 @@ def _load_uniprot_sprot(dirname, session, organism_set):
 
         if organism_set is not None:
             if not len(set(organisms) & organism_set):
+                _cleanup(element)
                 continue
 
         accessions = [unicode(acc.text) for acc in element.iterchildren(_p+'accession')]
@@ -119,14 +127,9 @@ def _load_uniprot_sprot(dirname, session, organism_set):
                 for prop in dbref.findall(_p+'property'):
                     if prop.get('type') == 'evidence':
                         evidence_code = prop.get('value');
-                if waldo.go.is_cellular_component(id, session):
-                    go_annotations.append(models.GoAnnotation(id, evidence_code))
+                go_annotations.append(models.GoAnnotation(id, evidence_code))
 
-        # We need to cleanup. Otherwise, we end up with so many nodes in memory
-        # that we run out.
-        element.clear()
-        while element.getprevious() is not None:
-            del element.getparent()[0]
+        _cleanup(element)
 
         entry = models.Entry(name, rname, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
@@ -214,4 +217,29 @@ def _load_idmapping(dirname, session, organism_set):
         loaded += 1
     return loaded
 
+def _load_sec_ac(datadir, session):
+    # This is a human readable file with a multi-line free text header
+    # The start of data is indicated by
+    # Secondary AC ... Primary AC
+    # ____________     __________
+    #
+    # So, we skip until the first of these lines and then one more.
+
+    loaded = 0
+    data_next = False
+    in_data = False
+    for line in open(path.join(datadir, 'sec_ac.txt')):
+        if in_data:
+            sec,primary = line.strip().split()
+            if session.query(Translation).filter(Translation.input_name == primary).limit(1).count():
+                session.add(Translation(
+                        'uniprot:accession', sec,
+                        'uniprot:accession', primary))
+                session.commit()
+                loaded += 1
+        elif data_next:
+            in_data = True
+        elif line.startswith('Secondary AC'):
+            data_next = True
+    return loaded
 

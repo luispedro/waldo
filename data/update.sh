@@ -17,6 +17,7 @@ wget -N http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.ob
 # Uniprot
 wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
 wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
+wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/knowledgebase/docs/sec_ac.txt
 
 # LOCATE
 wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_mouse_v6_20081121.xml.zip
