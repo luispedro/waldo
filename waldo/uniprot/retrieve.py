@@ -73,7 +73,7 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
 
 def retrieve_go_annotations(name, session=None, return_evidence=False, only_cellular_component=True):
     '''
-    go_ids = retrieve_go_annotations(name, session={backend.create_session()}, return_evidence=False)
+    go_ids = retrieve_go_annotations(name, session={backend.create_session()}, return_evidence=False, only_cellular_component=True)
 
     Retrieve GO ids by uniprot name.
 
@@ -83,12 +83,14 @@ def retrieve_go_annotations(name, session=None, return_evidence=False, only_cell
         uniprot name
     session : SQLAlchemy session object, optional
         session to use (default: call backend.create_session())
-    return_evidence : boolean, False
-        Whether to return evidence
+    return_evidence : boolean, optional
+        Whether to return evidence (default: False)
+    only_cellular_component : boolean, optional
+        Whether to return only GO terms in the cellular component space (default: True)
 
     Returns
     -------
-    go_ids : list of str or (str,str)
+    go_ids : list of str or list of (str,str)
         go terms (of the form "GO:00..."). If ``return_evidence``, then pairs
         are returned, where the second element is the evidence code.
     '''
