@@ -30,20 +30,24 @@ def is_cellular_component(go_id, session=None):
     '''
     is_cc = is_cellular_component(go_id, session={new session})
 
-    Returns whether 
+    Returns whether the id belongs to the cellular component sub-ontology
 
     Parameters
     ----------
-      go_id : A GO id (e.g., GO:123456789)
+    go_id : str
+        A GO id (e.g., GO:123456789)
+    session : SQLAlchemy session object, optional
+
     Returns
     -------
-      Boolean : whether go_id is in cellular_component namespace
+    is_cc : Boolean
+        whether go_id is in cellular_component namespace
     '''
     if session is None:
         session = create_session()
-    return bool( session.query(models.Term) 
+    return bool( session.query(models.Term)
                     .filter(and_(
-                            models.Term.id == go_id,
+                            models.Term.id == go_id
                             models.Term.namespace == 'cellular_component'))
                     .count()
                 )
@@ -56,12 +60,14 @@ def id_to_term(go_id, session=None):
 
     Parameters
     ----------
-      go_id : A GO ID (e.g., GO:123456789)
-      session : An SQLAlchemy session
+    go_id : str
+        A GO ID (e.g., GO:123456789)
+    session :  SQLAlchemy session object, optional
 
     Returns
     -------
-      term : A GO term (e.g. "mitochondrion")
+    term : str
+        A GO term (e.g. "mitochondrion")
     '''
     if session is None: session = create_session()
     term = session.query(Term).filter(Term.id == go_id).first()
