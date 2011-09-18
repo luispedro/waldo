@@ -145,6 +145,8 @@ def _name_guess(name):
     return '<unknown>'
 
 def _load_idmapping(dirname, session, organism_set):
+    def add(input_ns, input_n, output_ns, output_n):
+        session.add(Translation(input_ns, input_n, output_ns, output_n))
     input = gzip.GzipFile(path.join(dirname, 'idmapping_selected.tab.gz'))
     loaded = 0
     seen_IDs = set()
@@ -176,42 +178,16 @@ def _load_idmapping(dirname, session, organism_set):
             _name_guess(UniProtKB_ID) not in organism_set:
             continue
 
-        session.add(Translation(
-                'uniprot:accession',
-                UniProtKB_AC,
-                'uniprot:name',
-                UniProtKB_ID))
-        session.add(Translation(
-                'uniprot:accession',
-                UniProtKB_AC,
-                'ensembl:gene_id',
-                Ensembl))
-        session.add(Translation(
-                'uniprot:accession',
-                UniProtKB_AC,
-                'ensembl:peptide_id',
-                Ensembl_PRO))
+        add('uniprot:accession', UniProtKB_AC, 'uniprot:name', UniProtKB_ID)
+        add('uniprot:accession', UniProtKB_AC, 'ensembl:gene_id', Ensembl)
+        add('uniprot:accession', UniProtKB_AC, 'ensembl:peptide_id', Ensembl_PRO)
+        for embl_cds in EMBL_CDS.split('; '):
+            add('embl:cds', embl_cds, 'uniprot:name', UniProtKB_ID)
         if not UniProtKB_ID in seen_IDs:
-            session.add(Translation(
-                    'uniprot:name',
-                    UniProtKB_ID,
-                    'ensembl:gene_id',
-                    Ensembl))
-            session.add(Translation(
-                    'uniprot:name',
-                    UniProtKB_ID,
-                    'ensembl:peptide_id',
-                    Ensembl_PRO))
-            session.add(Translation(
-                    'ensembl:peptide_id',
-                    Ensembl_PRO,
-                    'uniprot:name',
-                    UniProtKB_ID))
-            session.add(Translation(
-                    'ensembl:gene_id',
-                    Ensembl,
-                    'uniprot:name',
-                    UniProtKB_ID))
+            add('uniprot:name', UniProtKB_ID, 'ensembl:gene_id', Ensembl)
+            add('uniprot:name', UniProtKB_ID, 'ensembl:peptide_id', Ensembl_PRO)
+            add('ensembl:peptide_id', Ensembl_PRO, 'uniprot:name', UniProtKB_ID)
+            add('ensembl:gene_id', Ensembl, 'uniprot:name', UniProtKB_ID)
             seen_IDs.add(UniProtKB_ID)
         session.commit()
         loaded += 1

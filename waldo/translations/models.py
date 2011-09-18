@@ -10,6 +10,7 @@ from sqlalchemy.orm import relation, backref
 from waldo.backend import Base
 
 known_namespaces = (
+    'embl:cds',
     'ensembl:peptide_id',
     'ensembl:gene_id',
     'ensembl:transcript_id',
