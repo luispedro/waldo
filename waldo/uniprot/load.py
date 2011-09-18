@@ -184,10 +184,14 @@ def _load_idmapping(dirname, session, organism_set):
         for embl_cds in EMBL_CDS.split('; '):
             add('embl:cds', embl_cds, 'uniprot:name', UniProtKB_ID)
         if not UniProtKB_ID in seen_IDs:
-            add('uniprot:name', UniProtKB_ID, 'ensembl:gene_id', Ensembl)
-            add('uniprot:name', UniProtKB_ID, 'ensembl:peptide_id', Ensembl_PRO)
-            add('ensembl:peptide_id', Ensembl_PRO, 'uniprot:name', UniProtKB_ID)
-            add('ensembl:gene_id', Ensembl, 'uniprot:name', UniProtKB_ID)
+            Ensembl = Ensembl.split('; ')
+            Ensembl_PRO = Ensembl_PRO.split('; ')
+            add('uniprot:name', UniProtKB_ID, 'ensembl:gene_id', Ensembl[0])
+            add('uniprot:name', UniProtKB_ID, 'ensembl:peptide_id', Ensembl_PRO[0])
+            for e in Ensembl:
+                add('ensembl:gene_id', e, 'uniprot:name', UniProtKB_ID)
+            for e in Ensembl_PRO:
+                add('ensembl:peptide_id', e, 'uniprot:name', UniProtKB_ID)
             seen_IDs.add(UniProtKB_ID)
         session.commit()
         loaded += 1
