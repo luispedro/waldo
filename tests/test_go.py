@@ -7,7 +7,7 @@ import waldo.go.go
 def load_go(sessionmaker):
     return waldo.go.load.load('tests/data/', sessionmaker)
 
-def test_is_cellular_component():
+def test_go():
     engine = create_engine('sqlite://')
     metadata = waldo.go.models.Base.metadata
     metadata.bind = engine
@@ -23,7 +23,9 @@ def test_is_cellular_component():
 
     assert waldo.go.go.is_cellular_component('GO:0000015', session)
     assert waldo.go.go.is_cellular_component('GO:0000108', session)
+    assert waldo.go.go.vocabulary('GO:0000108', session) == 'cellular_component'
     assert not waldo.go.go.is_cellular_component('GO:0000107', session)
+    assert waldo.go.go.vocabulary('GO:0000107', session) != 'cellular_component'
 
     id = 'GO:0000015'
     term = 'phosphopyruvate hydratase complex'

@@ -47,10 +47,38 @@ def is_cellular_component(go_id, session=None):
         session = create_session()
     return bool( session.query(models.Term)
                     .filter(and_(
-                            models.Term.id == go_id
+                            models.Term.id == go_id,
                             models.Term.namespace == 'cellular_component'))
                     .count()
                 )
+
+
+def vocabulary(go_id, session=None):
+    '''
+    voc = vocabulary(go_id, session={new session})
+
+    Return the vocabulary to which the `go_id` belongs.
+
+    Parameters
+    ----------
+    go_id : str
+        A GO id (e.g., GO:123456789)
+    session : SQLAlchemy session object, optional
+
+    Returns
+    -------
+    voc: str
+        Vocabulary (one of 'cellular_component', 'molecular_process', 'biological_function')
+        None if not found.
+    '''
+    if session is None:
+        session = create_session()
+    entry = session.query(models.Term) \
+                    .filter(models.Term.id == go_id) \
+                    .first()
+    if entry:
+        return entry.namespace
+
 
 def id_to_term(go_id, session=None):
     '''
