@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -14,12 +14,7 @@ setuptools not found. Please install it.
 On linux, the package is often called python-setuptools'''
     exit(1)
 
-long_description = '''\
-Waldo: Where Proteins Are
--------------------------
-
-Waldo tells what everyone already knows.
-'''
+long_description = file('README.rst').read()
 
 classifiers = [
 'Development Status :: 4 - Beta',
