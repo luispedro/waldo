@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -43,14 +43,7 @@ def is_cellular_component(go_id, session=None):
     is_cc : Boolean
         whether go_id is in cellular_component namespace
     '''
-    if session is None:
-        session = create_session()
-    return bool( session.query(models.Term)
-                    .filter(and_(
-                            models.Term.id == go_id,
-                            models.Term.namespace == 'cellular_component'))
-                    .count()
-                )
+    return (vocabulary(go_id, session) == 'cellular_component')
 
 
 def vocabulary(go_id, session=None):
