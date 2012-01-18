@@ -14,19 +14,10 @@ import json_entry
 
 def searchby(request):
     if request.method == 'GET':
-        if 'ensemblgene' in request.GET:
-            key = 'ensemblgene'
-        elif 'ensemblprot' in request.GET:
-            key = 'ensemblprot'
-        elif 'mgiid' in request.GET:
-            key = 'mgiid'
-        elif 'protname' in request.GET:
-            key = 'protname'
-        elif 'uniprotid' in request.GET:
-            key = 'uniprotid'
-        elif 'locateid' in request.GET:
-            key = 'locateid'
-        value = request.GET[key]
+        for key in ('ensemblgene', 'ensemblprot', 'mgiid', 'protname', 'uniprotid', 'locateid'):
+            if key in request.GET
+                value = request.GET[key]
+                break
         return HttpResponseRedirect('/search/%s/%s' % (key, value))
 
 def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None):
@@ -170,7 +161,6 @@ def get_json(request, id=None):
     session = waldo.backend.create_session()
 
     op = request.path_info.split('/')[2]
-    print op
     if op == 'location' :
         entry = waldo.locate.retrieve.retrieve_entry(id, session)
     elif op == 'uniprot' :
