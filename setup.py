@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <lpc@cmu.edu>
+# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -40,7 +40,7 @@ setuptools.setup(name = 'Waldo',
       description = 'Protein Subcellular Location Information Package',
       long_description = long_description,
       author = 'Luis Pedro Coelho and Shannon Quinn',
-      author_email = 'lpc@cmu.edu',
+      author_email = 'luis@luispedro.org',
       license = 'MIT',
       platforms = ['Any'],
       classifiers = classifiers,
