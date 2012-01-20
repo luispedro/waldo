@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -84,6 +84,12 @@ class Organism(Base):
 
     def __init__(self, organism):
         self.organism = organism
+
+    def __str__(self):
+        return str(self.organism)
+
+    def __unicode__(self):
+        return unicode(self.organism, 'utf-8')
 
 class Entry(Base):
     __tablename__ = 'uniprot_entry'
