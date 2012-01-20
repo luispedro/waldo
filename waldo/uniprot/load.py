@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2011, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,8 +24,8 @@ from __future__ import division
 from lxml import etree
 import models
 from os import path
-import gzip
 
+from waldo.tools import _gzip_open
 import waldo.go
 from waldo.translations.models import Translation
 
@@ -74,7 +74,7 @@ def _cleanup(element):
         del element.getparent()[0]
 
 def _load_uniprot_sprot(dirname, session, organism_set):
-    input = gzip.GzipFile(path.join(dirname, _inputfilename))
+    input = _gzip_open(path.join(dirname, _inputfilename))
     loaded = 0
 
     for event, element in etree.iterparse(input, tag=_p+'entry'):
@@ -147,7 +147,7 @@ def _name_guess(name):
 def _load_idmapping(dirname, session, organism_set):
     def add(input_ns, input_n, output_ns, output_n):
         session.add(Translation(input_ns, input_n, output_ns, output_n))
-    input = gzip.GzipFile(path.join(dirname, 'idmapping_selected.tab.gz'))
+    input = _gzip_open(path.join(dirname, 'idmapping_selected.tab.gz'))
     loaded = 0
     seen_IDs = set()
     for line in input:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,8 +23,9 @@
 from __future__ import division
 from models import Term
 from sqlalchemy.orm import sessionmaker
-import gzip
 from os import path
+
+from waldo.tools import _gzip_open
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
@@ -51,9 +52,9 @@ def load(dirname=None, create_session=None):
     session = create_session()
     filename = path.join(dirname, _inputfilename)
     if not path.exists(filename) and path.exists(filename + '.gz'):
-        input = gzip.GzipFile(filename + '.gz')
+        input = _gzip_open(filename)
     else:
-        input = file(filename)
+        input = open(filename)
 
     id = None
     in_term = False

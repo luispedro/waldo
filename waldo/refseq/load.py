@@ -1,6 +1,5 @@
-
 # -*- coding: utf-8 -*-
-# Copyright (C) 2011, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2011-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,10 +22,10 @@
 
 from __future__ import division
 from os import path
-import gzip
 
 import waldo.go
 from waldo.translations.models import Translation
+from waldo.tools import _gzip_open
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
@@ -57,7 +56,7 @@ def load(dirname=None, create_session=None, mouse_only=True):
         from waldo import backend
         create_session = backend.create_session
     session = create_session()
-    input = gzip.GzipFile(filename)
+    input = _gzip_open(filename)
     header = input.readline()
 
     if not mouse_only:

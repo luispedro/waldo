@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2011, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2011-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # License: MIT
@@ -8,7 +8,8 @@ from __future__ import division
 from waldo.nog import models
 from os import path
 import os
-import gzip
+
+from waldo.tools import _gzip_open
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
@@ -46,7 +47,7 @@ def load(dirname=None, create_session=None, species=('Mus Musculus', 'Homo Sapie
     session = create_session()
     nr_loaded = 0
     filename = path.join(dirname,_inputfilename)
-    inputfile = gzip.GzipFile(filename)
+    inputfile = _gzip_open(filename)
     header = inputfile.readline()
     for line in inputfile:
         prot_name, \

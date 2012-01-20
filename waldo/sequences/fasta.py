@@ -6,6 +6,8 @@
 from __future__ import division
 from collections import namedtuple
 
+from waldo.tools import _gzip_open
+
 sequence = namedtuple('sequence', 'header sequence')
 
 def read(input):
@@ -24,8 +26,7 @@ def read(input):
     """
     if type(input) == str:
         if input.endswith('.gz'):
-            import gzip
-            input = gzip.GzipFile(input)
+            input = _gzip_open(input)
         else:
             input = file(input)
     seq_items = []
