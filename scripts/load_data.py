@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
+
+from sqlalchemy.orm.session import Session
 
 import waldo.mgi.load
 import waldo.go.load
@@ -24,11 +26,12 @@ modules = [
     waldo.refseq.load
     ]
 
-session = waldo.backend.create_session ()
+session = waldo.backend.create_session()
 c = session.connection()
 
-# This is only valid for SQLite3, but it makes it much faster
-c.execute('''PRAGMA SYNCHRONOUS=OFF;''')
+# These are only valid for SQLite3, but it makes it much faster
+c.execute('PRAGMA synchronous=OFF;')
+c.execute('PRAGMA journal_mode=OFF;')
 for module in modules:
-    module.load(create_session=(lambda: session))
+    module.load(create_session=(lambda: Session(bind=c)))
 
