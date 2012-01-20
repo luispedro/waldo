@@ -15,7 +15,7 @@ import json_entry
 def searchby(request):
     if request.method == 'GET':
         for key in ('ensemblgene', 'ensemblprot', 'mgiid', 'protname', 'uniprotid', 'locateid'):
-            if key in request.GET
+            if key in request.GET:
                 value = request.GET[key]
                 break
         return HttpResponseRedirect('/search/%s/%s' % (key, value))
