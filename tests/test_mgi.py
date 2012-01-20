@@ -29,7 +29,7 @@ def test_mgi_load():
     # MGI:1915545 is in the file but does not have a cellular component
     assert not session.query(waldo.mgi.models.Entry).filter(waldo.mgi.models.Entry.mgi_id == 'MGI:1915545').count()
 
-    assert 'IEA' in [annot.evidence_code for annot in waldo.mgi.retrieve.retrieve_entry('MGI:1918918', session).annotations]
+    assert 'IEA' in [annot.evidence_code for annot in waldo.mgi.retrieve.retrieve_entry('MGI:1918918', session).go_annotations]
 
     for namespace in ('mgi:name', 'mgi:id', 'mgi:symbol'):
         assert session.query(Translation).filter(
@@ -42,7 +42,7 @@ def test_mgi():
     session,_ = load_mgi_test()
     def test_annotated(id, go_id, tf):
         first = session.query(waldo.mgi.models.Entry).filter(waldo.mgi.models.Entry.mgi_id == id).first()
-        st = go_id in map(lambda ann: ann.go_id, first.annotations)
+        st = go_id in map(lambda ann: ann.go_id, first.go_annotations)
         assert st == tf
     yield test_annotated, 'MGI:1918918', 'GO:0016020', True
     yield test_annotated, 'MGI:1918918', 'GO:0005783', False

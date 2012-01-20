@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -58,7 +58,7 @@ def retrieve_go_annotations(mgi_id, session=None):
     entr = session.query(Entry).filter(Entry.mgi_id == mgi_id).first()
     if entr is None:
         raise KeyError('waldo.mgi.retrieve_go_annotations: No entry for `%s`' % mgi_id)
-    return [go.go_id for go in entr.annotations]
+    return [go.go_id for go in entr.go_annotations]
 
 def retrieve_entry(id, session=None):
     '''
