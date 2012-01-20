@@ -25,3 +25,7 @@ def test_retrieve():
     assert ret == uid
     goids = waldo.locate.retrieve.retrieve_go_annotations(ret, session)
 
+    entry = waldo.locate.retrieve.retrieve_entry(locid, session)
+    assert len(entry.organisms) == 1
+
+

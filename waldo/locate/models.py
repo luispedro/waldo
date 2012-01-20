@@ -171,6 +171,10 @@ class Entry(Base):
     xrefs = relation(ExternalReference)
     images = relation(Image)
 
+    @property
+    def organisms(self):
+        return [self.organism]
+
     def __init__(self, id, source_name, source_id, accn, isoforms, predictions, references, annotations, locations, images, xrefs, organism=None):
         self.id = id
         self.source_name = source_name
