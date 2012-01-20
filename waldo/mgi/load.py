@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -113,7 +113,7 @@ def _load_gene_annotation(filename, session):
     return loaded
 
 def _load_mrk_ensembl(filename, session):
-    for i,line in enumerate(file(filename)):
+    for line in open(filename):
         tokens = line.strip().split('\t')
         mgi_accession, marker_sym, marker_name, cm_pos, chromosome, ensembl_gene_id = tokens[:6]
         def add_synonym(namespace, name):
@@ -138,7 +138,7 @@ def _load_mrk_ensembl(filename, session):
 
 def _load_pubmed_ids(filename, session):
     '''
-    For each line in the file, determine if the referenced MGI ID exists in SQLite.
+    For each line in the file, determine if the referenced MGI ID exists in database.
     If so, insert the associated PubMed IDs into SQLite.
     '''
     for line in file(filename):
