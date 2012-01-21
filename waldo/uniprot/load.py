@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 #  of this software and associated documentation files (the "Software"), to deal
 #  in the Software without restriction, including without limitation the rights
 #  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 #  copies of the Software, and to permit persons to whom the Software is
 #  furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 #  all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 #  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 #  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -99,7 +99,7 @@ def _load_uniprot_sprot(dirname, session, organism_set):
 
         for ref in element.iterchildren(_p+'reference'):
             for subel in ref.iterchildren():
-                if(subel.tag == _p+'citation'):
+                if subel.tag == _p+'citation':
                     key = ref.get('key')
                     type = subel.get('type')
                     title = subel.findtext(_p+'title')
@@ -110,12 +110,13 @@ def _load_uniprot_sprot(dirname, session, organism_set):
                         authors.extend([person.get('name') for person in author.findall(_p+'person')])
                     authors = " AND ".join(authors)
 
-                    dbrefs = filter(lambda x : x.get('type') == 'DOI', subel.findall(_p+'dbReference'))
+                    dbReference = subel.findall(_p + 'dbReference')
+                    dbrefs = filter(lambda x : x.get('type') == 'DOI', dbReference)
                     dbRefString = ''
                     if len(dbrefs):
                         dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
                     else:
-                        dbrefs = filter(lambda x : x.get('type') == 'PubMed', subel.findall(_p+'dbReference'))
+                        dbrefs = filter(lambda x : x.get('type') == 'PubMed', dbReference)
                         if len(dbrefs):
                             dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
                     references.append(models.Reference(key, type, title, authors, dbRefString))
@@ -205,13 +206,22 @@ def _load_sec_ac(datadir, session):
     #
     # So, we skip until the first of these lines and then one more.
 
+    cache = {}
+    def _in_db(name):
+        if name not in cache:
+            # This is a simple method to avoid having the cache explode whilst still getting most of the benefits
+            if len(cache) > (16*1024):
+                cache.clear()
+            cache[name] = session.query(Translation).filter(Translation.input_name == name).limit(1).count()
+        return cache[name]
+
     loaded = 0
     data_next = False
     in_data = False
     for line in open(path.join(datadir, 'sec_ac.txt')):
         if in_data:
             sec,primary = line.strip().split()
-            if session.query(Translation).filter(Translation.input_name == primary).limit(1).count():
+            if _in_db(primary):
                 session.add(Translation(
                         'uniprot:accession', sec,
                         'uniprot:accession', primary))
