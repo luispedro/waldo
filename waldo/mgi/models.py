@@ -32,7 +32,6 @@ class GOAnnotation(Base):
     go_id = Column(String(15), nullable=False)
     evidence_code = Column(String(3), nullable=True)
     evidence = Column(String(3), nullable=True)
-    organisms = [u'Mus Musculus']
 
     def __init__(self, mgi_id, go_id, evidence_code, evidence=None):
         self.mgi_id = mgi_id
@@ -46,6 +45,8 @@ class Entry(Base):
     name = Column(String(32))
     pubmedids = Column(String(100), nullable=True)
     go_annotations = relation(GOAnnotation)
+    references = []
+    organisms = [u'Mus Musculus']
 
     def __init__(self, mgi_id, name):
         self.mgi_id = mgi_id
