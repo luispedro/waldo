@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -135,10 +135,14 @@ class LocateAnnotation(Base):
     source_name = Column(String(50))
     accn = Column(String(20))
     locations = relation(LocateLocation)
+    evidence_code = ''
 
     @property
     def go_id(self):
-        return self.locations
+        locs = self.locations
+        if len(locs):
+            return self.locations[0].go_id
+        return '<unknown>'
 
     def __init__(self, evidence, source_id, source_name, accn, locations):
         self.evidence = evidence
@@ -174,6 +178,10 @@ class LocateEntry(Base):
     locations = relation(LocateLocation)
     xrefs = relation(ExternalReference)
     images = relation(Image)
+
+    @property
+    def internal_id(self):
+        return self.id
 
     @property
     def name(self):

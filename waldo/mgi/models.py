@@ -48,6 +48,10 @@ class MGIEntry(Base):
     references = []
     organisms = [u'Mus Musculus']
 
+    @property
+    def internal_id(self):
+        return self.mgi_id
+
     def __init__(self, mgi_id, name):
         self.mgi_id = mgi_id
         self.name = name

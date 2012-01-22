@@ -103,6 +103,10 @@ class UniprotEntry(Base):
     organisms = relation(Organism)
 
 
+    @property
+    def internal_id(self):
+        return self.name
+
     def __init__(self, name, rname, accessions, comments, references, go_annotations, sequence, organisms):
         self.name = name
         self.rname = rname
