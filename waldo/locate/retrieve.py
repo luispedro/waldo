@@ -73,18 +73,18 @@ def retrieve_go_annotations(id, session=None):
 
     locations = set()
     for location in entry.locations:
-        locations.update(_splitGO(location.goid))
+        locations.update(_splitGO(location.go_id))
 
     for predict in entry.predictions:
-        locations.update(_splitGO(predict.goid))
+        locations.update(_splitGO(predict.go_id))
 
     for reference in entry.references:
         for location in reference.locations:
-            locations.update(_splitGO(location.goid))
+            locations.update(_splitGO(location.go_id))
 
-    for annotation in entry.annotations:
+    for annotation in entry.go_annotations:
         for location in annotation.locations:
-            locations.update(_splitGO(location.goid))
+            locations.update(_splitGO(location.go_id))
 
     return list(locations)
 

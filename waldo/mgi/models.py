@@ -39,7 +39,7 @@ class GOAnnotation(Base):
         self.evidence_code = evidence_code
         self.evidence = evidence
 
-class Entry(Base):
+class MGIEntry(Base):
     __tablename__ = 'mgi_entry'
     mgi_id = Column(String(32), nullable=False, primary_key=True)
     name = Column(String(32))
@@ -56,3 +56,4 @@ class Entry(Base):
     def __repr__(self):
         return '<%s>' % self.mgi_id
 
+Entry = MGIEntry

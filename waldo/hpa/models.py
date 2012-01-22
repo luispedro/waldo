@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -19,7 +19,7 @@ class Location(Base):
         self.name = name
         self.entry_id = entryid
 
-class Entry(Base):
+class HPAEntry(Base):
     __tablename__ = 'hpa_ids'
     entry_id = Column(Integer(11), primary_key=True)
     species = Column(String(30))
@@ -33,3 +33,5 @@ class Entry(Base):
 
     def __repr__(self):
         return '<ENSG %s>' % self.ensembl_id
+
+Entry = HPAEntry

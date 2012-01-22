@@ -91,7 +91,7 @@ class Organism(Base):
     def __unicode__(self):
         return unicode(self.organism, 'utf-8')
 
-class Entry(Base):
+class UniprotEntry(Base):
     __tablename__ = 'uniprot_entry'
     name = Column(String(32), nullable=False, primary_key=True)
     rname = Column(String(128), nullable=False)
@@ -121,3 +121,4 @@ class Entry(Base):
     def __repr__(self):
         return '<Uniprot Entry: %s>' % self.name
 
+Entry = UniprotEntry
