@@ -123,7 +123,7 @@ def get_json(request, id=None):
     session = waldo.backend.create_session()
 
     op = request.path_info.split('/')[2]
-    if op == 'location' :
+    if op == 'locate':
         entry = waldo.locate.retrieve.retrieve_entry(id, session)
     elif op == 'uniprot' :
         entry = waldo.uniprot.retrieve.retrieve_entry(id, session)
