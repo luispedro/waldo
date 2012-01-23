@@ -1,6 +1,6 @@
 from collections import defaultdict
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
@@ -136,6 +136,4 @@ def get_json(request, id=None):
     elif op == 'mgi' :
         entry = waldo.mgi.retrieve.retrieve_entry(id, session)
 
-    return render_to_response('json.html', {
-                    'json' : json.dumps(entry, cls=json_entry.EntryEncoder)
-                    })
+    return HttpResponse(json.dumps(entry, cls=json_entry.EntryEncoder), content_type='application/json')
