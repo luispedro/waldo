@@ -14,5 +14,5 @@ urlpatterns = patterns('',
     (r'^json/', include('woof.odlaw.urls')),
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^$', direct_to_template, {'template' : 'index.html'}),
+    (r'^$', direct_to_template, {'template' : 'index.html'}, 'home'),
 )
