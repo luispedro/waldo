@@ -33,6 +33,7 @@ c = session.connection()
 c.execute('PRAGMA synchronous=OFF;')
 c.execute('PRAGMA journal_mode=OFF;')
 for module in modules:
+    c = session.connection()
     module.load(create_session=(lambda: Session(bind=c)))
     session.commit()
 
