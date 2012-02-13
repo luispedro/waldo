@@ -125,7 +125,7 @@ def term_to_id(go_term, session=None):
     return term.id
 
 
-def related(term, create_session=None):
+def related(term, level=1, create_session=None):
     '''
     for relname, to_term in related(term, create_session={backend.create_session}):
         ....
@@ -134,6 +134,8 @@ def related(term, create_session=None):
     ----------
     term : str or unicode
         GO term
+    level : int, optional
+        Maximum recursion level. Use ``-1`` for infinite recursion
     create_session : callable
 
     Returns
@@ -143,8 +145,18 @@ def related(term, create_session=None):
     if create_session is None:
         from waldo.backend import create_session
     session = create_session()
-    q = session\
-        .query(TermRelationship)\
-        .filter_by(from_term=term)
-    for rel in q.all():
-        yield rel.relname, rel.to_term
+    seen = set()
+    def recurse(term, level):
+        if level == 0:
+            return
+        q = session\
+            .query(TermRelationship)\
+            .filter_by(from_term=term)
+        for rel in q.all():
+            if rel.to_term not in seen:
+                seen.add(rel.to_term)
+                recurse(rel.to_term, level-1)
+    recurse(term, level)
+    for r in seen:
+        yield r
+
