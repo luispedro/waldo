@@ -82,7 +82,7 @@ def id_to_term(go_id, session=None):
     Parameters
     ----------
     go_id : str
-        A GO ID (e.g., GO:123456789)
+        A GO ID (e.g., GO:0005739)
     session :  SQLAlchemy session object, optional
 
     Returns
@@ -115,7 +115,7 @@ def term_to_id(go_term, session=None):
     Returns
     -------
     go_id : string
-        A GO ID (e.g., GO:123456789)
+        A GO ID (e.g., GO:0005739)
     '''
     if session is None: session = create_session()
     term = session.query(Term).filter(Term.name == go_term).first()
