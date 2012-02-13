@@ -23,7 +23,7 @@
 from __future__ import division
 from sqlalchemy import and_
 from waldo.backend import create_session
-from waldo.go.models import Term
+from waldo.go.models import Term, TermRelationship
 import models
 
 def is_cellular_component(go_id, session=None):
@@ -124,3 +124,27 @@ def term_to_id(go_term, session=None):
         return go_term
     return term.id
 
+
+def related(term, create_session=None):
+    '''
+    for relname, to_term in related(term, create_session={backend.create_session}):
+        ....
+
+    Parameters
+    ----------
+    term : str or unicode
+        GO term
+    create_session : callable
+
+    Returns
+    -------
+    iterator
+    '''
+    if create_session is None:
+        from waldo.backend import create_session
+    session = create_session()
+    q = session\
+        .query(TermRelationship)\
+        .filter_by(from_term=term)
+    for rel in q.all():
+        yield rel.relname, rel.to_term
