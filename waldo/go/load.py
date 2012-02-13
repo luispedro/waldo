@@ -21,10 +21,10 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-from models import Term
 from sqlalchemy.orm import sessionmaker
 from os import path
 
+from models import Term, TermRelationship
 from waldo.tools import _gzip_open
 
 _basedir = path.dirname(path.abspath(__file__))
@@ -65,8 +65,14 @@ def load(dirname=None, create_session=None):
             if id is not None and not is_obsolete:
                 term = Term(id, name, namespace)
                 session.add(term)
+                for name,targets in [('is_a',is_a),('part_of',part_of)]:
+                    for t in targets:
+                        r = TermRelationship(id, t, name)
+                        session.add(r)
                 loaded += 1
+                session.commit()
             is_a = []
+            part_of = []
             is_obsolete = False
             id = None
             in_term = (line == '[Term]')
@@ -83,6 +89,10 @@ def load(dirname=None, create_session=None):
                 content,_ = content.split('!')
                 content = content.strip()
                 is_a.append(content)
+            elif code == 'relationship':
+                content = content.split()
+                if content[0] == 'part_of':
+                    part_of.append(content[1])
             elif code == 'is_obsolete':
                 is_obsolete = True
             elif code == 'namespace':

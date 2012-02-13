@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,4 +37,22 @@ class Term(Base):
         self.id = id
         self.name = name
         self.namespace = namespace
+
+    def __str__(self):
+        return '<GO Model %s ("%s")>' % (self.id, self.name)
+
+    def __unicode__(self):
+        return unicode(str(self))
+
+class TermRelationship(Base):
+    __tablename__ = 'go_term_relationship'
+    id = Column(Integer, primary_key=True)
+    from_term = Column(String(24), ForeignKey('go_term.id'))
+    to_term = Column(String(24), ForeignKey('go_term.id'))
+    relname = Column(String(24))
+
+    def __init__(self, from_term, to_term, relname):
+        self.from_term = from_term
+        self.to_term = to_term
+        self.relname = relname
 
