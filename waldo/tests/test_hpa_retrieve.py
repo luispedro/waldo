@@ -4,8 +4,8 @@ import waldo.hpa.models
 import waldo.hpa.load
 import waldo.hpa.retrieve
 from waldo.translations.services import translate
+from .backend import testdir as _testdir
 
-_testdir = 'tests/data/'
 
 def test_hpa_retrieve():
     ensembl = 'ENSG00000000003'

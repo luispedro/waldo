@@ -11,13 +11,14 @@ import waldo.go.load
 import waldo.go.go
 
 from waldo.translations.models import Translation
+from .backend import testdir as _testdir
+from waldo.tests.backend import path_to_testfile
 
-_testdir = 'tests/data/'
-_testfile = _testdir + 'uniprot_sprot.xml.gz'
-_mapping_testfile = _testdir + 'idmapping_selected.tab.gz'
+_testfile = path_to_testfile('uniprot_sprot.xml.gz')
+_mapping_testfile = path_to_testfile('idmapping_selected.tab.gz')
 
 def load_uniprot_test():
-    from tests.test_go import load_go
+    from waldo.tests.test_go import load_go
     engine = create_engine('sqlite://')
     metadata = waldo.uniprot.models.Base.metadata
     metadata.bind = engine

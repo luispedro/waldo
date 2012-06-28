@@ -3,9 +3,10 @@ from sqlalchemy.orm import sessionmaker
 from waldo.go.models import Term
 import waldo.go.load
 import waldo.go.go
+from waldo.tests.backend import testdir
 
 def load_go(sessionmaker):
-    return waldo.go.load.load('tests/data/', sessionmaker)
+    return waldo.go.load.load(testdir, sessionmaker)
 
 def test_go():
     engine = create_engine('sqlite://')

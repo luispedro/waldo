@@ -5,8 +5,8 @@ import waldo.locate.models
 import waldo.locate.load
 import waldo.locate.retrieve
 from waldo.translations.models import Translation
+from .backend import testdir as _testdir
 
-_testdir = 'tests/data/'
 _testinput1 = _testdir + 'LOCATE_human_v6_20081121.xml.zip'
 _testinput2 = _testdir + 'LOCATE_mouse_v6_20081121.xml.zip'
 

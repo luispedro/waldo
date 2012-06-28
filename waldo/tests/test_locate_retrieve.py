@@ -5,8 +5,7 @@ import waldo.locate.models
 import waldo.locate.load
 import waldo.locate.retrieve
 from waldo.translations.services import translate
-
-_testdir = 'tests/data/'
+from .backend import testdir as _testdir
 
 def test_retrieve():
     ensembl = 'ENSG00000070785'

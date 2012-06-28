@@ -7,8 +7,8 @@ import waldo.backend
 import waldo.translations.models
 import waldo.refseq.load
 from waldo.translations.services import translate
+from .backend import testdir as _testdir
 
-_testdir = 'tests/data/'
 _testfile = _testdir + 'gene2ensembl.gz'
 
 def _load_refseq_test():

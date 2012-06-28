@@ -7,6 +7,7 @@ import waldo.nog.load
 from waldo.nog.load import _accept_species
 import waldo.nog.models
 from waldo.nog.retrieve import retrieve_orthologs
+from .backend import testdir as _testdir
 
 def test_species():
     assert _accept_species('Mus Musculus', 'ENSMUSP00000083761')
@@ -20,7 +21,7 @@ def test_nog_load():
     metadata.bind = engine
     metadata.create_all()
     sessionmaker_ = sessionmaker(engine)
-    _testinput = 'tests/data/'
+    _testinput = 'waldo/tests/data/'
 
     nr_entries = waldo.nog.load.load(_testinput, sessionmaker_)
     session = sessionmaker_ ()

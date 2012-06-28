@@ -7,6 +7,7 @@ import waldo.mgi.load
 import waldo.mgi.models
 import waldo.mgi.retrieve
 from waldo.translations.models import Translation
+from .backend import testdir
 
 def load_mgi_test():
     engine = create_engine('sqlite://')
@@ -14,9 +15,8 @@ def load_mgi_test():
     metadata.bind = engine
     metadata.create_all()
     sessionmaker_ = sessionmaker(engine)
-    _testinput = 'tests/data/'
 
-    nr_entries = waldo.mgi.load.load(_testinput, sessionmaker_)
+    nr_entries = waldo.mgi.load.load(testdir, sessionmaker_)
     session = sessionmaker_ ()
     return session, nr_entries
 

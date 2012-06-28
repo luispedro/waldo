@@ -5,21 +5,21 @@ from sqlalchemy import and_
 import waldo.goslim.goslim
 import waldo.goslim.load
 import waldo.goslim.models
+from waldo.tests.backend import path_to_testfile, testdir
 
 def test_load():
     engine = create_engine('sqlite://')
     metadata = waldo.goslim.models.Base.metadata
     metadata.bind = engine
     metadata.create_all()
-    _testinput = 'tests/data/'
 
     sessionmaker_ = sessionmaker(engine)
-    nr_entries, nr_aspects = waldo.goslim.load.load(_testinput, sessionmaker_)
-    inputfile = open(_testinput + waldo.goslim.load._inputfilename)
+    nr_entries, nr_aspects = waldo.goslim.load.load(testdir, sessionmaker_)
+    inputfile = open(path_to_testfile(waldo.goslim.load._inputfilename))
     nr_lines = len(inputfile.readlines())
     assert nr_entries == (nr_lines-1)
     aspects = set()
-    inputfile = open(_testinput + waldo.goslim.load._inputfilename)
+    inputfile = open(path_to_testfile(waldo.goslim.load._inputfilename))
     lines = inputfile.readlines()
     for line in lines[1:]:
         tokens = line.strip().split('\t')
