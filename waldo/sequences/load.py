@@ -22,9 +22,12 @@ def clear(create_session=None):
 
     Removes all Sequence related information
     '''
+    from waldo.backend import call_create_sesssion
     session = call_create_sesssion(create_session)
-    session.delete(models.EnsemblSequence)
+    session.query(models.EnsemblSequence).delete()
     session.commit()
+
+
 def load(dirname=None, create_session=None):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session})

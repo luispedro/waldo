@@ -37,9 +37,11 @@ def clear(create_session=None):
 
     Removes all GO related information
     '''
+    from waldo.backend import call_create_sesssion
+    from . import models
     session = call_create_sesssion(create_session)
-    session.delete(models.Term)
-    session.delete(models.TermRelationship)
+    session.query(models.Term).delete()
+    session.query(models.TermRelationship).delete()
     session.commit()
 
 def load(dirname=None, create_session=None):

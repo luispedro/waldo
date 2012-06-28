@@ -38,9 +38,10 @@ def clear(create_session=None):
 
     Removes all MGI related information
     '''
+    from waldo.backend import call_create_sesssion
     session = call_create_sesssion(create_session)
-    session.delete(models.GOAnnotation)
-    session.delete(models.MGIEntry)
+    session.query(models.GOAnnotation).delete()
+    session.query(models.MGIEntry).delete()
     session.commit()
 
 

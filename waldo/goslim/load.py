@@ -36,10 +36,11 @@ def clear(create_session=None):
 
     Removes all GO related information
     '''
+    from waldo.backend import call_create_sesssion
     session = call_create_sesssion(create_session)
-    session.delete(models.SlimSet)
-    session.delete(models.SlimTerm)
-    session.delete(models.SlimMapping)
+    session.query(SlimSet).delete()
+    session.query(SlimTerm).delete()
+    session.query(SlimMapping).delete()
     session.commit()
 
 

@@ -20,9 +20,10 @@ def clear(create_session=None):
 
     Removes all HPA related information
     '''
+    from waldo.backend import call_create_sesssion
     session = call_create_sesssion(create_session)
-    session.delete(models.Location)
-    session.delete(models.HPAEntry)
+    session.query(models.Location).delete()
+    session.query(models.HPAEntry).delete()
     session.commit()
 
 
