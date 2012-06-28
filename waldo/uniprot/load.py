@@ -42,12 +42,12 @@ def clear(create_session=None):
     '''
     from waldo.backend import call_create_sesssion
     session = call_create_sesssion(create_session)
-    session.delete(models.Accession)
-    session.delete(models.GoAnnotation)
-    session.delete(models.Reference)
-    session.delete(models.Comment)
-    session.delete(models.Organism)
-    session.delete(models.UniprotEntry)
+    session.query(models.Accession).delete()
+    session.query(models.GoAnnotation).delete()
+    session.query(models.Reference).delete()
+    session.query(models.Comment).delete()
+    session.query(models.Organism).delete()
+    session.query(models.UniprotEntry).delete()
     session.commit()
 
 def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo sapiens'])):

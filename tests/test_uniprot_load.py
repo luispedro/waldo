@@ -64,3 +64,9 @@ def test_nr_entries():
         for ent in entries:
             assert ent.rname.find("subunit") != -1
 
+
+def test_clear():
+    session,loaded = load_uniprot_test()
+    assert loaded > 0
+    waldo.uniprot.load.clear(lambda:session)
+    assert session.query(waldo.uniprot.models.Entry).count() == 0
