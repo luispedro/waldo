@@ -34,6 +34,22 @@ _datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'uniprot_sprot.xml.gz'
 _p = '{http://uniprot.org/uniprot}'
 
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all Uniprot related information
+    '''
+    from waldo.backend import call_create_sesssion
+    session = call_create_sesssion(create_session)
+    session.delete(models.Accession)
+    session.delete(models.GoAnnotation)
+    session.delete(models.Reference)
+    session.delete(models.Comment)
+    session.delete(models.Organism)
+    session.delete(models.UniprotEntry)
+    session.commit()
+
 def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo sapiens'])):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo sapiens'})

@@ -31,6 +31,17 @@ _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'gene_ontology.1_2.obo'
 
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all GO related information
+    '''
+    session = call_create_sesssion(create_session)
+    session.delete(models.Term)
+    session.delete(models.TermRelationship)
+    session.commit()
+
 def load(dirname=None, create_session=None):
     '''
     nr_entries = load(dirname={data/}, create_session={backend.create_session})

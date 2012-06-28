@@ -20,6 +20,16 @@ def _accept_species(sp, name):
     if sp == 'Homo Sapiens': return name.startswith('ENSP0')
     raise ValueError('waldo.nog.load: I cannot recognise species `%s`' % sp)
 
+
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all NOG related information
+    '''
+    session = call_create_sesssion(create_session)
+    session.delete(models.NogEntry)
+    session.commit()
 def load(dirname=None, create_session=None, species=('Mus Musculus', 'Homo Sapiens')):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session}, species=['Mus Musculus, Homo Sapiens')

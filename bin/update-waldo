@@ -1,39 +1,139 @@
-#!/bin/sh
+#!/usr/bin/env python
+# Copyright (C) 2009-2012
+# Luis Pedro Coelho <luis@luispedro.org>
+# vim: set ts=4 sts=4 sw=4 expandtab smartindent:
+# License: MIT. See COPYING.MIT file in the Waldo distribution
 
-# MGI
-# For some reason, curl does not work with these URLs, but wget does.
-wget -N ftp://ftp.informatics.jax.org/pub/reports/go_terms.mgi
-wget -N ftp://ftp.informatics.jax.org/pub/reports/go_refs.mgi
-wget -N ftp://ftp.informatics.jax.org/pub/reports/gene_association.mgi
-wget -N ftp://ftp.informatics.jax.org/pub/reports/MRK_ENSEMBL.rpt
-wget -N ftp://ftp.informatics.jax.org/pub/reports/MRK_Reference.rpt
+from sqlalchemy.orm.session import Session
 
-# MGI GO SLIM
-wget -N http://www.informatics.jax.org/gotools/data/input/map2MGIslim.txt
+import waldo.mgi.load
+import waldo.go.load
+import waldo.goslim.load
+import waldo.uniprot.load
+import waldo.locate.load
+import waldo.hpa.load
+import waldo.sequences.load
+import waldo.nog.load
+import waldo.refseq.load
+import waldo.uniprot.models
+import waldo.go.models
+import waldo.goslim.models
+import waldo.mgi.models
+import waldo.locate.models
+import waldo.hpa.models
+import waldo.translations.models
+import waldo.predictions.models
+import waldo.sequences.models
+import waldo.nog.models
 
-# GO
-wget -N http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.obo
+modules = {
+    'go': waldo.go.load,
+    'mgi': waldo.mgi.load,
+    'uniprot': waldo.uniprot.load,
+    'locate': waldo.locate.load,
+    'hpa': waldo.hpa.load,
+    'goslim': waldo.goslim.load,
+    'sequences': waldo.sequences.load,
+    'nog': waldo.nog.load,
+    'refseq': waldo.refseq.load
+    }
 
-# Uniprot
-wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz
-wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz
-wget -N ftp://ftp.uniprot.org/pub/databases/uniprot/knowledgebase/docs/sec_ac.txt
+urls = {
+    'mgi': [
+            'ftp://ftp.informatics.jax.org/pub/reports/go_terms.mgi',
+            'ftp://ftp.informatics.jax.org/pub/reports/go_refs.mgi',
+            'ftp://ftp.informatics.jax.org/pub/reports/gene_association.mgi',
+            'ftp://ftp.informatics.jax.org/pub/reports/MRK_ENSEMBL.rpt',
+            'ftp://ftp.informatics.jax.org/pub/reports/MRK_Reference.rpt',
+            ],
+    'mgi-goslim': [
+            'http://www.informatics.jax.org/gotools/data/input/map2MGIslim.txt',
+            ],
+    'go': [
+            'http://www.geneontology.org/ontology/obo_format_1_2/gene_ontology.1_2.obo',
+            ],
+    'uniprot': [
+            'ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz',
+            'ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/idmapping/idmapping_selected.tab.gz',
+            'ftp://ftp.uniprot.org/pub/databases/uniprot/knowledgebase/docs/sec_ac.txt',
+            ],
+    'locate': [
+            'http://locate.imb.uq.edu.au/info_files/LOCATE_mouse_v6_20081121.xml.zip',
+            'http://locate.imb.uq.edu.au/info_files/LOCATE_human_v6_20081121.xml.zip',
+            ],
 
-# LOCATE
-wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_mouse_v6_20081121.xml.zip
-unzip -u LOCATE_mouse_v6_20081121.xml.zip
-wget -N http://locate.imb.uq.edu.au/info_files/LOCATE_human_v6_20081121.xml.zip
-unzip -u LOCATE_human_v6_20081121.xml.zip
+    'sequences': [
+            'ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/pep/Mus_musculus.NCBIM37.*.pep.all.fa.gz',
+            ],
+    'hpa': [
+            'http://www.proteinatlas.org/download/subcellular_location.csv.zip',
+            ],
+    'nog': [
+            'http://eggnog.embl.de/download/maNOG.mapping.txt.gz',
+            ],
 
-# This is a FASTA file of mouse protein sequences
-wget -N ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/pep/Mus_musculus.NCBIM37.\*.pep.all.fa.gz
+    'refseq': [
+            'ftp://ftp.ncbi.nih.gov/gene/DATA/gene2ensembl.gz',
+            ],
+}
 
-# HPA
-wget -N http://www.proteinatlas.org/download/subcellular_location.csv.zip
-unzip -u subcellular_location.csv.zip
+triggers = ['go', 'refseq']
 
-# NOG
-wget -N http://eggnog.embl.de/download/maNOG.mapping.txt.gz
+def get_time(url):
+    from os import path
+    from glob import glob
+    filename = path.basename(url)
+    if '*' in filename:
+        filenames = glob(filename)
+        if not filenames: return -1
+        return max(map(path.getmtime, filenames))
+    if not path.exists(filename): return -1
+    return path.getmtime(filename)
 
-# Refseq name mappings
-wget -N ftp://ftp.ncbi.nih.gov/gene/DATA/gene2ensembl.gz
+
+def download(url):
+    from os import system
+    system("wget -N '%s'" % url)
+
+
+def main(argv):
+    waldo.backend.init()
+    waldo.backend.create_tables()
+    verbose = "-v" in argv or "--verbose" in argv
+    dirty_mods = []
+    for k,us in urls.iteritems():
+        dirty = False
+        for u in us:
+            prev = get_time(u)
+            download(u)
+            if get_time(u) != prev:
+                dirty = True
+        if dirty:
+            if verbose:
+                print 'Database %s has been updated' % k
+            dirty_mods.append(k)
+
+    for t in triggers:
+        if t in dirty_mods:
+            dirty_mods = modules.keys()
+            if verbose:
+                print "GO has changed, reindexing all libraries"
+
+    if verbose and not dirty_mods:
+        print 'No databases have changed'
+
+    if dirty_mods:
+        session = waldo.backend.create_session()
+        c = session.connection()
+
+        # These are only valid for SQLite3, but it makes it much faster
+        c.execute('PRAGMA synchronous=OFF;')
+        c.execute('PRAGMA journal_mode=OFF;')
+        for k in dirty_mods:
+            # modules[k].clear()
+            modules[k].load(create_session=(lambda: Session(bind=c)))
+
+if __name__ == '__main__':
+    from sys import argv
+    main(argv)
+

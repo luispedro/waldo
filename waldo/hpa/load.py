@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -13,6 +13,18 @@ _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 
 _annot = 'subcellular_location.csv'
+
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all HPA related information
+    '''
+    session = call_create_sesssion(create_session)
+    session.delete(models.Location)
+    session.delete(models.HPAEntry)
+    session.commit()
+
 
 def load(dirname=None, create_session=None):
     '''

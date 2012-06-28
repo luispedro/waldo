@@ -29,6 +29,21 @@ import models
 
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
+
+
+
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all MGI related information
+    '''
+    session = call_create_sesssion(create_session)
+    session.delete(models.GOAnnotation)
+    session.delete(models.MGIEntry)
+    session.commit()
+
+
 def load(dirname=None, create_session=None):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session})

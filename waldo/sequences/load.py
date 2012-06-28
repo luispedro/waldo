@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2011, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2011-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # License: MIT
@@ -15,6 +15,16 @@ import glob
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 
+
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all Sequence related information
+    '''
+    session = call_create_sesssion(create_session)
+    session.delete(models.EnsemblSequence)
+    session.commit()
 def load(dirname=None, create_session=None):
     '''
     nr_loaded = load(dirname={data/}, create_session={backend.create_session})

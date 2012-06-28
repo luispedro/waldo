@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2011, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -15,6 +15,25 @@ _datadir = path.abspath(path.join(_basedir, '../../data'))
 
 _mouse = 'LOCATE_mouse_v6_20081121.xml'
 _human = 'LOCATE_human_v6_20081121.xml'
+
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all LOCATE related information
+    '''
+    from waldo.backend import call_create_sesssion
+    session = call_create_sesssion(create_session)
+    session.delete(models.Isoform)
+    session.delete(models.Image)
+    session.delete(models.LocatePrediction)
+    session.delete(models.LocateLocation)
+    session.delete(models.Literature)
+    session.delete(models.LocateAnnotation)
+    session.delete(models.ExternalReference)
+    session.delete(models.LocateEntry)
+    session.commit()
+
 
 def load(dirname=None, create_session=None):
     '''

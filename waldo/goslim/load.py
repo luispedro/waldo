@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -28,6 +28,20 @@ from os import path
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'map2MGIslim.txt'
+
+
+def clear(create_session=None):
+    '''
+    clear()
+
+    Removes all GO related information
+    '''
+    session = call_create_sesssion(create_session)
+    session.delete(models.SlimSet)
+    session.delete(models.SlimTerm)
+    session.delete(models.SlimMapping)
+    session.commit()
+
 
 def load(dirname=None, create_session=None):
     '''
