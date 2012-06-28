@@ -30,6 +30,14 @@ install_requires = [
     'lxml',
     ]
 
+package_dir = {
+    'waldo.tests': 'waldo/tests',
+}
+package_data = {
+    'woof': ['templates/*.html', 'templates/static/*.html', 'media/css/*.css'],
+    'waldo.tests': ['data/*'],
+}
+
 setuptools.setup(name = 'Waldo',
       version = '0.1',
       description = 'Protein Subcellular Location Information Package',
@@ -40,9 +48,10 @@ setuptools.setup(name = 'Waldo',
       platforms = ['Any'],
       classifiers = classifiers,
       url = '',
-      packages = setuptools.find_packages(exclude='tests'),
-      install_requires=install_requires,
+      packages = setuptools.find_packages(),
+      install_requires = install_requires,
+      package_dir = package_dir,
+      package_data = package_data,
       test_suite = 'nose.collector',
-      package_data={'woof': ['templates/*.html', 'templates/static/*.html', 'media/css/*.css']}
       )
 
