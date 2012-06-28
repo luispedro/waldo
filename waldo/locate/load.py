@@ -24,14 +24,14 @@ def clear(create_session=None):
     '''
     from waldo.backend import call_create_sesssion
     session = call_create_sesssion(create_session)
-    session.delete(models.Isoform)
-    session.delete(models.Image)
-    session.delete(models.LocatePrediction)
-    session.delete(models.LocateLocation)
-    session.delete(models.Literature)
-    session.delete(models.LocateAnnotation)
-    session.delete(models.ExternalReference)
-    session.delete(models.LocateEntry)
+    session.query(models.Isoform).delete()
+    session.query(models.Image).delete()
+    session.query(models.LocatePrediction).delete()
+    session.query(models.LocateLocation).delete()
+    session.query(models.Literature).delete()
+    session.query(models.LocateAnnotation).delete()
+    session.query(models.ExternalReference).delete()
+    session.query(models.LocateEntry).delete()
     session.commit()
 
 

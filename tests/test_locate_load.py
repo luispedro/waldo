@@ -28,3 +28,5 @@ def test_num_entries():
     session = sessionmaker_()
     assert session.query(waldo.locate.models.Entry).count() == num_entries
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace == 'locate:id')).count()
+    waldo.locate.load.clear(sessionmaker_)
+    assert session.query(waldo.locate.models.Entry).count() == 0
