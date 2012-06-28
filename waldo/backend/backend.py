@@ -59,6 +59,15 @@ def create_session():
         init()
     return _create_session()
 
+def call_create_sesssion(creator):
+    '''
+    session = call_create_sesssion(creator)
+
+    if creator is not None, calls it; otherwise, uses the global create_session
+    '''
+    if creator: return creator()
+    return create_session()
+
 def create_tables():
     '''
     create_tables()
