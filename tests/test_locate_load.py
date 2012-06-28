@@ -7,12 +7,17 @@ import waldo.locate.retrieve
 from waldo.translations.models import Translation
 
 _testdir = 'tests/data/'
-_testinput1 = _testdir + 'LOCATE_human_v6_20081121.xml'
-_testinput2 = _testdir + 'LOCATE_mouse_v6_20081121.xml'
+_testinput1 = _testdir + 'LOCATE_human_v6_20081121.xml.zip'
+_testinput2 = _testdir + 'LOCATE_mouse_v6_20081121.xml.zip'
+
+def read_zipfile(fname):
+    import zipfile
+    zf = zipfile.ZipFile(fname)
+    return zf.open(zf.filelist[0])
 
 def test_num_entries():
-    num_entries = len(re.findall('</LOCATE_protein>', file(_testinput1).read()))
-    num_entries += len(re.findall('</LOCATE_protein>', file(_testinput2).read()))
+    num_entries = len(re.findall('</LOCATE_protein>', read_zipfile(_testinput1).read()))
+    num_entries += len(re.findall('</LOCATE_protein>', read_zipfile(_testinput2).read()))
 
     engine = create_engine('sqlite://')
     metadata = waldo.locate.models.Base.metadata

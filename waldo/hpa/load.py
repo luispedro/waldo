@@ -12,7 +12,7 @@ from waldo.translations.models import Translation
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 
-_annot = 'subcellular_location.csv'
+_annot = 'subcellular_location.csv.zip'
 
 def clear(create_session=None):
     '''
@@ -51,14 +51,18 @@ def load(dirname=None, create_session=None):
       (none)
 
     '''
+    import zipfile
     if dirname is None: dirname = _datadir
     if create_session is None:
         import waldo.backend
         create_session = waldo.backend.create_session
     session = create_session()
+    zf = zipfile.ZipFile(path.join(dirname, _annot))
+    inputf = zf.open(zf.filelist[0])
+
 
     # loop through the entries in the file
-    csvreader = csv.reader(open(path.join(dirname, _annot)), delimiter=',', quotechar='"')
+    csvreader = csv.reader(inputf, delimiter=',', quotechar='"')
     count = 0
     loc_names = []
     for row in csvreader:

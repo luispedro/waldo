@@ -13,8 +13,8 @@ from waldo.translations.models import Translation
 _basedir = path.dirname(path.abspath(__file__))
 _datadir = path.abspath(path.join(_basedir, '../../data'))
 
-_mouse = 'LOCATE_mouse_v6_20081121.xml'
-_human = 'LOCATE_human_v6_20081121.xml'
+_mouse = 'LOCATE_mouse_v6_20081121.xml.zip'
+_human = 'LOCATE_human_v6_20081121.xml.zip'
 
 def clear(create_session=None):
     '''
@@ -68,8 +68,11 @@ def load(dirname=None, create_session=None):
     return loaded
 
 def _loadfile(filename, organism, session):
+    import zipfile
     nr_entries = 0
-    input = file(filename)
+    zf = zipfile.ZipFile(filename)
+    inputf = zf.open(zf.filelist[0])
+
 
     def load_location(loc):
         return models.Location(
@@ -91,7 +94,7 @@ def _loadfile(filename, organism, session):
                     img.findtext('channel2'),
                     img.findtext('coloc'))
 
-    for _, entry in etree.iterparse(input, tag=u'LOCATE_protein'):
+    for _, entry in etree.iterparse(inputf, tag=u'LOCATE_protein'):
         protein_source = None
         annots = []
         predicts = []
