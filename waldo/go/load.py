@@ -37,9 +37,9 @@ def clear(create_session=None):
 
     Removes all GO related information
     '''
-    from waldo.backend import call_create_sesssion
+    from waldo.backend import call_create_session
     from . import models
-    session = call_create_sesssion(create_session)
+    session = call_create_session(create_session)
     session.query(models.Term).delete()
     session.query(models.TermRelationship).delete()
     session.commit()
@@ -58,11 +58,9 @@ def load(dirname=None, create_session=None):
     -------
       nr_entries : Nr of entries
     '''
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        import waldo.backend
-        create_session = waldo.backend.create_session
-    session = create_session()
     filename = path.join(dirname, _inputfilename)
     if not path.exists(filename) and path.exists(filename + '.gz'):
         input = _gzip_open(filename)

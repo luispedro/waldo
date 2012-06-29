@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2011, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -59,9 +59,9 @@ def create_session():
         init()
     return _create_session()
 
-def call_create_sesssion(creator):
+def call_create_session(creator):
     '''
-    session = call_create_sesssion(creator)
+    session = call_create_session(creator)
 
     if creator is not None, calls it; otherwise, uses the global create_session
     '''

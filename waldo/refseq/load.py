@@ -50,12 +50,10 @@ def load(dirname=None, create_session=None, mouse_only=True):
     nr_loaded : int
         Nr. of entries loaded
     '''
+    from waldo.backend import call_create_session
     if dirname is None: dirname = _datadir
     filename = path.join(dirname, _inputfilename)
-    if create_session is None:
-        from waldo import backend
-        create_session = backend.create_session
-    session = create_session()
+    session = call_create_session(create_session)
     input = _gzip_open(filename)
     header = input.readline()
 

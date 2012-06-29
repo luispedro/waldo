@@ -20,8 +20,8 @@ def clear(create_session=None):
 
     Removes all HPA related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(models.Location).delete()
     session.query(models.HPAEntry).delete()
     session.commit()
@@ -53,11 +53,9 @@ def load(dirname=None, create_session=None):
 
     '''
     import zipfile
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        import waldo.backend
-        create_session = waldo.backend.create_session
-    session = create_session()
     zf = zipfile.ZipFile(path.join(dirname, _annot))
     inputf = zf.open(zf.filelist[0])
 

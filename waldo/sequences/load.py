@@ -22,8 +22,8 @@ def clear(create_session=None):
 
     Removes all Sequence related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(models.EnsemblSequence).delete()
     session.commit()
 
@@ -46,13 +46,11 @@ def load(dirname=None, create_session=None):
     nr_loaded : integer
         Nr. of entries loaded
     '''
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     if dirname is None: dirname = _datadir
     inputfilename = glob.glob(path.join(dirname,'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
     filename = path.join(inputfilename)
-    if create_session is None:
-        from waldo import backend
-        create_session = backend.create_session
-    session = create_session()
     nr_loaded = 0
     for seq in fasta.read(filename):
         htokens = seq.header.split()

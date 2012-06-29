@@ -27,8 +27,8 @@ def clear(create_session=None):
 
     Removes all NOG related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(models.NogEntry).delete()
     session.commit()
 
@@ -53,11 +53,9 @@ def load(dirname=None, create_session=None, species=('Mus Musculus', 'Homo Sapie
     nr_loaded : integer
         Nr. of entries loaded
     '''
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        from waldo import backend
-        create_session = backend.create_session
-    session = create_session()
     nr_loaded = 0
     filename = path.join(dirname,_inputfilename)
     inputfile = _gzip_open(filename)

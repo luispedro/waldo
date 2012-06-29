@@ -36,8 +36,8 @@ def clear(create_session=None):
 
     Removes all GO related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(SlimSet).delete()
     session.query(SlimTerm).delete()
     session.query(SlimMapping).delete()
@@ -59,11 +59,9 @@ def load(dirname=None, create_session=None):
     -------
       nr_entries : Nr of entries
     '''
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        import waldo.backend
-        create_session = waldo.backend.create_session
-    session = create_session()
     filename = path.join(dirname, _inputfilename)
     input = open(filename)
 

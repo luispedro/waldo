@@ -40,8 +40,8 @@ def clear(create_session=None):
 
     Removes all Uniprot related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(models.Accession).delete()
     session.query(models.GoAnnotation).delete()
     session.query(models.Reference).delete()
@@ -72,11 +72,10 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
         Nr. of entries loaded. This double counts entries that are parsed both
         from SwissProt and from the ID mapping.
     '''
+    from waldo.backend import call_create_session
+
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        from waldo import backend
-        create_session = backend.create_session
-    session = create_session()
+    session = call_create_session(create_session)
     loaded = _load_uniprot_sprot(dirname, session, organism_set)
     loaded += _load_idmapping(dirname, session, organism_set)
     loaded += _load_sec_ac(dirname, session)

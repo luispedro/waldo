@@ -22,8 +22,8 @@ def clear(create_session=None):
 
     Removes all LOCATE related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(models.Isoform).delete()
     session.query(models.Image).delete()
     session.query(models.LocatePrediction).delete()
@@ -57,11 +57,9 @@ def load(dirname=None, create_session=None):
     ----------
     To download database files: http://locate.imb.uq.edu.au/downloads.shtml
     '''
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        import waldo.backend
-        create_session = waldo.backend.create_session
-    session = create_session()
 
     loaded = _loadfile(path.join(dirname, _mouse), 'Mus musculus', session)
     loaded += _loadfile(path.join(dirname, _human), 'Homo sapiens', session)

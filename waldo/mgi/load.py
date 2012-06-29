@@ -38,8 +38,8 @@ def clear(create_session=None):
 
     Removes all MGI related information
     '''
-    from waldo.backend import call_create_sesssion
-    session = call_create_sesssion(create_session)
+    from waldo.backend import call_create_session
+    session = call_create_session(create_session)
     session.query(models.GOAnnotation).delete()
     session.query(models.MGIEntry).delete()
     session.commit()
@@ -67,11 +67,9 @@ def load(dirname=None, create_session=None):
     http://www.geneontology.org/GO.format.gaf-1_0.shtml
     http://wiki.geneontology.org/index.php/GAF_2.0
     '''
+    from waldo.backend import call_create_session
     if dirname is None: dirname = _datadir
-    if create_session is None:
-        import waldo.backend
-        create_session = waldo.backend.create_session
-    session = create_session()
+    session = call_create_session(create_session)
     loaded = _load_gene_annotation(path.join(dirname, 'gene_association.mgi'), session)
     _load_mrk_ensembl(path.join(dirname, 'MRK_ENSEMBL.rpt'), session)
     _load_pubmed_ids(path.join(dirname, 'MRK_Reference.rpt'), session)
