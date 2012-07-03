@@ -26,8 +26,19 @@ def searchby():
             redirect('/search/%s/%s' % (key,value))
     redirect('error')
 
+
+def _result(format, name, value, arguments, predictions=[]):
+    if type(arguments) != dict:
+        arguments = {'ensemblgene': arguments}
+    return template('results', {
+            'search_term_type': name,
+            'search_term_value': value,
+            'all_results': list(_retrieve_all(**arguments)),
+            'predictions': predictions,
+    })
+
 @route('/search/ensemblegene/<gene>')
-def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None):
+def search(ensemblgene, format='html'):
     from collections import defaultdict
 
     predictions = waldo.predictions.retrieve.retrieve_predictions(ensemblgene)
@@ -35,46 +46,21 @@ def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=Non
     for p in predictions:
         predictions_grouped[p.predictor].append(p)
     predictions = predictions_grouped.items()
-    return template('results', {
-        'search_term_type' : 'Ensembl Gene',
-        'search_term_value' : ensemblgene,
-        'all_results' : list(_retrieve_all(ensemblgene)),
-        'predictions' : predictions,
-    })
+    return _result(format, 'Ensembl Gene', ensemblgene, ensemblgene, predictions)
 
 
 @route('/search/ensembleprot/<ensemblprot>')
-def search(ensemblprot):
-    return template('results', {
-            'search_term_type': 'Ensembl peptide',
-            'search_term_value': ensemblprot,
-            'all_results': list(_retrieve_all(ensemblpeptide=ensemblprot))
-    })
-
+def search(ensemblprot, format='html'):
+    return _result(format, 'Ensembl Peptide', ensemblgene, {'ensemblpeptide': ensemblpeptide})
 @route('/search/mgiid/<mgiid>')
-def search(mgiid):
-    return template('results', {
-            'search_term_type': 'MIG ID',
-            'search_term_value': mgiid,
-            'all_results': list(_retrieve_all(translate(mgiid, 'mgi:id', 'ensembl:gene_id')))
-    })
-
+def search(mgiid, format='html'):
+    return _result(format, 'MGI ID', mgiid, translate(mgiid, 'mgi:id', 'ensembl:gene_id'))
 @route('/search/protname/<protname>')
-def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None):
-    return template('results', {
-            'search_term_type': 'Uniprot ID',
-            'search_term_value': protname,
-            'all_results': list(_retrieve_all(translate(uniprotid, 'uniprot:name', 'ensembl:gene_id')))
-    })
-
-
+def search(protname, format='html'):
+    return _result(format, 'Uniprot ID', protname, translate(uniprotid, 'uniprot:name', 'ensembl:gene_id'))
 @route('/search/locateid/<locateid>')
-def search(locateid):
-    return template('results', {
-            'search_term_type': 'LOCATE ID',
-            'search_term_value': protname,
-            'all_results': list(_retrieve_all(translate(locateid, 'locate:id', 'ensembl:gene_id')))
-    })
+def search(locateid, format='html'):
+    return _result(format, 'LOCATE ID', locateid, translate(locateid, 'locate:id', 'ensembl:gene_id'))
 
 
 def _format(entry, module):
