@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-{% block title %}About{% endblock %}
-{% block content %}
 <h1>About Waldo</h1>
 <p>Waldo was developed at Carnegie Mellon University, by <a
 href="http://luispedro.org">Luis Pedro Coelho</a>, <a
@@ -14,6 +11,7 @@ as a Python library.</p>
 
 <p>If you use waldo in any research publication, please reference the waldo paper.
 It is currently under review, we will let you know when it comes out. (Or <a
-href="{% url contact-us %}">send us a note</a> and we will be sure to let you
+href="{{ get_url('contact-us') }}">send us a note</a> and we will be sure to let you
 know once it comes out.)</p>
-{% endblock %}
+
+%rebase base title='About'

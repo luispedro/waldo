@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-{% block title %}Contact Us{% endblock %}
-{% block content %}
 <h2>Contact Us</h2>
 
 <p>Please use one of the following email addresses for questions/comments about
@@ -10,4 +7,6 @@ waldo:</p>
     <li>luis at luispedro dot org</li>
     <li>murphy at cmu dot edu</li>
 </ul>
-{% endblock %}
+
+%rebase base title='Contact Us'
+

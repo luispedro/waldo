@@ -18,9 +18,9 @@ SimpleTemplate.defaults["get_url"] = app.get_url
 
 
 route('/', name='home', callback=lambda: template('index'))
-route('/help', name='help', callback=lambda:template('help'))
-route('/about', name='about', callback=lambda:template('about'))
-route('/contact-us', name='contact-us', callback=lambda:template('help'))
+route('/help', name='help', callback=lambda:template('static/help'))
+route('/about', name='about', callback=lambda:template('static/about'))
+route('/contact-us', name='contact-us', callback=lambda:template('static/help'))
 route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root='./media'))
 
 
