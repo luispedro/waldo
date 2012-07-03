@@ -43,7 +43,7 @@ def _result(format, name, value, arguments, predictions=[]):
             'predictions': predictions,
     })
 
-@route('/search/ensemblegene/<gene>')
+@route('/search/ensemblgene/<ensemblgene>')
 def search(ensemblgene, format='html'):
     from collections import defaultdict
 

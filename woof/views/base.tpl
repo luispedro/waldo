@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>{{ title or 'Waldo' }}</title>
+    <title>{{ get('title','Waldo') }}</title>
     <meta name="authors" content="Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy" />
     <meta name="keywords" content="subcellular location, subcellular localization, protein, database" />
     <script type="text/javascript" src="/media/js/jquery.js"></script>
