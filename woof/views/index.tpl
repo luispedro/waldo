@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-{% block content %}
-
 <h3>Search by...</h3>
 <div style="text-align: center; ">
 <table cellspacing="10" cellpadding="10" border="0">
@@ -60,4 +57,5 @@
 </tr>
 </table>
 </div>
-{% endblock %}
+
+%rebase base title='Waldo'

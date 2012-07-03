@@ -1,14 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    {% block head %}
-    <title>{% block title %}Waldo{% endblock %}</title>
+    <title>{{ title or 'Waldo' }}</title>
     <meta name="authors" content="Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy" />
     <meta name="keywords" content="subcellular location, subcellular localization, protein, database" />
     <script type="text/javascript" src="/media/js/jquery.js"></script>
     <link rel="stylesheet" type="text/css" href="/media/css/whitelove.css" media="screen" />
     <link rel="shortcut icon" href="favicon.ico" />
-    {% endblock %}
 </head>
 
 
@@ -21,9 +19,7 @@
 {% autoescape off %}
         <div id="content">
             <div class="left">
-                {% block content %}
-                    My content
-                {% endblock %}
+                %include
             </div>
             <div class="right">
                 <ul>
@@ -38,10 +34,8 @@
 
 <hr style="margin-top: 3em" />
 <div class="footer">
-        {% block footer %}
-            <p>Copyright (c) 2010-2012. Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy, and Jephthah Liddie. All rights reserved.</p>
-            <p>Website CSS by <a href="http://www.free-css-templates.com/">Free CSS Templates</a>, Thanks to <a href="http://www.dubaiapartments.biz/hotels/">Hotels - Dubai</a>.</p>
-        {% endblock %}
+    <p>Copyright (c) 2010-2012. Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy, and Jephthah Liddie. All rights reserved.</p>
+    <p>Website CSS by <a href="http://www.free-css-templates.com/">Free CSS Templates</a>, Thanks to <a href="http://www.dubaiapartments.biz/hotels/">Hotels - Dubai</a>.</p>
 </div>
 </body>
 </html>
