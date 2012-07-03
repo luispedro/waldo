@@ -12,25 +12,23 @@
 
 <body>
 <div id="header">
-<h1><a href="{% url home %}">Waldo</a></h1>
+<h1><a href="{{ get_url('home') }}">Waldo</a></h1>
 <h2>Where Proteins Are</h2>
 </div>
 
-{% autoescape off %}
-        <div id="content">
-            <div class="left">
-                %include
-            </div>
-            <div class="right">
-                <ul>
-                <li><a href="{% url help %}">Help</a></li>
-                <li><a href="{% url about %}">About Waldo</a></li>
-                <li><a href="{% url contact-us %}">Contact Us</a></li>
-                </ul>
-            </div>
-            <div style="clear: both;"> </div>
-        </div>
-{% endautoescape %}
+<div id="content">
+    <div class="left">
+        %include
+    </div>
+    <div class="right">
+        <ul>
+        <li><a href="{{ get_url('help') }}">Help</a></li>
+        <li><a href="{{ get_url('about') }}">About Waldo</a></li>
+        <li><a href="{{ get_url('contact-us') }}">Contact Us</a></li>
+        </ul>
+    </div>
+    <div style="clear: both;"> </div>
+</div>
 
 <hr style="margin-top: 3em" />
 <div class="footer">

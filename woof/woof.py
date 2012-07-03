@@ -1,4 +1,6 @@
-from bottle import route, run, template, redirect
+from bottle import Bottle, run, template, redirect, static_file
+from bottle import SimpleTemplate
+
 
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
@@ -10,12 +12,16 @@ from waldo.translations.services import translate
 import waldo.backend
 import json
 
+app = Bottle()
+route = app.route
+SimpleTemplate.defaults["get_url"] = app.get_url
 
-route('/', callback=lambda: template('index'))
-route('/help', callback=lambda:template('help'))
-route('/about', callback=lambda:template('about'))
-route('/contact-us', callback=lambda:template('help'))
-route('/media/<filename:path>', callback=lambda f: static_file(f, root=_BASE_DIR+'/media'))
+
+route('/', name='home', callback=lambda: template('index'))
+route('/help', name='help', callback=lambda:template('help'))
+route('/about', name='about', callback=lambda:template('about'))
+route('/contact-us', name='contact-us', callback=lambda:template('help'))
+route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root='./media'))
 
 
 @route('/query')
@@ -135,7 +141,7 @@ def get_json(request, id=None):
 
 
 def main():
-    run(host='localhost', port=8000)
+    run(app, host='localhost', port=8000)
 
 if __name__ == '__main__':
     main()
