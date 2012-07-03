@@ -1,6 +1,5 @@
-from collections import defaultdict
-from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect, HttpResponse
+from bottle import route, run, template, redirect
+
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
 import waldo.locate.retrieve
@@ -10,62 +9,72 @@ import waldo.nog.retrieve
 from waldo.translations.services import translate
 import waldo.backend
 import json
-import json_entry
 
-def searchby(request):
-    if request.method == 'GET':
-        for key in ('ensemblgene', 'ensemblprot', 'mgiid', 'protname', 'uniprotid', 'locateid'):
-            if key in request.GET:
-                value = request.GET[key]
-                break
-        return HttpResponseRedirect('/search/%s/%s' % (key, value))
 
+route('/', callback=lambda: template('index'))
+route('/help', callback=lambda:template('help'))
+route('/about', callback=lambda:template('about'))
+route('/contact-us', callback=lambda:template('help'))
+route('/media/<filename:path>', callback=lambda f: static_file(f, root=_BASE_DIR+'/media'))
+
+
+@route('/query')
+def searchby():
+    for key in ('ensemblgene', 'ensemblprot', 'mgiid', 'protname', 'uniprotid', 'locateid'):
+        if key in request.forms:
+            value = request.forms.get(key)
+            redirect('/search/%s/%s' % (key,value))
+    redirect('error')
+
+@route('/search/ensemblegene/<gene>')
 def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None):
-    predictions = None
-    if ensemblgene is not None:
-        results = _retrieve_all(ensemblgene)
-        search_term_type = 'Ensembl gene'
-        search_term_value = ensemblgene
-        predictions = waldo.predictions.retrieve.retrieve_predictions(ensemblgene)
-        predictions_grouped = defaultdict(list)
-        for p in predictions:
-            predictions_grouped[p.predictor].append(p)
-        predictions = predictions_grouped.items()
+    from collections import defaultdict
+
+    predictions = waldo.predictions.retrieve.retrieve_predictions(ensemblgene)
+    predictions_grouped = defaultdict(list)
+    for p in predictions:
+        predictions_grouped[p.predictor].append(p)
+    predictions = predictions_grouped.items()
+    return template('results', {
+        'search_term_type' : 'Ensembl Gene',
+        'search_term_value' : ensemblgene,
+        'all_results' : list(_retrieve_all(ensemblgene)),
+        'predictions' : predictions,
+    })
 
 
-    elif ensemblprot is not None:
-        results = _retrieve_all(ensemblpeptide=ensemblprot)
-        search_term_type = 'Ensembl peptide'
-        search_term_value = ensemblprot
+@route('/search/ensembleprot/<ensemblprot>')
+def search(ensemblprot):
+    return template('results', {
+            'search_term_type': 'Ensembl peptide',
+            'search_term_value': ensemblprot,
+            'all_results': list(_retrieve_all(ensemblpeptide=ensemblprot))
+    })
 
-    elif mgiid is not None:
-        results = _retrieve_all(translate(mgiid, 'mgi:id', 'ensembl:gene_id'))
-        search_term_type = 'MGI ID'
-        search_term_value = mgiid
+@route('/search/mgiid/<mgiid>')
+def search(mgiid):
+    return template('results', {
+            'search_term_type': 'MIG ID',
+            'search_term_value': mgiid,
+            'all_results': list(_retrieve_all(translate(mgiid, 'mgi:id', 'ensembl:gene_id')))
+    })
 
-    elif uniprotid is not None:
-        results = _retrieve_all(translate(uniprotid, 'uniprot:name', 'ensembl:gene_id'))
-        search_term_type = 'Uniprot ID'
-        search_term_value = uniprotid
+@route('/search/protname/<protname>')
+def search(request, ensemblgene=None, ensemblprot=None, mgiid=None, protname=None, uniprotid=None, locateid=None):
+    return template('results', {
+            'search_term_type': 'Uniprot ID',
+            'search_term_value': protname,
+            'all_results': list(_retrieve_all(translate(uniprotid, 'uniprot:name', 'ensembl:gene_id')))
+    })
 
-    elif locateid is not None:
-        results = _retrieve_all(translate(locateid, 'locate:id', 'ensembl:gene_id'))
-        search_term_type = 'LOCATE ID'
-        search_term_value = locateid
 
-    elif protname is not None:
-        results = _search_name(protname)
-        search_term_type = 'Protein name'
-        search_term_value = protname
-
-    return render_to_response(
-                'results.html',
-                {
-                    'search_term_type' : search_term_type,
-                    'search_term_value' : search_term_value,
-                    'all_results' : list(results),
-                    'predictions' : predictions,
-                })
+@route('/search/locateid/<locateid>')
+def search(locateid):
+    return template('results', {
+            'search_term_type': 'LOCATE ID',
+            'search_term_value': protname,
+            'all_results': list(_retrieve_all(translate(locateid, 'locate:id', 'ensembl:gene_id')))
+    })
 
 
 def _format(entry, module):
@@ -137,3 +146,10 @@ def get_json(request, id=None):
         entry = waldo.mgi.retrieve.retrieve_entry(id, session)
 
     return HttpResponse(json.dumps(entry, cls=json_entry.EntryEncoder), content_type='application/json')
+
+
+def main():
+    run(host='localhost', port=8000)
+
+if __name__ == '__main__':
+    main()
