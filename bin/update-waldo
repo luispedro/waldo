@@ -104,6 +104,7 @@ def main(argv):
     parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/')
     parser.add_option('--database', action='store', dest='database', default='/var/lib/waldo/waldo.sqlite3')
     parser.add_option('--force-reindex', action='store_true', dest='force_reindex')
+    parser.add_option('--no-download', action='store_true', dest='no_download')
     options,args = parser.parse_args(argv)
 
     try:
@@ -114,6 +115,8 @@ def main(argv):
 
     dirty_mods = []
     for k,us in urls.iteritems():
+        if options.no_download:
+            continue
         dirty = False
         for u in us:
             prev = get_time(u)
@@ -147,9 +150,19 @@ def main(argv):
         # These are only valid for SQLite3, but it makes it much faster
         c.execute('PRAGMA synchronous=OFF;')
         c.execute('PRAGMA journal_mode=OFF;')
-        for _,mod in dirty_mods:
-            mod.clear()
-            mod.load(datadir=options.datadir, create_session=(lambda: Session(bind=c)))
+        create_session = lambda: Session(bind=c)
+
+        if sum(1 for name,_ in dirty_mods if name == 'go'):
+            if options.verbose:
+                print 'GO will be reindexed. This triggers whole-database reindexing.'
+            for _,mod in dirty_mods:
+                mod.clear(create_session=create_session)
+
+        for name,mod in dirty_mods:
+            if options.verbose:
+                print 'Indexing %s...' % name
+            mod.clear(create_session=create_session)
+            mod.load(datadir=options.datadir, create_session=create_session)
 
 if __name__ == '__main__':
     from sys import argv

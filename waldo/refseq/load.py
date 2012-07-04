@@ -29,6 +29,10 @@ from waldo.tools import _gzip_open
 
 _inputfilename = 'gene2ensembl.gz'
 
+def clear(create_session=None):
+    pass
+
+
 def load(datadir, create_session=None, mouse_only=True):
     '''
     nr_loaded = load(datadir, create_session={backend.create_session}, mouse_only=True)
