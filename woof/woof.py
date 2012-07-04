@@ -9,6 +9,7 @@ import waldo.predictions.retrieve
 import waldo.sequences.retrieve
 import waldo.nog.retrieve
 from waldo.translations.services import translate
+from waldo.go import id_to_term
 import waldo.backend
 import json
 
@@ -84,7 +85,7 @@ def _format(entry, module):
         'organism' : '; '.join(entry.organisms),
         'celltype': '-',
         'condition':'-',
-        'location': '; '.join([go_annot.go_id for go_annot in entry.go_annotations]),
+        'location': [id_to_term(go_annot.go_id) for go_annot in entry.go_annotations],
         'references': '<br />'.join([paper.title for paper in entry.references]),
         'evidence' : evidence,
         'evidence_code' : '<br />'.join([go_annot.evidence_code for go_annot in entry.go_annotations]),

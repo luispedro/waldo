@@ -19,10 +19,12 @@
   <td>{{ element['organism'] }}</td>
   <td>{{ element['celltype'] }}</td>
   <td>{{ element['condition'] }}</td>
-  <td>{{ element['location'] }}</td>
+  <td>
+    % for loc,ev in zip(element['location'], element['evidence_code']):
+        {{ loc }} ({{ ev }})<br />
+    % end
+  </td>
   <td>{{ element['references'] }}</td>
-  <td>{{ element['evidence'] }}</td> <!-- experiments, predictions ? -->
-  <td>{{ element['evidence_code'] }}</td>
   <td>{{! element['source'] }}</td> <!-- original database -->
 % end
 </tr>
