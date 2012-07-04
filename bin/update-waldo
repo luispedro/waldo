@@ -26,17 +26,17 @@ import waldo.predictions.models
 import waldo.sequences.models
 import waldo.nog.models
 
-modules = {
-    'go': waldo.go.load,
-    'mgi': waldo.mgi.load,
-    'uniprot': waldo.uniprot.load,
-    'locate': waldo.locate.load,
-    'hpa': waldo.hpa.load,
-    'goslim': waldo.goslim.load,
-    'sequences': waldo.sequences.load,
-    'nog': waldo.nog.load,
-    'refseq': waldo.refseq.load
-    }
+modules = [
+    ('go', waldo.go.load),
+    ('mgi', waldo.mgi.load),
+    ('uniprot', waldo.uniprot.load),
+    ('locate', waldo.locate.load),
+    ('hpa', waldo.hpa.load),
+    ('goslim', waldo.goslim.load),
+    ('sequences', waldo.sequences.load),
+    ('nog', waldo.nog.load),
+    ('refseq', waldo.refseq.load),
+    ]
 
 urls = {
     'mgi': [
@@ -99,12 +99,10 @@ def download(url):
 def main(argv):
     import optparse
     from os import makedirs, chdir
-    waldo.backend.init()
-    waldo.backend.create_tables()
-
     parser = optparse.OptionParser()
     parser.add_option('--verbose', action='store_true', dest='verbose')
     parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/')
+    parser.add_option('--database', action='store', dest='database', default='/var/lib/waldo/waldo.sqlite3')
     parser.add_option('--force-reindex', action='store_true', dest='force_reindex')
     options,args = parser.parse_args(argv)
 
@@ -129,26 +127,29 @@ def main(argv):
 
     for t in triggers:
         if t in dirty_mods:
-            dirty_mods = modules.keys()
+            dirty_mods = modules
             if options.verbose:
                 print "GO has changed, reindexing all libraries"
 
     if options.force_reindex:
-        dirty_mods = modules.keys()
+        dirty_mods = modules
 
     if options.verbose and not dirty_mods:
         print 'No databases have changed'
 
     if dirty_mods:
+        waldo.backend.init(options.database)
+        waldo.backend.create_tables()
+
         session = waldo.backend.create_session()
         c = session.connection()
 
         # These are only valid for SQLite3, but it makes it much faster
         c.execute('PRAGMA synchronous=OFF;')
         c.execute('PRAGMA journal_mode=OFF;')
-        for k in dirty_mods:
-            # modules[k].clear()
-            modules[k].load(datadir=options.datadir, create_session=(lambda: Session(bind=c)))
+        for _,mod in dirty_mods:
+            mod.clear()
+            mod.load(datadir=options.datadir, create_session=(lambda: Session(bind=c)))
 
 if __name__ == '__main__':
     from sys import argv
