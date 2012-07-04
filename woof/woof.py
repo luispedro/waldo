@@ -1,4 +1,4 @@
-from bottle import Bottle, run, template, redirect, static_file
+from bottle import Bottle, run, template, redirect, static_file, request
 from bottle import SimpleTemplate
 
 
@@ -44,9 +44,12 @@ def _result(format, name, value, arguments, predictions=[]):
             'predictions': predictions,
     })
 
+@route('/search/ensemblgene')
 @route('/search/ensemblgene/<ensemblgene>')
-def search(ensemblgene, format='html'):
+def search(ensemblgene=None, format='html'):
     from collections import defaultdict
+    if ensemblgene is None:
+        ensemblgene = request.query.ensemblgene
 
     predictions = waldo.predictions.retrieve.retrieve_predictions(ensemblgene)
     predictions_grouped = defaultdict(list)
@@ -58,7 +61,7 @@ def search(ensemblgene, format='html'):
 
 @route('/search/ensembleprot/<ensemblprot>')
 def search(ensemblprot, format='html'):
-    return _result(format, 'Ensembl Peptide', ensemblgene, {'ensemblpeptide': ensemblpeptide})
+    return _result(format, 'Ensembl Peptide', ensemblprot, {'ensemblpeptide': ensemblpeptide})
 @route('/search/mgiid/<mgiid>')
 def search(mgiid, format='html'):
     return _result(format, 'MGI ID', mgiid, translate(mgiid, 'mgi:id', 'ensembl:gene_id'))
@@ -79,16 +82,16 @@ def _format(entry, module):
         try:
             evidence = '<br />'.join((annot.evidence or 'None') for annot in entry.go_annotations),
         except:
-            evidence = '-'
+            evidence = None
     return {
         'protein': entry.name,
         'organism' : '; '.join(entry.organisms),
-        'celltype': '-',
-        'condition':'-',
+        'celltype': None,
+        'condition': None,
         'location': [id_to_term(go_annot.go_id) for go_annot in entry.go_annotations],
         'references': '<br />'.join([paper.title for paper in entry.references]),
         'evidence' : evidence,
-        'evidence_code' : '<br />'.join([go_annot.evidence_code for go_annot in entry.go_annotations]),
+        'evidence_code' : [go_annot.evidence_code for go_annot in entry.go_annotations],
         'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.name),module.name),
         }
 def _search_name(name):

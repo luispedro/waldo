@@ -1,34 +1,30 @@
-<h2>Database Results</h2>
 <p>Searched by {{ search_term_type }}(<strong>{{ search_term_value }}</strong>)
-<table cellspacing="0" cellpadding="5" class="results">
-<tr>
-  <th>Protein</th>
-  <th>Organism</th>
-  <th>Celltype</th>
-  <th>Condition</th>
-  <th>GO Terms</th>
-  <th>References (PubMed IDs)</th>
-  <th>Evidence</th>
-  <th>Evidence Code</th>
-  <th>Original Entry Database</th>
-</tr>
 
+<h2>Database Results</h2>
 % for element in all_results:
-<tr>
-  <td>{{ element['protein'] }}</td>
-  <td>{{ element['organism'] }}</td>
-  <td>{{ element['celltype'] }}</td>
-  <td>{{ element['condition'] }}</td>
-  <td>
-    % for loc,ev in zip(element['location'], element['evidence_code']):
-        {{ loc }} ({{ ev }})<br />
+    <h3>{{ element['protein'] }} (in organism {{ element['organism'] }})</h3>
+    <p>
+    % if element['celltype'] is None:
+        No cell type information<br />
+    % else:
+      In cell type <cite>{{ element['celltype'] }}</cite><br />
     % end
-  </td>
-  <td>{{ element['references'] }}</td>
-  <td>{{! element['source'] }}</td> <!-- original database -->
+    % if element['condition'] is None:
+        No condition information
+    % else:
+        In condition <cite>{{ element['condition'] }}</cite>
+    % end
+    </p>
+    <p>Locations:</p>
+    <ul>
+    % for loc,ev in zip(element['location'], element['evidence_code']):
+        <li>{{ loc }} ({{ ev }})</li>
+    % end
+    </ul>
+
+  <p>References: {{ element['references'] }}</p>
+  <p>Database Link: {{! element['source'] }}</p>
 % end
-</tr>
-</table>
 
 <h2>Prediction Results</h2>
 
