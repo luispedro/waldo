@@ -168,9 +168,7 @@ class LocateEntry(Base):
     __tablename__ = 'locate_entries'
     id = Column(Integer(11), primary_key=True)
     organism = Column(String(30), nullable=True)
-    source_name = Column(String(50))
-    source_id = Column(Integer(11))
-    accn = Column(String(20))
+    name = Column(String(50))
     isoforms = relation(Isoform)
     predictions = relation(LocatePrediction)
     references = relation(Literature)
@@ -184,18 +182,12 @@ class LocateEntry(Base):
         return self.id
 
     @property
-    def name(self):
-        return self.source_name
-
-    @property
     def organisms(self):
         return [self.organism]
 
-    def __init__(self, id, source_name, source_id, accn, isoforms, predictions, references, go_annotations, locations, images, xrefs, organism=None):
+    def __init__(self, id, name, isoforms, predictions, references, go_annotations, locations, images, xrefs, organism=None):
         self.id = id
-        self.source_name = source_name
-        self.source_id = source_id
-        self.accn = accn
+        self.name = name
         self.organism = organism
         self.isoforms = isoforms
         self.predictions = predictions

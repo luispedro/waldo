@@ -29,8 +29,6 @@ from waldo.tools import _gzip_open
 import waldo.go
 from waldo.translations.models import Translation
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'uniprot_sprot.xml.gz'
 _p = '{http://uniprot.org/uniprot}'
 
@@ -50,15 +48,15 @@ def clear(create_session=None):
     session.query(models.UniprotEntry).delete()
     session.commit()
 
-def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u'Homo sapiens'])):
+def load(datadir, create_session=None, organism_set=set([u'Mus musculus', u'Homo sapiens'])):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo sapiens'})
+    nr_loaded = load(datadir, create_session={backend.create_session}, organism_set={'Mus musculus', 'Homo sapiens'})
 
     Load uniprot into database
 
     Parameters
     ----------
-    dirname : str, optional
+    datadir : str
         Directory containing the XML Uniprot file
     create_session : callable, optional
         a callable object that returns an sqlalchemy session
@@ -74,11 +72,10 @@ def load(dirname=None, create_session=None, organism_set=set([u'Mus musculus', u
     '''
     from waldo.backend import call_create_session
 
-    if dirname is None: dirname = _datadir
     session = call_create_session(create_session)
-    loaded = _load_uniprot_sprot(dirname, session, organism_set)
-    loaded += _load_idmapping(dirname, session, organism_set)
-    loaded += _load_sec_ac(dirname, session)
+    loaded = _load_uniprot_sprot(datadir, session, organism_set)
+    loaded += _load_idmapping(datadir, session, organism_set)
+    loaded += _load_sec_ac(datadir, session)
     return loaded
 
 def _cleanup(element):
@@ -88,8 +85,8 @@ def _cleanup(element):
     while element.getprevious() is not None:
         del element.getparent()[0]
 
-def _load_uniprot_sprot(dirname, session, organism_set):
-    input = _gzip_open(path.join(dirname, _inputfilename))
+def _load_uniprot_sprot(datadir, session, organism_set):
+    input = _gzip_open(path.join(datadir, _inputfilename))
     loaded = 0
 
     for event, element in etree.iterparse(input, tag=_p+'entry'):
@@ -160,10 +157,10 @@ def _name_guess(name):
         return u'Homo sapiens'
     return '<unknown>'
 
-def _load_idmapping(dirname, session, organism_set):
+def _load_idmapping(datadir, session, organism_set):
     def add(input_ns, input_n, output_ns, output_n):
         session.add(Translation(input_ns, input_n, output_ns, output_n))
-    input = _gzip_open(path.join(dirname, 'idmapping_selected.tab.gz'))
+    input = _gzip_open(path.join(datadir, 'idmapping_selected.tab.gz'))
     loaded = 0
     seen_IDs = set()
     for line in input:

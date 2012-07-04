@@ -9,9 +9,6 @@ import csv
 import models
 from waldo.translations.models import Translation
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
-
 _annot = 'subcellular_location.csv.zip'
 
 def clear(create_session=None):
@@ -27,17 +24,17 @@ def clear(create_session=None):
     session.commit()
 
 
-def load(dirname=None, create_session=None):
+def load(datadir, create_session=None):
     '''
-    num_entries = load(dirname={data/}, create_session={backend.create_session})
+    num_entries = load(datadir={data/}, create_session={backend.create_session})
 
     Load the data from a subcellular location annotations file into the local 
     relational database
 
     Parameters
     ----------
-    dirname : str, optional
-        Base directory containing the annotations file (default: 'data/')
+    datadir : str, optional
+        Base directory containing the annotations file
     create_session : callable, optional
         Callable object which returns an sqlalchemy session (default:
         waldo.backend.create_session)
@@ -55,8 +52,7 @@ def load(dirname=None, create_session=None):
     import zipfile
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
-    if dirname is None: dirname = _datadir
-    zf = zipfile.ZipFile(path.join(dirname, _annot))
+    zf = zipfile.ZipFile(path.join(datadir, _annot))
     inputf = zf.open(zf.filelist[0])
 
 

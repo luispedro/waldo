@@ -97,9 +97,23 @@ def download(url):
 
 
 def main(argv):
+    import optparse
+    from os import makedirs, chdir
     waldo.backend.init()
     waldo.backend.create_tables()
-    verbose = "-v" in argv or "--verbose" in argv
+
+    parser = optparse.OptionParser()
+    parser.add_option('--verbose', action='store_true', dest='verbose')
+    parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/')
+    parser.add_option('--force-reindex', action='store_true', dest='force_reindex')
+    options,args = parser.parse_args(argv)
+
+    try:
+        makedirs(options.datadir)
+    except OSError:
+        pass
+    chdir(options.datadir)
+
     dirty_mods = []
     for k,us in urls.iteritems():
         dirty = False
@@ -109,17 +123,20 @@ def main(argv):
             if get_time(u) != prev:
                 dirty = True
         if dirty:
-            if verbose:
+            if options.verbose:
                 print 'Database %s has been updated' % k
             dirty_mods.append(k)
 
     for t in triggers:
         if t in dirty_mods:
             dirty_mods = modules.keys()
-            if verbose:
+            if options.verbose:
                 print "GO has changed, reindexing all libraries"
 
-    if verbose and not dirty_mods:
+    if options.force_reindex:
+        dirty_mods = modules.keys()
+
+    if options.verbose and not dirty_mods:
         print 'No databases have changed'
 
     if dirty_mods:
@@ -131,7 +148,7 @@ def main(argv):
         c.execute('PRAGMA journal_mode=OFF;')
         for k in dirty_mods:
             # modules[k].clear()
-            modules[k].load(create_session=(lambda: Session(bind=c)))
+            modules[k].load(datadir=options.datadir, create_session=(lambda: Session(bind=c)))
 
 if __name__ == '__main__':
     from sys import argv

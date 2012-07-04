@@ -27,17 +27,15 @@ import waldo.go
 from waldo.translations.models import Translation
 from waldo.tools import _gzip_open
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'gene2ensembl.gz'
 
-def load(dirname=None, create_session=None, mouse_only=True):
+def load(datadir, create_session=None, mouse_only=True):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, mouse_only=True)
+    nr_loaded = load(datadir, create_session={backend.create_session}, mouse_only=True)
 
     Parameters
     ----------
-    load : str, optional
+    datadir : str
         Directory containing the gene2ensembl.gz file
     create_session : callable, optional
         a callable that returns an sqlalchemy session
@@ -51,8 +49,7 @@ def load(dirname=None, create_session=None, mouse_only=True):
         Nr. of entries loaded
     '''
     from waldo.backend import call_create_session
-    if dirname is None: dirname = _datadir
-    filename = path.join(dirname, _inputfilename)
+    filename = path.join(datadir, _inputfilename)
     session = call_create_session(create_session)
     input = _gzip_open(filename)
     header = input.readline()

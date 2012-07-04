@@ -10,8 +10,6 @@ from os import path
 from collections import defaultdict
 from waldo.translations.models import Translation
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
 
 _mouse = 'LOCATE_mouse_v6_20081121.xml.zip'
 _human = 'LOCATE_human_v6_20081121.xml.zip'
@@ -35,16 +33,16 @@ def clear(create_session=None):
     session.commit()
 
 
-def load(dirname=None, create_session=None):
+def load(datadir, create_session=None):
     '''
-    num_entries = load(dirname={data/}, create_session={backend.create_session})
+    num_entries = load(datadir, create_session={backend.create_session})
 
     Load LOCATE database file information into local relational database
 
     Parameters
     ----------
-    dirname : str, optional
-        System folder containing database files.
+    datadir : str
+        Path to directory containing database files.
     create_session : callable, optional
         Callable object which returns an sqlalchemy session
 
@@ -59,10 +57,9 @@ def load(dirname=None, create_session=None):
     '''
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
-    if dirname is None: dirname = _datadir
 
-    loaded = _loadfile(path.join(dirname, _mouse), 'Mus musculus', session)
-    loaded += _loadfile(path.join(dirname, _human), 'Homo sapiens', session)
+    loaded = _loadfile(path.join(datadir, _mouse), 'Mus musculus', session)
+    loaded += _loadfile(path.join(datadir, _human), 'Homo sapiens', session)
     return loaded
 
 def _loadfile(filename, organism, session):
@@ -162,9 +159,7 @@ def _loadfile(filename, organism, session):
                 protein_source = sub.find('source')
         session.add(models.Entry(
                         entry.get('uid'),
-                        protein_source.findtext('source_name'),
-                        protein_source.get('source_id'),
-                        protein_source.findtext('accn'),
+                        entry.get('protein_function'), # protein_function is what LOCATE calls a human readable name
                         isoforms,
                         predicts,
                         refs,

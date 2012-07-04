@@ -27,10 +27,6 @@ from os import path
 from waldo.translations.models import Translation
 import models
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
-
-
 
 def clear(create_session=None):
     '''
@@ -45,15 +41,16 @@ def clear(create_session=None):
     session.commit()
 
 
-def load(dirname=None, create_session=None):
+def load(datadir, create_session=None):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session})
+    nr_loaded = load(datadir, create_session={backend.create_session})
 
     Loads gene_annotation.mgi and MRK_ENSEMBL.rpt files from MGI
 
     Parameters
     ----------
-      dirname : base directory for data.
+      datadir : str
+        base directory for data.
 
     Returns
     -------
@@ -68,11 +65,11 @@ def load(dirname=None, create_session=None):
     http://wiki.geneontology.org/index.php/GAF_2.0
     '''
     from waldo.backend import call_create_session
-    if dirname is None: dirname = _datadir
+    if datadir is None: datadir = _datadir
     session = call_create_session(create_session)
-    loaded = _load_gene_annotation(path.join(dirname, 'gene_association.mgi'), session)
-    _load_mrk_ensembl(path.join(dirname, 'MRK_ENSEMBL.rpt'), session)
-    _load_pubmed_ids(path.join(dirname, 'MRK_Reference.rpt'), session)
+    loaded = _load_gene_annotation(path.join(datadir, 'gene_association.mgi'), session)
+    _load_mrk_ensembl(path.join(datadir, 'MRK_ENSEMBL.rpt'), session)
+    _load_pubmed_ids(path.join(datadir, 'MRK_Reference.rpt'), session)
     return loaded
 
 def _load_gene_annotation(filename, session):

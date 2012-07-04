@@ -25,8 +25,6 @@ from models import SlimSet, SlimTerm, SlimMapping
 from sqlalchemy.orm import sessionmaker
 from os import path
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'map2MGIslim.txt'
 
 
@@ -44,15 +42,15 @@ def clear(create_session=None):
     session.commit()
 
 
-def load(dirname=None, create_session=None):
+def load(datadir, create_session=None):
     '''
-    nr_entries = load(dirname={data/}, create_session={backend.create_session})
+    nr_entries = load(datadir, create_session={backend.create_session})
 
     Load MGI GO SLIM file
 
     Parameters
     ----------
-      dirname : Directory containing GO files
+      datadir : Directory containing GO files
       create_session : a callable object that returns an sqlalchemy session
 
     Returns
@@ -61,8 +59,7 @@ def load(dirname=None, create_session=None):
     '''
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
-    if dirname is None: dirname = _datadir
-    filename = path.join(dirname, _inputfilename)
+    filename = path.join(datadir, _inputfilename)
     input = open(filename)
 
     input.readline() # header

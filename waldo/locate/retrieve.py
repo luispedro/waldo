@@ -76,7 +76,7 @@ def retrieve_go_annotations(id, session=None):
 
     for reference in entry.references:
         for location in reference.locations:
-            locations.update(location.go_id.split(';')
+            locations.update(location.go_id.split(';'))
 
     for annotation in entry.go_annotations:
         for location in annotation.locations:

@@ -12,10 +12,6 @@ from os import path
 import os
 import glob
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
-
-
 def clear(create_session=None):
     '''
     clear()
@@ -28,15 +24,15 @@ def clear(create_session=None):
     session.commit()
 
 
-def load(dirname=None, create_session=None):
+def load(datadir, create_session=None):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session})
+    nr_loaded = load(datadir, create_session={backend.create_session})
 
     Load ENSEMBL FASTA file into database
 
     Parameters
     ----------
-    dirname : str, optional
+    datadir : str
         Directory containing the FASTA file
     create_session : callable, optional
         a callable object that returns an sqlalchemy session
@@ -48,8 +44,7 @@ def load(dirname=None, create_session=None):
     '''
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
-    if dirname is None: dirname = _datadir
-    inputfilename = glob.glob(path.join(dirname,'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
+    inputfilename = glob.glob(path.join(datadir, 'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
     filename = path.join(inputfilename)
     nr_loaded = 0
     for seq in fasta.read(filename):

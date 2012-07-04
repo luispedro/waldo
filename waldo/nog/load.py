@@ -11,8 +11,6 @@ import os
 
 from waldo.tools import _gzip_open
 
-_basedir = path.dirname(path.abspath(__file__))
-_datadir = path.abspath(path.join(_basedir, '../../data'))
 _inputfilename = 'maNOG.mapping.txt.gz'
 
 def _accept_species(sp, name):
@@ -33,15 +31,15 @@ def clear(create_session=None):
     session.commit()
 
 
-def load(dirname=None, create_session=None, species=('Mus Musculus', 'Homo Sapiens')):
+def load(datadir, create_session=None, species=('Mus Musculus', 'Homo Sapiens')):
     '''
-    nr_loaded = load(dirname={data/}, create_session={backend.create_session}, species=['Mus Musculus, Homo Sapiens')
+    nr_loaded = load(datadir, create_session={backend.create_session}, species=['Mus Musculus, Homo Sapiens')
 
     Load NOG entries file file into database
 
     Parameters
     ----------
-    dirname : str, optional
+    datadir : str
         Directory containing the maNOG.mapping.txt.gz file
     create_session : callable, optional
         a callable object that returns an sqlalchemy session
@@ -55,9 +53,9 @@ def load(dirname=None, create_session=None, species=('Mus Musculus', 'Homo Sapie
     '''
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
-    if dirname is None: dirname = _datadir
+    if datadir is None: datadir = _datadir
     nr_loaded = 0
-    filename = path.join(dirname,_inputfilename)
+    filename = path.join(datadir, _inputfilename)
     inputfile = _gzip_open(filename)
     header = inputfile.readline()
     for line in inputfile:
