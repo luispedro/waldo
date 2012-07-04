@@ -1,17 +1,14 @@
-<p>Searched by {{ search_term_type }}(<strong>{{ search_term_value }}</strong>)
+<p>Results for <cite>{{ search_term_value }}</cite> as {{ search_term_type }}</p>
 
 <h2>Database Results</h2>
 % for element in all_results:
-    <h3>{{ element['protein'] }} (in organism {{ element['organism'] }})</h3>
+    <div class="dbresult">
+    <h3>{{ element['protein'] }}</h3>
     <p>
-    % if element['celltype'] is None:
-        No cell type information<br />
-    % else:
+    % if element['celltype'] is not None:
       In cell type <cite>{{ element['celltype'] }}</cite><br />
     % end
-    % if element['condition'] is None:
-        No condition information
-    % else:
+    % if element['condition'] is not None:
         In condition <cite>{{ element['condition'] }}</cite>
     % end
     </p>
@@ -22,8 +19,11 @@
     % end
     </ul>
 
-  <p>References: {{ element['references'] }}</p>
-  <p>Database Link: {{! element['source'] }}</p>
+    % if element['references']:
+        <p>References: {{ element['references'] }}</p>
+    % end
+    <p>Database link: {{! element['source'] }}</p>
+    </div>
 % end
 
 <h2>Prediction Results</h2>

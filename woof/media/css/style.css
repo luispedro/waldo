@@ -56,19 +56,17 @@ h2 {
     color: #333;
 }
 
-.results {
-    border-left: 1px solid #000000;
-    border-bottom: 1px solid #000000;
-    width: 800px;
+.dbresult {
+    width: 650px;
+    margin: 2em;
+    padding-top: 1em;
+    padding-left: 2em;
+    background-color: #eee;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
-.results th, .results td {
-    text-align: left;
-    width: 150px;
-    border-top: 1px solid #000000;
-    border-right: 1px solid #000000;
-}
-
-.results th {
-    background-color: #EEEEEE;
+.dbresult ul {
+    list-style-type: none;
 }
