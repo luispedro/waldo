@@ -34,9 +34,14 @@ _p = '{http://uniprot.org/uniprot}'
 
 def clear(create_session=None):
     '''
-    clear()
+    clear(create_session={backend.create_session})
 
     Removes all Uniprot related information
+
+    Parameters
+    ----------
+    create_session : callable, optional
+        callable which returns a session
     '''
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
