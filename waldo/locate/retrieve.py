@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -46,9 +46,6 @@ def from_ensembl_peptide_id(ensembl_peptide_id, session=None):
     '''
     return translate(ensembl_peptide_id, 'ensembl:peptide_id', 'locate:id', session)
 
-def _splitGO(goids):
-    goids = goids.split(';')
-    return goids
 
 def retrieve_go_annotations(id, session=None):
     '''
@@ -70,21 +67,20 @@ def retrieve_go_annotations(id, session=None):
     '''
     if session is None: session = backend.create_session()
     entry = session.query(Entry).filter(Entry.id == id).first()
-
     locations = set()
     for location in entry.locations:
-        locations.update(_splitGO(location.go_id))
+        locations.update(location.go_id.split(';'))
 
     for predict in entry.predictions:
-        locations.update(_splitGO(predict.go_id))
+        locations.update(predict.go_id.split(';'))
 
     for reference in entry.references:
         for location in reference.locations:
-            locations.update(_splitGO(location.go_id))
+            locations.update(location.go_id.split(';')
 
     for annotation in entry.go_annotations:
         for location in annotation.locations:
-            locations.update(_splitGO(location.go_id))
+            locations.update(location.go_id.split(';'))
 
     return list(locations)
 
