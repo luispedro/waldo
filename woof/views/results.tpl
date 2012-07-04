@@ -12,7 +12,7 @@
         In condition <cite>{{ element['condition'] }}</cite>
     % end
     </p>
-    <p>Locations:</p>
+    <p>Listed Locations:</p>
     <ul>
     % for loc,ev in zip(element['location'], element['evidence_code']):
         <li>{{ loc }} ({{ ev }})</li>
