@@ -2,7 +2,7 @@
 <p>Waldo was developed at Carnegie Mellon University, by <a
 href="http://luispedro.org">Luis Pedro Coelho</a>, <a
 href="http://www.magsolweb.net/">Shannon Quinn</a>, <a
-href="http://www.cs.queensu.ca/~shatkay/">Hagit Shatkay</a>, and <a
+href="http://www.eecis.udel.edu/~shatkay/">Hagit Shatkay</a>, and <a
 href="http://murphylab.web.cmu.edu/">Robert F. Murphy</a>.</p>
 
 <p>The goal is a unified interface to up-to-date subcellular location
