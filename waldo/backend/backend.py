@@ -54,10 +54,18 @@ def init(database_file=None):
     _engine = create_engine('sqlite:///' + database_file, echo=False)
     _create_session = sessionmaker(bind=_engine)
 
-def create_session():
+def create_session(**kwargs):
+    '''
+    session = create_session(**kwargs)
+
+    Parameters
+    ---
+    kwargs : any
+        If used, these are passed as **kwargs to the session maker
+    '''
     if _create_session is None:
         init()
-    return _create_session()
+    return _create_session(**kwargs)
 
 def call_create_session(creator):
     '''
