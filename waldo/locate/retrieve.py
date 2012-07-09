@@ -67,9 +67,7 @@ def retrieve_go_annotations(id, session=None):
     '''
     if session is None: session = backend.create_session()
     entry = session.query(Entry).filter(Entry.id == id).first()
-    locations = set()
-    for location in entry.locations:
-        locations.update(location.go_id.split(';'))
+    locations = set([ann.go_id for ann in entry.go_annotations])
 
     for predict in entry.predictions:
         locations.update(predict.go_id.split(';'))
@@ -118,5 +116,5 @@ def gen_url(id):
     '''
     if id is None:
         raise ValueError('waldo.locate.gen_url: Cannot handle `None` IDs')
-    return 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=' + id
+    return 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=%s' % id
 

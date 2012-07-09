@@ -25,7 +25,6 @@ def clear(create_session=None):
     session.query(models.Isoform).delete()
     session.query(models.Image).delete()
     session.query(models.LocatePrediction).delete()
-    session.query(models.LocateLocation).delete()
     session.query(models.Literature).delete()
     session.query(models.LocateAnnotation).delete()
     session.query(models.ExternalReference).delete()
@@ -69,13 +68,6 @@ def _loadfile(filename, organism, session):
     inputf = zf.open(zf.filelist[0])
 
 
-    def load_location(loc):
-        return models.Location(
-                    loc.get('goid'),
-                    loc.findtext('tier1'),
-                    loc.findtext('tier2'),
-                    loc.findtext('tier3'))
-
     def load_image(img, is_coloc):
         return models.Image(
                     img.findtext('filename'),
@@ -102,7 +94,7 @@ def _loadfile(filename, organism, session):
             if sub.tag == 'transcript':
                 isoforms = [models.Isoform(oi.get('class'), oi.text) for oi in sub.findall('other_isoforms/isoform')]
             elif sub.tag == 'experimental_data':
-                expData = map(load_location, sub.iterfind('locations/location'))
+                expData = [loc.get('goid').split(';') for loc in sub.iterfind('locations/location')]
                 for img in sub.iterfind('images/rep_image|images/image'):
                     images.append(load_image(img, False))
                 for img in sub.iterfind('coloc_images/rep_coloc_image|coloc_images/coloc_image'):
@@ -110,13 +102,14 @@ def _loadfile(filename, organism, session):
             elif sub.tag == 'externalannot':
                 for annotation in sub.iterfind('reference'):
                     evidence = sub.findtext('evidence')
-                    locations = map(load_location, sub.iterfind('locations/location'))
+                    locations = [loc.get('goid').split(';') for loc in sub.iterfind('locations/location')]
                     source = annotation.find('source[1]')
-                    annots.append(models.Annotation(evidence,
-                            source.get('source_id'),
-                            source.findtext('source_name'),
-                            source.findtext('accn'),
-                            locations))
+                    for loc in locations:
+                        annots.append(models.Annotation(evidence,
+                                source.get('source_id'),
+                                source.findtext('source_name'),
+                                source.findtext('accn'),
+                                loc))
             elif sub.tag == 'scl_prediction':
                 for source in sub:
                     if source.tag != 'source': continue
@@ -128,7 +121,7 @@ def _loadfile(filename, organism, session):
             elif sub.tag == 'literature':
                 for ref in sub:
                     if ref.tag != 'reference': continue
-                    locations = map(load_location, sub.iterfind('locations/location'))
+                    locations = [loc.get('goid').split(';') for loc in sub.iterfind('locations/location')]
                     source = ref.find('source')
                     refs.append(models.Literature(
                                 ref.findtext('author'),

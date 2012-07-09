@@ -80,34 +80,9 @@ class LocatePrediction(Base):
         self.location = location
         self.go_id = go_id
 
-class LocateLocation(Base):
-    __tablename__ = 'locate_locations'
-    id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    literature_id = Column(Integer(11), ForeignKey('locate_literature.id'), nullable=True)
-    externalannot_id = Column(Integer(11), ForeignKey('locate_annotations.id'), nullable=True)
-    image_id = Column(Integer(11), ForeignKey('locate_images.id'), nullable=True)
-    go_id = Column(String(50))
-    tier1 = Column(String(100), nullable=True)
-    tier2 = Column(String(100), nullable=True)
-    tier3 = Column(String(100), nullable=True)
-
-    def __init__(self, go_id, tier1, tier2=None, tier3=None):
-        self.go_id = go_id
-        self.tier1 = tier1
-        self.tier2 = tier2
-        self.tier3 = tier3
-
-        # this section is a dirty hack to get around getattr() and the possible
-        # (and unwanted) conversion of None to 'None'...this should be fixed
-        # from within load.py FIXME
-        if tier1 is not None: self.tier1 = unicode(tier1)
-        if tier2 is not None: self.tier2 = unicode(tier2)
-        if tier3 is not None: self.tier3 = unicode(tier3)
-
 class Literature(Base):
     __tablename__ = 'locate_literature'
-    id = Column(Integer(11), primary_key=True)
+    id = Column(Integer, primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
     author = Column(String(200))
     title = Column(String(200))
@@ -115,7 +90,17 @@ class Literature(Base):
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
-    locations = relation(LocateLocation)
+
+    class LiteratureLocation(Base):
+        __tablename__ = 'locate_literature_location'
+        id = Column(Integer, primary_key=True)
+        literature_id = Column(Integer, ForeignKey('locate_literature.id'), index=True)
+        go_id = Column(String(16))
+
+        def __init__(self, go_id):
+            self.go_id = go_id
+
+    locations = relation(LiteratureLocation)
 
     def __init__(self, author, title, citation, source_id, source_name, accn, locations):
         self.author = author
@@ -129,27 +114,21 @@ class Literature(Base):
 class LocateAnnotation(Base):
     __tablename__ = 'locate_annotations'
     id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    evidence = Column(String(50))
+    locate_id = Column(Integer, ForeignKey('locate_entries.id'), index=True)
+    evidence = Column(String(64))
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
-    locations = relation(LocateLocation)
-    evidence_code = ''
+    go_id = Column(String(32))
+    evidence_code = None
 
-    @property
-    def go_id(self):
-        locs = self.locations
-        if len(locs):
-            return self.locations[0].go_id
-        return '<unknown>'
 
-    def __init__(self, evidence, source_id, source_name, accn, locations):
+    def __init__(self, evidence, source_id, source_name, accn, go_id):
         self.evidence = evidence
         self.source_id = source_id
         self.source_name = source_name
         self.accn = accn
-        self.locations = locations
+        self.go_id = go_id
 
 class ExternalReference(Base):
     __tablename__ = 'locate_externalreferences'
@@ -173,7 +152,6 @@ class LocateEntry(Base):
     predictions = relation(LocatePrediction)
     references = relation(Literature)
     go_annotations = relation(LocateAnnotation)
-    locations = relation(LocateLocation)
     xrefs = relation(ExternalReference)
     images = relation(Image)
 
@@ -200,5 +178,4 @@ class LocateEntry(Base):
 Entry = LocateEntry
 Prediction = LocatePrediction
 Annotation = LocateAnnotation
-Location = LocateLocation
 
