@@ -91,6 +91,7 @@ def _loadfile(filename, organism, session):
 
     for _, entry in etree.iterparse(inputf, tag=u'LOCATE_protein'):
         protein_source = None
+        name = None
         annots = []
         predicts = []
         refs = []
@@ -140,26 +141,27 @@ def _loadfile(filename, organism, session):
             elif sub.tag == 'xrefs':
                 for xref in sub.iterfind('xref'):
                     source = xref.find('source')
-                    name = source.findtext('source_name')
+                    source_name = source.findtext('source_name')
                     accn = source.findtext('accn')
-                    extrefs.append(models.ExternalReference(source.get('source_id'), name, accn))
+                    extrefs.append(models.ExternalReference(source.get('source_id'), source_name, accn))
                     # check if ref is to Ensembl-*
-                    if name.startswith('Ensembl'):
-                        if name.startswith('Ensembl-Gene'):
+                    if source_name.startswith('Ensembl'):
+                        if source_name.startswith('Ensembl-Gene'):
                             namespace = 'ensembl:gene_id'
-                        elif name.startswith('Ensembl-Peptide'):
+                        elif source_name.startswith('Ensembl-Peptide'):
                             namespace = 'ensembl:peptide_id'
                         else:
-                            raise IOError('waldo.locate.load: Cannot handle source_name \'%s\'' % name)
+                            raise IOError('waldo.locate.load: Cannot handle source_name \'%s\'' % source_name)
                         t = Translation(namespace, accn, 'locate:id', entry.get('uid'))
                         session.add(t)
                         t = Translation('locate:id', entry.get('uid'), namespace, accn)
                         session.add(t)
             elif sub.tag == 'protein':
                 protein_source = sub.find('source')
+                name = sub.findtext('protein_function') # protein_function is what LOCATE calls a human readable name
         session.add(models.Entry(
                         entry.get('uid'),
-                        entry.get('protein_function'), # protein_function is what LOCATE calls a human readable name
+                        name,
                         isoforms,
                         predicts,
                         refs,

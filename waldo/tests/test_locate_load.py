@@ -28,5 +28,10 @@ def test_num_entries():
     session = sessionmaker_()
     assert session.query(waldo.locate.models.Entry).count() == num_entries
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace == 'locate:id')).count()
+
+    e = session.query(waldo.locate.models.Entry).get('6000072')
+    assert e.name == 'cyclin-dependent kinase 9'
+
+
     waldo.locate.load.clear(sessionmaker_)
     assert session.query(waldo.locate.models.Entry).count() == 0
