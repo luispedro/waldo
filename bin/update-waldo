@@ -144,14 +144,7 @@ def main(argv):
         waldo.backend.init(options.database)
         waldo.backend.create_tables()
 
-        session = waldo.backend.create_session()
-        c = session.connection()
-
-        # These are only valid for SQLite3, but it makes it much faster
-        c.execute('PRAGMA synchronous=OFF;')
-        c.execute('PRAGMA journal_mode=OFF;')
-        create_session = lambda: Session(bind=c)
-
+        create_session = None
         if sum(1 for name,_ in dirty_mods if name == 'go'):
             if options.verbose:
                 print 'GO will be reindexed. This triggers whole-database reindexing.'
