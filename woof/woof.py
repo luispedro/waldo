@@ -62,8 +62,12 @@ def search(ensemblgene=None, format='html'):
 @route('/search/ensembleprot/<ensemblprot>')
 def search(ensemblprot, format='html'):
     return _result(format, 'Ensembl Peptide', ensemblprot, {'ensemblpeptide': ensemblpeptide})
+@route('/search/mgiid')
 @route('/search/mgiid/<mgiid>')
-def search(mgiid, format='html'):
+def search(mgiid=None, format='html'):
+    if mgiid is None:
+        mgiid = request.query.mgiid
+
     return _result(format, 'MGI ID', mgiid, translate(mgiid, 'mgi:id', 'ensembl:gene_id'))
 @route('/search/protname/<protname>')
 def search(protname, format='html'):
