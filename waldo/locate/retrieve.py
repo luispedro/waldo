@@ -116,5 +116,7 @@ def gen_url(id):
     -------
       url : web url of corresponding data page.
     '''
+    if id is None:
+        raise ValueError('waldo.locate.gen_url: Cannot handle `None` IDs')
     return 'http://locate.imb.uq.edu.au/cgi-bin/report.cgi?entry=' + id
 
