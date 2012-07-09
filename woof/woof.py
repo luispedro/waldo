@@ -87,8 +87,11 @@ def _format(entry, module):
             evidence = '<br />'.join((annot.evidence or 'None') for annot in entry.go_annotations),
         except:
             evidence = None
+    name = entry.name
+    if name is None:
+        name = '<unnamed protein>'
     return {
-        'protein': entry.name,
+        'protein': name,
         'organism' : '; '.join(entry.organisms),
         'celltype': None,
         'condition': None,
@@ -96,7 +99,7 @@ def _format(entry, module):
         'references': '<br />'.join([paper.title for paper in entry.references]),
         'evidence' : evidence,
         'evidence_code' : [go_annot.evidence_code for go_annot in entry.go_annotations],
-        'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.name),module.name),
+        'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.internal_id), module.name),
         }
 def _search_name(name):
     session = waldo.backend.create_session()
