@@ -88,7 +88,9 @@ def _format(entry, module):
         evidence = '<br />'.join(
                 ['<a href="http://locate.imb.uq.edu.au/data_images/%s/%s"><img height="50" width="50" src="http://locate.imb.uq.edu.au/data_images/%s/%s" /></a>' %
                     (img.filename[0:3], img.filename, img.filename[0:3], img.filename) for img in entry.images]),
+        location = [(id_to_term(go_id),None) for go_id in module.retrieve_go_annotations(entry.internal_id)]
     else:
+        location = [(id_to_term(go_annotation.go_id),go_annotation.evidence_code) for go_annotation in entry.go_annotations]
         try:
             evidence = '<br />'.join((annot.evidence or 'None') for annot in entry.go_annotations),
         except:
@@ -101,10 +103,9 @@ def _format(entry, module):
         'organism' : '; '.join(map(str,entry.organisms)),
         'celltype': None,
         'condition': None,
-        'location': [id_to_term(go_annot.go_id) for go_annot in entry.go_annotations],
+        'location': location,
         'references': entry.references,
         'evidence' : evidence,
-        'evidence_code' : [go_annot.evidence_code for go_annot in entry.go_annotations],
         'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.internal_id), module.name),
         }
 def _search_name(name):

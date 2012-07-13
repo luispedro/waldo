@@ -14,8 +14,12 @@
     </p>
     <p>Listed Locations:</p>
     <ul>
-    % for loc,ev in zip(element['location'], element['evidence_code']):
-        <li>{{ loc }} ({{ ev }})</li>
+    % for loc,ev in element['location']:
+        <li>{{ loc }}
+        % if ev is not None:
+            ({{ ev }})
+        % end
+        </li>
     % end
     </ul>
 
