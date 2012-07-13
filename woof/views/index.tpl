@@ -20,10 +20,19 @@
     </td>
 </tr>
 <tr>
-    <td>Uniprot ID:</td>
+    <td>Uniprot Accession ID:</td>
     <td>
-        <form action="/search/uniprotid" method="get">
-        <input type="text" name="uniprotid" size="32" />
+        <form action="/search/uniprotacc" method="get">
+        <input type="text" name="uniprotacc" size="32" />
+        <input type="submit" value="Lookup" />
+        </form>
+    </td>
+</tr>
+<tr>
+    <td>Uniprot Protein name:</td>
+    <td>
+        <form action="/search/uniprotname" method="get">
+        <input type="text" name="uniprotname" size="32" />
         <input type="submit" value="Lookup" />
         </form>
     </td>
@@ -42,15 +51,6 @@
     <td>
         <form action="/search/locateid" method="get">
         <input type="text" name="locateid" value="6008510" size="32" />
-        <input type="submit" value="Lookup" />
-        </form>
-    </td>
-</tr>
-<tr>
-    <td>Protein name:</td>
-    <td>
-        <form action="/search/protname" method="get">
-        <input type="text" name="protname" size="32" />
         <input type="submit" value="Lookup" />
         </form>
     </td>

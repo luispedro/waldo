@@ -27,10 +27,10 @@ route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], 
 
 @route('/query')
 def searchby():
-    for key in ('ensemblgene', 'ensemblprot', 'mgiid', 'protname', 'uniprotid', 'locateid'):
+    for key in ('ensemblgene', 'ensemblprot', 'mgiid', 'protname', 'uniprotacc', 'locateid'):
         if key in request.forms:
             value = request.forms.get(key)
-            redirect('/search/%s/%s' % (key,value))
+            redirect('/search/%s?%s=%s' % (key,key,value))
     redirect('error')
 
 
@@ -45,11 +45,9 @@ def _result(format, name, value, arguments, predictions=[]):
     })
 
 @route('/search/ensemblgene')
-@route('/search/ensemblgene/<ensemblgene>')
-def search(ensemblgene=None, format='html'):
+def search(format='html'):
     from collections import defaultdict
-    if ensemblgene is None:
-        ensemblgene = request.query.ensemblgene
+    ensemblgene = request.query.ensemblgene
 
     predictions = waldo.predictions.retrieve.retrieve_predictions(ensemblgene)
     predictions_grouped = defaultdict(list)
@@ -59,21 +57,29 @@ def search(ensemblgene=None, format='html'):
     return _result(format, 'Ensembl Gene', ensemblgene, ensemblgene, predictions)
 
 
-@route('/search/ensembleprot/<ensemblprot>')
-def search(ensemblprot, format='html'):
-    return _result(format, 'Ensembl Peptide', ensemblprot, {'ensemblpeptide': ensemblpeptide})
-@route('/search/mgiid')
-@route('/search/mgiid/<mgiid>')
-def search(mgiid=None, format='html'):
-    if mgiid is None:
-        mgiid = request.query.mgiid
+@route('/search/ensemblprot')
+def search(format='html'):
+    ensemblprot = request.query.ensemblprot
+    return _result(format, 'Ensembl Peptide', ensemblprot, {'ensemblpeptide': ensemblprot})
 
+@route('/search/mgiid')
+def search(format='html'):
+    mgiid = request.query.mgiid
     return _result(format, 'MGI ID', mgiid, translate(mgiid, 'mgi:id', 'ensembl:gene_id'))
-@route('/search/protname/<protname>')
-def search(protname, format='html'):
-    return _result(format, 'Uniprot ID', protname, translate(uniprotid, 'uniprot:name', 'ensembl:gene_id'))
-@route('/search/locateid/<locateid>')
-def search(locateid, format='html'):
+
+@route('/search/uniprotname')
+def search(format='html'):
+    uniprotname = request.query.uniprotname
+    return _result(format, 'Uniprot Name', uniprotname, translate(uniprotname, 'uniprot:name', 'ensembl:gene_id'))
+
+@route('/search/uniprotacc')
+def search(format='html'):
+    uniprotacc = request.query.uniprotacc
+    return _result(format, 'Uniprot Accession ID', uniprotacc, translate(uniprotacc, 'uniprot:accession', 'ensembl:gene_id'))
+
+@route('/search/locateid')
+def search(format='html'):
+    locateid = request.query.locateid
     return _result(format, 'LOCATE ID', locateid, translate(locateid, 'locate:id', 'ensembl:gene_id'))
 
 
