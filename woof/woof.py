@@ -102,7 +102,7 @@ def _format(entry, module):
         'celltype': None,
         'condition': None,
         'location': [id_to_term(go_annot.go_id) for go_annot in entry.go_annotations],
-        'references': '<br />'.join([paper.title for paper in entry.references]),
+        'references': entry.references,
         'evidence' : evidence,
         'evidence_code' : [go_annot.evidence_code for go_annot in entry.go_annotations],
         'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.internal_id), module.name),

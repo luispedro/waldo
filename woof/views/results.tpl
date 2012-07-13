@@ -20,7 +20,12 @@
     </ul>
 
     % if element['references']:
-        <p>References: {{ element['references'] }}</p>
+        <p>References:</p>
+        <ul>
+        % for p in element['references']:
+            <li><cite>{{ p.title }}</cite> by <cite>{{ p.authors }}</cite></li>
+        </ul>
+        %end
     % end
     <p>Database link: {{! element['source'] }}</p>
     </div>
