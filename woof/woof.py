@@ -92,7 +92,7 @@ def _format(entry, module):
         name = '<unnamed protein>'
     return {
         'protein': name,
-        'organism' : '; '.join(entry.organisms),
+        'organism' : '; '.join(map(str,entry.organisms)),
         'celltype': None,
         'condition': None,
         'location': [id_to_term(go_annot.go_id) for go_annot in entry.go_annotations],
