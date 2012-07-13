@@ -58,6 +58,15 @@ class Reference(Base):
     authors = Column(String(512))
     dbRef = Column(String(64))
 
+    def gen_citation(self):
+        return '<a href="%s"><cite>%s</cite></a> by <cite>%s</cite>' % (self.gen_url(), self.title, self.authors)
+
+    def gen_url(self):
+        rtype,_,code = self.dbRef.partition(':')
+        if rtype == "DOI":
+            return 'http://dx.doi.org/%s' % code
+        return 'http://www.ncbi.nlm.nih.gov/pubmed/%s' % code
+
     def __init__(self, key, type, title, authors, dbRef):
         self.type = type
         self.key = key

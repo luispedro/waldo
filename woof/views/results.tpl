@@ -23,7 +23,7 @@
         <p>References:</p>
         <ul>
         % for p in element['references']:
-            <li><cite>{{ p.title }}</cite> by <cite>{{ p.authors }}</cite></li>
+            <li>{{! p.gen_citation() }}</li>
         </ul>
         %end
     % end

@@ -84,12 +84,19 @@ class Literature(Base):
     __tablename__ = 'locate_literature'
     id = Column(Integer, primary_key=True)
     locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    author = Column(String(200))
+    authors = Column(String(200))
     title = Column(String(200))
     citation = Column(String(100))
     source_id = Column(Integer(11))
     source_name = Column(String(50))
     accn = Column(String(20))
+
+
+    def gen_citation(self):
+        return '<cite>%s</cite> by <cite>%s</cite> (%s)' % (self.title, self.authors, self.citation)
+
+    def gen_url(self):
+        return None
 
     class LiteratureLocation(Base):
         __tablename__ = 'locate_literature_location'
@@ -102,8 +109,8 @@ class Literature(Base):
 
     locations = relation(LiteratureLocation)
 
-    def __init__(self, author, title, citation, source_id, source_name, accn, locations):
-        self.author = author
+    def __init__(self, authors, title, citation, source_id, source_name, accn, locations):
+        self.authors = authors
         self.title = title
         self.citation = citation
         self.source_id = source_id
