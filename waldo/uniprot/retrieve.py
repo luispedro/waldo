@@ -96,6 +96,8 @@ def retrieve_go_annotations(name, session=None, return_evidence=False, only_cell
     '''
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
+    if entr is None:
+        return []
     annotations = entr.go_annotations
     if only_cellular_component:
         def is_cellular_component(g):
