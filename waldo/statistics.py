@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009, Shannon Quinn <squinn@cmu.edu>
+# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -20,7 +20,8 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 #  THE SOFTWARE.
 
-from __future__ import division
+from __future__ import print_function
+
 from collections import defaultdict
 from sqlalchemy import and_, func
 import waldo.backend
@@ -33,32 +34,33 @@ def uniprotstats(session=None):
     from waldo.uniprot.models import Entry, Reference, Accession, Comment
     if session is None:
         session = waldo.backend.create_session()
-    print 'Total Uniprot entries:', session.query(Entry).count()
-    print 'Unique accession numbers:', session.query(Accession.accession).distinct().count()
-    print 'Unique references:', session.query(Reference.key).distinct().count()
-    print 'Unique comment types:', session.query(Comment.type).distinct().count()
+    print('Total Uniprot entries: {0}'.format(session.query(Entry).count()))
+    print('Unique accession numbers: {0}'.format(session.query(Accession.accession).distinct().count()))
+    print('Unique references: {0}'.format(session.query(Reference.key).distinct().count()))
+    print('Unique comment types: {0}'.format(session.query(Comment.type).distinct().count()))
 
 
 def locatestats(session=None):
     from waldo.locate.models import Entry, ExternalReference, Annotation, Literature, Location, Isoform, Image, Prediction
     if session is None: session = waldo.backend.create_session()
     q = session.query
-    print 'Total LOCATE entries: %d' % q(Entry).count()
-    for organism_count in q(Entry.organism, func.count(Entry.organism)).group_by(Entry.organism):
-        print '\tTotal %s entries: %s' % organism_count
-    print
-    print 'Protein data sources: %s' % q(Entry.source_name).distinct().count()
-    print 'Unique protein accession numbers: %s' % q(Entry.accn).distinct().count()
-    print 'Unique SCL prediction methods: %s' % q(Prediction.method).distinct().count()
-    print 'Unique references cited: %s' % q(Literature.accn).distinct().count()
-    print 'Unique external annotations: %s' % q(Annotation.id).distinct().count()
-    print 'Unique external references: %s' % q(ExternalReference.source_name).distinct().count()
+    print('Total LOCATE entries: {0}'.format(q(Entry).count()))
+    for organism,count in q(Entry.organism, func.count(Entry.organism)).group_by(Entry.organism):
+        print('\tTotal {0} entries: {1}'.format(organism,count))
+    print()
+    print('Protein data sources: {0}'.format(q(Entry.source_name).distinct().count()))
+    print('Unique protein accession numbers: {0}'.format(q(Entry.accn).distinct().count()))
+    print('Unique SCL prediction methods: {0}'.format(q(Prediction.method).distinct().count()))
+    print('Unique references cited: {0}'.format(q(Literature.accn).distinct().count()))
+    print('Unique external annotations: {0}'.format(q(Annotation.id).distinct().count()))
+    print('Unique external references: {0}'.format(q(ExternalReference.source_name).distinct().count()))
 
 def mgistats(session=None):
     from waldo.uniprot.models import Entry, GOAnnotation
     if session is None:
         session = waldo.backend.create_session()
     entries = session.query(Entry)
-    print 'Total MGI entries: %d' % entries.count()
-    print 'Unique PubMed references: %d' % session.query(Entry.pubmedids).distinct().count()
-    print 'Unique Evidence identifiers: %d' % session.query(GOAnnotation.evidence).distinct().count()
+    print('Total MGI entries: {0}'.format(entries.count()))
+    print('Unique PubMed references: {0}'.format(session.query(Entry.pubmedids).distinct().count()))
+    print('Unique Evidence identifiers: {0}'.format(session.query(GOAnnotation.evidence).distinct().count()))
+
