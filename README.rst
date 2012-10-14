@@ -6,6 +6,18 @@ Waldo tells what everyone already knows.
 Installation
 ............
 
+Dependencies
+
+- python
+- lxml
+- sqlalchemy
+
+Under a debian or Ubuntu system, the following commands will install all needed
+packages::
+
+    sudo apt-get install python-lxml
+    sudo apt-get install python-sqlalchemy
+
 You can run the ``install.sh`` file to get everything working. The individual
 steps are::
 
