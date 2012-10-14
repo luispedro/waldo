@@ -1,9 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-cd data/
-./update.sh
-cd ..
-python<scripts/create_tables.py
-python<scripts/load_data.py
+datadir=$PWD/data
+
 python setup.py install
+mkdir -p $datadir
+./bin/update-waldo --datadir $datadir
 
