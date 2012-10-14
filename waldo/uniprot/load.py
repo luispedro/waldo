@@ -94,7 +94,7 @@ def _load_uniprot_sprot(datadir, session, organism_set):
     input = _gzip_open(path.join(datadir, _inputfilename))
     loaded = 0
 
-    for event, element in etree.iterparse(input, tag=_p+'entry'):
+    for _event, element in etree.iterparse(input, tag=_p+'entry'):
         organisms = []
         for item in element.iterchildren(_p+'organism'):
             for subitem in item.iterchildren():
