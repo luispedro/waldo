@@ -63,7 +63,7 @@ urls = {
             ],
 
     'sequences': [
-            'ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/pep/Mus_musculus.NCBIM37.*.pep.all.fa.gz',
+            'ftp://ftp.ensembl.org/pub/current_fasta/mus_musculus/pep/Mus_musculus.*.pep.all.fa.gz',
             ],
     'hpa': [
             'http://www.proteinatlas.org/download/subcellular_location.csv.zip',

@@ -44,7 +44,7 @@ def load(datadir, create_session=None):
     '''
     from waldo.backend import call_create_session
     session = call_create_session(create_session)
-    inputfilename = glob.glob(path.join(datadir, 'Mus_musculus.NCBIM37.*.pep.all.fa.gz'))[0]
+    inputfilename = glob.glob(path.join(datadir, 'Mus_musculus.*.pep.all.fa.gz'))[0]
     filename = path.join(inputfilename)
     nr_loaded = 0
     for seq in fasta.read(filename):
