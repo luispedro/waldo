@@ -98,7 +98,7 @@ def download(url):
 
 def main(argv):
     import optparse
-    from os import makedirs, chdir
+    from os import makedirs, chdir, getcwd
     parser = optparse.OptionParser()
     parser.add_option('--verbose', action='store_true', dest='verbose')
     parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/')
@@ -111,6 +111,7 @@ def main(argv):
         makedirs(options.datadir)
     except OSError:
         pass
+    startdir = getcwd()
     chdir(options.datadir)
 
     dirty_mods = []
@@ -140,6 +141,9 @@ def main(argv):
     if options.verbose and not dirty_mods:
         print 'No databases have changed'
 
+    # The reason why we need to chdir to initial directory is because
+    # options.database might be a relative path
+    chdir(startdir)
     if dirty_mods:
         waldo.backend.init(options.database)
         waldo.backend.create_tables()
