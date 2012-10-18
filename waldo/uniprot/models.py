@@ -48,6 +48,12 @@ class GoAnnotation(Base):
         self.go_id = go_id
         self.evidence_code = evidence_code
 
+    def __str__(self):
+        return 'GoAnnotation({0})'.format(self.go_id)
+
+    def __repr__(self):
+        return 'GoAnnotation({0}, {1}, {2}, {3})'.format(self.go_ann_id, self.uniprot_name, self.go_id, self.evidence_code)
+
 class Reference(Base):
     __tablename__ = 'uniprot_reference'
     refid = Column(Integer, primary_key=True)
