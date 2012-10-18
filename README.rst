@@ -45,6 +45,12 @@ The ``datadir`` is where waldo will store the downloaded information. It
 defaults to ``/var/lib/waldo/data``. You can also specify where to store the
 database file (default is ``/var/lib/waldo/waldo.sqlite3``).
 
+Running the Webapp
+..................
+
+If you have installed waldo as above, you should execute ``python woof.py``
+inside the woof directory.
+
 Links
 .....
 
