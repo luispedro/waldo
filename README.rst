@@ -48,8 +48,9 @@ database file (default is ``/var/lib/waldo/waldo.sqlite3``).
 Running the Webapp
 ..................
 
-If you have installed waldo as above, you should execute ``python woof.py``
-inside the woof directory.
+If you have installed waldo as above, you should execute::
+
+    python woof/woof.py
 
 Links
 .....

@@ -1,6 +1,6 @@
 from bottle import Bottle, run, template, redirect, static_file, request
 from bottle import SimpleTemplate
-
+from bottle import TEMPLATE_PATH
 
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
@@ -12,17 +12,21 @@ from waldo.translations.services import translate
 from waldo.go import id_to_term
 import waldo.backend
 import json
+from os import path
 
 app = Bottle()
 route = app.route
 SimpleTemplate.defaults["get_url"] = app.get_url
+
+basedir = path.abspath(path.dirname(__file__))
+TEMPLATE_PATH.append(path.join(basedir, 'views'))
 
 
 route('/', name='home', callback=lambda: template('index'))
 route('/help', name='help', callback=lambda:template('static/help'))
 route('/about', name='about', callback=lambda:template('static/about'))
 route('/contact-us', name='contact-us', callback=lambda:template('static/help'))
-route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root='./media'))
+route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root=path.join(basedir,'media')))
 
 
 @route('/query')
