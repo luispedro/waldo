@@ -100,11 +100,11 @@ def main(argv):
     import optparse
     from os import makedirs, chdir, getcwd
     parser = optparse.OptionParser()
-    parser.add_option('--verbose', action='store_true', dest='verbose')
-    parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/')
-    parser.add_option('--database', action='store', dest='database', default='/var/lib/waldo/waldo.sqlite3')
-    parser.add_option('--force-reindex', action='store_true', dest='force_reindex')
-    parser.add_option('--no-download', action='store_true', dest='no_download')
+    parser.add_option('--verbose', action='store_true', dest='verbose', help='Verbose output')
+    parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/', help='Where to store data files')
+    parser.add_option('--database', action='store', dest='database', default='/var/lib/waldo/waldo.sqlite3', help='Path to database file')
+    parser.add_option('--force-reindex', action='store_true', dest='force_reindex', help='Reindex data even if no changes are detected')
+    parser.add_option('--no-download', action='store_true', dest='no_download', help='Do not download any data (only useful with --force_reindex)')
     options,args = parser.parse_args(argv)
 
     try:
@@ -114,6 +114,11 @@ def main(argv):
     startdir = getcwd()
     chdir(options.datadir)
 
+    if options.no_download and not options.force_reindex:
+        from sys import stderr
+        stderr.write('Option --no-download does not make sense without option --force-reindex.\n')
+        stderr.write('Doing nothing.\n')
+        return
     dirty_mods = []
     for k,us in urls.iteritems():
         if options.no_download:
@@ -126,20 +131,20 @@ def main(argv):
                 dirty = True
         if dirty:
             if options.verbose:
-                print 'Database %s has been updated' % k
+                print('Database {0} has been updated'.format(k))
             dirty_mods.append(k)
 
     for t in triggers:
         if t in dirty_mods:
             dirty_mods = modules
             if options.verbose:
-                print "GO has changed, reindexing all libraries"
+                print("GO has changed, reindexing all libraries")
 
     if options.force_reindex:
         dirty_mods = modules
 
     if options.verbose and not dirty_mods:
-        print 'No databases have changed'
+        print('No databases have changed')
 
     # The reason why we need to chdir to initial directory is because
     # options.database might be a relative path
@@ -151,13 +156,13 @@ def main(argv):
         create_session = None
         if sum(1 for name,_ in dirty_mods if name == 'go'):
             if options.verbose:
-                print 'GO will be reindexed. This triggers whole-database reindexing.'
+                print('GO will be reindexed. This triggers whole-database reindexing.')
             for _,mod in dirty_mods:
                 mod.clear(create_session=create_session)
 
         for name,mod in dirty_mods:
             if options.verbose:
-                print 'Indexing %s...' % name
+                print('Indexing {0}...'.format(name))
             mod.clear(create_session=create_session)
             mod.load(datadir=options.datadir, create_session=create_session)
 
