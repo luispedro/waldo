@@ -94,6 +94,7 @@ def retrieve_go_annotations(name, session=None, return_evidence=False, only_cell
         go terms (of the form "GO:00..."). If ``return_evidence``, then pairs
         are returned, where the second element is the evidence code.
     '''
+    import waldo.go
     if session is None: session = waldo.backend.create_session()
     entr = session.query(Entry).filter(Entry.name == name).first()
     if entr is None:
