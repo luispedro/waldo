@@ -39,7 +39,17 @@ This is the standard Python installation command. In order to start using
 waldo, you need to download all the database files and build the index. The
 utility script ``waldo-update`` should accomplish this::
 
+    waldo-update --user
+    waldo-update
     waldo-update --datadir /path/to/datadir --database database.sqlite3
+
+There are three variations (shown above):
+
+1. ``--user`` (the default for ``install.sh``) installs waldo locally for this
+   user
+2. Without an argument, it installs it system-wide (you need to have write
+   access to ``/var/lib/waldo``
+3. You can specify exactly where to store the data.
 
 The ``datadir`` is where waldo will store the downloaded information. It
 defaults to ``/var/lib/waldo/data``. You can also specify where to store the

@@ -29,8 +29,9 @@ import logging
 logging = logging.getLogger('backend')
 
 _paths = [
-    path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '.',
+    path.expanduser('~/.local/shared/waldo/waldo.sqlite3'),
+    path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '/var/lib/waldo',
     ]
 use_fts3 = False
