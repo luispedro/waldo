@@ -162,8 +162,19 @@ def get_json(request, id=None):
     return HttpResponse(json.dumps(entry, cls=json_entry.EntryEncoder), content_type='application/json')
 
 
-def main():
-    run(app, host='localhost', port=8000)
+def main(argv):
+    import optparse
+
+    parser = optparse.OptionParser()
+    parser.add_option(
+                    '--port',
+                    action='store',
+                    dest='port',
+                    help='TCP Port to use (default: 8000)')
+    options, args = parser.parse_args(argv)
+    if not options.port: options.port = 8000
+    run(app, host='localhost', port=options.port)
 
 if __name__ == '__main__':
-    main()
+    from sys import argv
+    main(argv)
