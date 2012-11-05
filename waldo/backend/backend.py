@@ -30,7 +30,7 @@ logging = logging.getLogger('backend')
 
 _paths = [
     '.',
-    path.expanduser('~/.local/shared/waldo/waldo.sqlite3'),
+    path.expanduser('~/.local/share/waldo'),
     path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '/var/lib/waldo',
     ]
