@@ -1,6 +1,16 @@
-from bottle import Bottle, run, template, redirect, static_file, request
-from bottle import SimpleTemplate
-from bottle import TEMPLATE_PATH
+try:
+    from bottle import Bottle, run, template, redirect, static_file, request
+    from bottle import SimpleTemplate
+    from bottle import TEMPLATE_PATH
+except:
+    from sys import stderr
+    stderr.write('''\
+import bottle failed. Try
+
+    pip install bottle
+
+See http://bottlepy.org/ for details.''')
+    raise
 
 import waldo.uniprot.retrieve
 import waldo.mgi.retrieve
