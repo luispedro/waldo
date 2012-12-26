@@ -79,6 +79,8 @@ def search(format='html'):
 @route('/search/mgiid')
 def search(format='html'):
     mgiid = request.query.mgiid
+    if not mgiid.startswith('MGI:'):
+        mgiid = 'MGI:'+mgiid
     return _result(format, 'MGI ID', mgiid, translate(mgiid, 'mgi:id', 'ensembl:gene_id'))
 
 @route('/search/uniprotname')
