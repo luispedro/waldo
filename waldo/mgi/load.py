@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -75,7 +75,7 @@ def load(datadir, create_session=None):
 def _load_gene_annotation(filename, session):
     entries = set()
     loaded = 0
-    for line in file(filename):
+    for line in open(filename):
         if line[-1] == '\n': line = line[:-1]
         # DO NOT USE
         # line = line.strip()
@@ -87,7 +87,7 @@ def _load_gene_annotation(filename, session):
         if line[0] == '!':
             if line.startswith('!gaf-version:'):
                 if not line == '!gaf-version: 2.0':
-                    raise IOError("waldo.go.load: Cannot parse. Wrong GAF version.\nHeader line: %s" % line)
+                    raise IOError("waldo.mgi.load: Cannot parse. Wrong GAF version.\nHeader line: %s" % line)
             continue
         
         try:
@@ -152,7 +152,7 @@ def _load_pubmed_ids(filename, session):
     For each line in the file, determine if the referenced MGI ID exists in database.
     If so, insert the associated PubMed IDs into SQLite.
     '''
-    for line in file(filename):
+    for line in open(filename):
         mgi_id, \
         mrk_symbol, \
         mrk_name, \
