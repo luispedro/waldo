@@ -98,23 +98,23 @@ def _safe_head(lst):
 def _load_uniprot_sprot(datadir, session, organism_set):
     input = _gzip_open(path.join(datadir, _inputfilename))
     loaded = 0
+    organisms_select = etree.XPath('up:organism/*[@type="scientific"]/text()', namespaces=_ns)
+    accession_select = etree.XPath('up:accession/text()', namespaces=_ns)
+    rname_select = etree.XPath('up:protein/up:recommendedName/up:fullName/text()', namespaces=_ns)
+    primary_name_select = etree.XPath('up:gene/up:name[@type="primary"]/text()', namespaces=_ns)
 
     for _event, element in etree.iterparse(input, tag=_p+'entry'):
-        organisms = []
-        for item in element.iterchildren(_p+'organism'):
-            for subitem in item.iterchildren():
-                if subitem.get('type') == u'scientific':
-                    organisms.append(unicode(subitem.text))
+        organisms = map(unicode, organisms_select(element))
 
         if organism_set is not None:
             if not len(set(organisms) & organism_set):
                 _cleanup(element)
                 continue
 
-        accessions = [unicode(acc.text) for acc in element.iterchildren(_p+'accession')]
+        accessions = map(unicode, accession_select(element))
         name = unicode(element.findtext(_p+'name'))
-        rname = element.find(_p + 'protein').find(_p+'recommendedName').find(_p + 'fullName').text
-        gname = _safe_head(element.xpath('up:gene/up:name[@type="primary"]/text()', namespaces=_ns))
+        rname = _safe_head(rname_select(element))
+        gname = _safe_head(primary_name_select(element))
 
         sequence = unicode(element.findtext(_p+'sequence'))
         comments = [models.Comment(c.get('type'), unicode(c.findtext(_p+'text'))) for c in element.iterchildren(_p+'comment')]
