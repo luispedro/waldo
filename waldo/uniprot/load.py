@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,6 +31,7 @@ from waldo.translations.models import Translation
 
 _inputfilename = 'uniprot_sprot.xml.gz'
 _p = '{http://uniprot.org/uniprot}'
+_ns = {'up': _p[1:-1] }
 
 def clear(create_session=None):
     '''
@@ -90,6 +91,10 @@ def _cleanup(element):
     while element.getprevious() is not None:
         del element.getparent()[0]
 
+def _safe_head(lst):
+    if len(lst):
+        return lst[0]
+
 def _load_uniprot_sprot(datadir, session, organism_set):
     input = _gzip_open(path.join(datadir, _inputfilename))
     loaded = 0
@@ -109,6 +114,8 @@ def _load_uniprot_sprot(datadir, session, organism_set):
         accessions = [unicode(acc.text) for acc in element.iterchildren(_p+'accession')]
         name = unicode(element.findtext(_p+'name'))
         rname = element.find(_p + 'protein').find(_p+'recommendedName').find(_p + 'fullName').text
+        gname = _safe_head(element.xpath('up:gene/up:name[@type="primary"]/text()', namespaces=_ns))
+
         sequence = unicode(element.findtext(_p+'sequence'))
         comments = [models.Comment(c.get('type'), unicode(c.findtext(_p+'text'))) for c in element.iterchildren(_p+'comment')]
         references = []
@@ -149,7 +156,7 @@ def _load_uniprot_sprot(datadir, session, organism_set):
 
         _cleanup(element)
 
-        entry = models.Entry(name, rname, accessions, comments, references, go_annotations, sequence, organisms)
+        entry = models.Entry(name, rname, gname, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
         session.commit()

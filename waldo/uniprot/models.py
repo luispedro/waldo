@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -110,6 +110,7 @@ class UniprotEntry(Base):
     __tablename__ = 'uniprot_entry'
     name = Column(String(32), nullable=False, primary_key=True)
     rname = Column(String(128), nullable=False)
+    gname = Column(String(128), nullable=True)
     accessions = relation(Accession)
     references = relation(Reference)
     comments = relation(Comment)
@@ -122,9 +123,10 @@ class UniprotEntry(Base):
     def internal_id(self):
         return self.name
 
-    def __init__(self, name, rname, accessions, comments, references, go_annotations, sequence, organisms):
+    def __init__(self, name, rname, gname, accessions, comments, references, go_annotations, sequence, organisms):
         self.name = name
         self.rname = rname
+        self.gname = gname
         if type(accessions[0]) in (str, unicode):
             accessions = map(Accession, accessions)
         if organisms and type(organisms[0]) in (str, unicode):

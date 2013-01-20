@@ -45,6 +45,7 @@ def test_nr_entries():
     session,loaded = load_uniprot_test()
     assert loaded == (nr_entries + nr_names)
     test_entry = waldo.uniprot.retrieve.retrieve_entry('2AAA_MOUSE', session)
+    assert test_entry.gname == 'Ppp2r1a'
     assert session.query(Translation).filter(and_(Translation.input_namespace == 'ensembl:gene_id', Translation.output_namespace ==  'uniprot:name')).count()
     assert waldo.uniprot.retrieve.from_ensembl_gene_id('ENSMUSG00000047281', session) == '1433S_MOUSE'
     assert 'GO:0000159' in waldo.uniprot.retrieve.retrieve_go_annotations('2AAA_MOUSE', session)
