@@ -162,27 +162,31 @@ def main(argv):
         waldo.backend.init(options.database)
         waldo.backend.create_tables()
 
-        create_session = None
         if options.unsafe:
-            def create_session():
-                session = waldo.backend.create_session()
-                c = session.connection()
+            from sqlalchemy import event
+            from waldo.backend import create_session
+            s = create_session()
+            def set_unsafe(c, _):
                 # These are only valid for SQLite3, but it makes it much faster
                 c.execute('PRAGMA synchronous=OFF;')
                 c.execute('PRAGMA journal_mode=OFF;')
-                return session
+                c.execute('PRAGMA temp_store=MEMORY;')
+            c = s.connection()
+            event.listen(c.engine, 'connect', set_unsafe)
+            del c
+            del s
 
         if sum(1 for name,_ in dirty_mods if name == 'go'):
             if options.verbose:
                 print('GO will be reindexed. This triggers whole-database reindexing.')
             for _,mod in dirty_mods:
-                mod.clear(create_session=create_session)
+                mod.clear()
 
         for name,mod in dirty_mods:
             if options.verbose:
                 print('Indexing {0}...'.format(name))
-            mod.clear(create_session=create_session)
-            mod.load(datadir=options.datadir, create_session=create_session)
+            mod.clear()
+            mod.load(datadir=options.datadir)
 
 if __name__ == '__main__':
     from sys import argv
