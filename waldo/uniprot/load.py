@@ -110,6 +110,8 @@ def _load_uniprot_sprot(datadir, session, organism_set):
     accession_select = etree.XPath('up:accession/text()', namespaces=_ns)
     rname_select = etree.XPath('up:protein/up:recommendedName/up:fullName/text()', namespaces=_ns)
     primary_name_select = etree.XPath('up:gene/up:name[@type="primary"]/text()', namespaces=_ns)
+    citation_select = etree.XPath('up:reference/up:citation', namespaces=_ns)
+    author_select = etree.XPath('up:authorList/up:person/text()', namespaces=_ns)
 
     for _event, element in _safe_iterparse(input, tag=_p+'entry'):
         organisms = map(unicode, organisms_select(element))
@@ -129,29 +131,27 @@ def _load_uniprot_sprot(datadir, session, organism_set):
         references = []
         go_annotations = []
 
-        for ref in element.iterchildren(_p+'reference'):
-            for subel in ref.iterchildren():
-                if subel.tag == _p+'citation':
-                    key = ref.get('key')
-                    type = subel.get('type')
-                    title = subel.findtext(_p+'title')
-                    if title is None or key is None:
-                        continue
-                    authors = []
-                    for author in subel.iterchildren(_p+'authorList'):
-                        authors.extend([person.get('name') for person in author.findall(_p+'person')])
-                    authors = " AND ".join(authors)
 
-                    dbReference = subel.findall(_p + 'dbReference')
-                    dbrefs = filter(lambda x : x.get('type') == 'DOI', dbReference)
-                    dbRefString = ''
-                    if len(dbrefs):
-                        dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
-                    else:
-                        dbrefs = filter(lambda x : x.get('type') == 'PubMed', dbReference)
-                        if len(dbrefs):
-                            dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
-                    references.append(models.Reference(key, type, title, authors, dbRefString))
+        for citation in citation_select(element):
+            ref = citation.getparent()
+            key = ref.get('key')
+            type = citation.get('type')
+            title = citation.findtext(_p+'title')
+            if title is None or key is None:
+                continue
+            authors = author_select(citation)
+            authors = " AND ".join(authors)
+
+            dbReference = citation.findall(_p + 'dbReference')
+            dbrefs = filter(lambda x : x.get('type') == 'DOI', dbReference)
+            dbRefString = ''
+            if len(dbrefs):
+                dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
+            else:
+                dbrefs = filter(lambda x : x.get('type') == 'PubMed', dbReference)
+                if len(dbrefs):
+                    dbRefString = "%s:%s" % (dbrefs[0].get('type'), dbrefs[0].get('id'))
+            references.append(models.Reference(key, type, title, authors, dbRefString))
 
         for dbref in element.iterchildren(_p+'dbReference'):
             if dbref.get('type') == 'Go':
