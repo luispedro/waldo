@@ -105,7 +105,7 @@ def load(datadir, create_session=None):
         loaded += 1
         # This check is ugly, but commit() is rather slow
         # The speed up is worth it:
-        if (loaded % 128) == 0:
+        if (loaded % 512) == 0:
             session.commit()
     session.commit()
     return loaded
