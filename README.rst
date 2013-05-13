@@ -41,11 +41,11 @@ The individual steps are::
 
 This is the standard Python installation command. In order to start using
 waldo, you need to download all the database files and build the index. The
-utility script ``waldo-update`` should accomplish this::
+utility script ``update-waldo`` should accomplish this::
 
-    waldo-update --user
-    waldo-update
-    waldo-update --datadir /path/to/datadir --database database.sqlite3
+    update-waldo --user
+    update-waldo
+    update-waldo --datadir /path/to/datadir --database database.sqlite3
 
 There are three variations (shown above):
 
