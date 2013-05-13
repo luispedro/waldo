@@ -120,7 +120,9 @@ def _load_gene_annotation(filename, session):
                 loaded += 1
             annotation = models.GOAnnotation(DB_object_id, go_id, evidence_code, assigned_by)
             session.add(annotation)
-            session.commit()
+            if len(session.new) > 512:
+                session.commit()
+    session.commit()
     return loaded
 
 def _load_mrk_ensembl(filename, session):
@@ -145,7 +147,9 @@ def _load_mrk_ensembl(filename, session):
             for id in peptide_ids.split():
                 add_synonym('ensembl:peptide_id', id)
         add_synonym('ensembl:gene_id', ensembl_gene_id)
-        session.commit()
+        if len(session.new) > 512:
+            session.commit()
+    session.commit()
 
 def _load_pubmed_ids(filename, session):
     '''
@@ -165,5 +169,7 @@ def _load_pubmed_ids(filename, session):
 
             # update the record to include the PubMed IDs
             obj.pubmedids = pubmed_ids
-            session.commit()
+            if len(session.dirty) > 512:
+                session.commit()
+    session.commit()
 

@@ -131,7 +131,6 @@ def _load_uniprot_sprot(datadir, session, organism_set):
         references = []
         go_annotations = []
 
-
         for citation in citation_select(element):
             ref = citation.getparent()
             key = ref.get('key')
@@ -167,7 +166,9 @@ def _load_uniprot_sprot(datadir, session, organism_set):
         entry = models.Entry(name, rname, gname, accessions, comments, references, go_annotations, sequence, organisms)
         session.add(entry)
         loaded += 1
-        session.commit()
+        if len(session.new) > 512:
+            session.commit()
+    session.commit()
     return loaded
 
 def _name_guess(name):
@@ -226,8 +227,10 @@ def _load_idmapping(datadir, session, organism_set):
             for e in Ensembl_PRO:
                 add('ensembl:peptide_id', e, 'uniprot:name', UniProtKB_ID)
             seen_IDs.add(UniProtKB_ID)
-        session.commit()
+        if len(session.new) > 512:
+            session.commit()
         loaded += 1
+    session.commit()
     return loaded
 
 def _load_sec_ac(datadir, session):
@@ -257,11 +260,13 @@ def _load_sec_ac(datadir, session):
                 session.add(Translation(
                         'uniprot:accession', sec,
                         'uniprot:accession', primary))
-                session.commit()
                 loaded += 1
+                if len(session.new) > 512:
+                    session.commit()
         elif data_next:
             in_data = True
         elif line.startswith('Secondary AC'):
             data_next = True
+    session.commit()
     return loaded
 
