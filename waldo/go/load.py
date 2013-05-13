@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,6 +42,32 @@ def clear(create_session=None):
     session.query(models.TermRelationship).delete()
     session.commit()
 
+
+def _parse_terms(stream):
+    from collections import defaultdict
+    in_term = False
+    for line in stream:
+        line = line.strip()
+        if not line:
+            if in_term:
+                yield term
+            in_term = False
+            continue
+        if line == '[Term]':
+            in_term = True
+            term = defaultdict(list)
+        if in_term:
+            key,_,value = line.partition(':')
+            value = value.strip()
+            if key == 'is_a':
+                value,_,_ = value.partition(' ! ')
+            elif key == 'relationship':
+                content = value.split()
+                if content[0] == 'part_of':
+                    key = 'part_of'
+                    value = content[1]
+            term[key].append(value)
+
 def load(datadir, create_session=None):
     '''
     nr_entries = load(datadir, create_session={backend.create_session})
@@ -67,44 +93,19 @@ def load(datadir, create_session=None):
     id = None
     in_term = False
     loaded = 0
-    for line in input:
-        line = line.strip()
-        if line in ('[Term]', '[Typedef]'):
-            if id is not None and not is_obsolete:
-                term = Term(id, name, namespace)
-                session.add(term)
-                for name,targets in [('is_a',is_a),('part_of',part_of)]:
-                    for t in targets:
-                        r = TermRelationship(id, t, name)
-                        session.add(r)
-                loaded += 1
-                session.commit()
-            is_a = []
-            part_of = []
-            is_obsolete = False
-            id = None
-            in_term = (line == '[Term]')
-        if not in_term:
+    for term in _parse_terms(input):
+        if term['is_obsolete']:
             continue
-        if line.find(':') > 0:
-            code, content = line.split(':',1)
-            content = content.strip()
-            if code == 'id':
-                id = content
-            elif code == 'name':
-                name = content
-            elif code == 'is_a':
-                content,_ = content.split('!')
-                content = content.strip()
-                is_a.append(content)
-            elif code == 'relationship':
-                content = content.split()
-                if content[0] == 'part_of':
-                    part_of.append(content[1])
-            elif code == 'is_obsolete':
-                is_obsolete = True
-            elif code == 'namespace':
-                namespace = content
-
+        session.add(
+            Term(id=term['id'][0], name=term['name'][0], namespace=term['namespace'][0]))
+        for rel in ('is_a','part_of'):
+            for t in term[rel]:
+                r = TermRelationship(id, t, rel)
+                session.add(r)
+        loaded += 1
+        # This check is ugly, but commit() is rather slow
+        # The speed up is worth it:
+        if (loaded % 128) == 0:
+            session.commit()
     session.commit()
     return loaded
