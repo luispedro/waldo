@@ -95,6 +95,14 @@ def _safe_head(lst):
     if len(lst):
         return lst[0]
 
+# This is a work around a bug in certain versions of libxml2
+def _safe_iterparse(*args,**kwargs):
+    try:
+        for r in etree.iterparse(*args,**kwargs):
+            yield r
+    except etree.XMLSyntaxError:
+        return
+
 def _load_uniprot_sprot(datadir, session, organism_set):
     input = _gzip_open(path.join(datadir, _inputfilename))
     loaded = 0
@@ -103,7 +111,7 @@ def _load_uniprot_sprot(datadir, session, organism_set):
     rname_select = etree.XPath('up:protein/up:recommendedName/up:fullName/text()', namespaces=_ns)
     primary_name_select = etree.XPath('up:gene/up:name[@type="primary"]/text()', namespaces=_ns)
 
-    for _event, element in etree.iterparse(input, tag=_p+'entry'):
+    for _event, element in _safe_iterparse(input, tag=_p+'entry'):
         organisms = map(unicode, organisms_select(element))
 
         if organism_set is not None:
