@@ -50,7 +50,7 @@ utility script ``update-waldo`` should accomplish this::
 There are three variations (shown above):
 
 1. ``--user`` (the default for ``install.sh``) installs waldo locally for this
-   user
+   user (under ``$HOME/.local/share/waldo``)
 2. Without an argument, it installs it system-wide (you need to have write
    access to ``/var/lib/waldo``
 3. You can specify exactly where to store the data.
@@ -58,6 +58,11 @@ There are three variations (shown above):
 The ``datadir`` is where waldo will store the downloaded information. It
 defaults to ``/var/lib/waldo/data``. You can also specify where to store the
 database file (default is ``/var/lib/waldo/waldo.sqlite3``).
+
+Additionally, you can use the ``--unsafe`` flag to speed up the indexing, but
+if you interrupt the process, the database may be broken::
+
+    update-waldo --user --unsafe
 
 Running the Webapp
 ..................
