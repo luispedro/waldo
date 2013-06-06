@@ -4,7 +4,7 @@
     <title>{{ get('title','Waldo') }}</title>
     <meta name="authors" content="Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy" />
     <meta name="keywords" content="subcellular location, subcellular localization, protein, database" />
-    <script type="text/javascript" src="/media/js/jquery.js"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <link rel="stylesheet" type="text/css" href="/media/css/style.css" media="screen" />
     <link rel="shortcut icon" href="favicon.ico" />
 </head>
@@ -32,7 +32,7 @@
 
 <hr style="margin-top: 3em" />
 <div class="footer">
-    <p>Copyright (c) 2010-2012. Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy, and Jephthah Liddie. All rights reserved.</p>
+    <p>Copyright (c) 2010-2013. Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy, and Jephthah Liddie. All rights reserved.</p>
 </div>
 </body>
 </html>
