@@ -35,19 +35,22 @@
     </div>
 % end
 
-<h2>Prediction Results</h2>
+% if PREDICTIONS_ENABLED:
 
-% if predictions:
-    % for pred in predictions:
-        <p>Prediction algorithm: {{pred[0] }}
-            <ul>
-            % for r in pred[1]:
-                <li>{{r.prediction}} ({{r.strength}})</li>
-            % end
-            </ul>
+    <h2>Prediction Results</h2>
+    % if predictions:
+        % for pred in predictions:
+            <p>Prediction algorithm: {{pred[0] }}
+                <ul>
+                % for r in pred[1]:
+                    <li>{{r.prediction}} ({{r.strength}})</li>
+                % end
+                </ul>
+        % end
+    % else:
+        <p>No prediction for this protein.</p>
     % end
-% else:
-    <p>No prediction for this protein.</p>
 % end
+
 
 % rebase base title='Waldo'

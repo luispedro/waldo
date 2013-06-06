@@ -31,6 +31,8 @@ SimpleTemplate.defaults["get_url"] = app.get_url
 basedir = path.abspath(path.dirname(__file__))
 TEMPLATE_PATH.append(path.join(basedir, 'views'))
 
+PREDICTIONS_ENABLED = False
+
 
 route('/', name='home', callback=lambda: template('index'))
 route('/help', name='help', callback=lambda:template('static/help'))
@@ -56,6 +58,7 @@ def _result(format, name, value, arguments, predictions=[]):
             'search_term_value': value,
             'all_results': list(_retrieve_all(**arguments)),
             'predictions': predictions,
+            'PREDICTIONS_ENABLED': PREDICTIONS_ENABLED,
     })
 
 @route('/search/ensemblgene')
