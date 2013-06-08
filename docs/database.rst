@@ -6,13 +6,6 @@ regarding what data to extract and store locally and what information was left
 in the downloaded files (datasources), possibly for future use. This is an
 explanation of the rationale.
 
-eSLDB
------
-
-eSLDB was used at an earlier stage, but found to contain too much overlap with
-uniprot + prediction. We are trying to replicate all of this and, therefore,
-eSLDB brought us little extra information.
-
 LOCATE
 ------
 
