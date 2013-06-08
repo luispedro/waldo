@@ -11,7 +11,6 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   definition-of-done.rst
    architecture.rst
    database.rst
 
