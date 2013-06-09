@@ -51,8 +51,9 @@ update-waldo --user --unsafe
 
 to install the database.</p>
 
-<h3>User vs Global Installation</h3>
 
-<p>Waldo can be installed for a single user or system-globally.</p>
+<h3>Online Documentation</h3>
+
+<p>Further online documentation is available at <a href="http://waldo.readthedocs.org/en/latest/">read the docs</a>.</p>
 
 %rebase base title='Help'
