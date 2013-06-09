@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -38,7 +38,7 @@ package_data = {
     'waldo.tests': ['data/*'],
 }
 
-setuptools.setup(name = 'Waldo',
+setuptools.setup(name = 'waldo',
       version = '0.1',
       description = 'Protein Subcellular Location Information Package',
       long_description = long_description,
