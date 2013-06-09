@@ -19,6 +19,25 @@ Once you download the code, you should be able to install it with::
 
     python setup.py install
 
+Dependencies
+~~~~~~~~~~~~
+
+- python
+- lxml
+- sqlalchemy
+- bottle
+
+bottle is only needed if wish to run the web application (i.e., if you only
+using the local programming API, then you can skip this step).
+
+Under a debian or Ubuntu system, the following commands will install all needed
+packages::
+
+    sudo apt-get install python-lxml
+    sudo apt-get install python-sqlalchemy
+    sudo apt-get install python-bottle
+
+
 Downloading and building the database
 -------------------------------------
 
