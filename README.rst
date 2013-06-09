@@ -74,4 +74,5 @@ If you have installed waldo as above, you should execute::
 Links
 .....
 
+- documentation: http://waldo.readthedocs.org/en/latest/
 - github: https://github.com/luispedro/waldo
