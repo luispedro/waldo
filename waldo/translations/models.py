@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -9,20 +9,21 @@ from sqlalchemy import Column, String, Integer, ForeignKey
 from sqlalchemy.orm import relation, backref
 from waldo.backend import Base
 
-known_namespaces = (
-    'embl:cds',
-    'ensembl:peptide_id',
-    'ensembl:gene_id',
-    'ensembl:transcript_id',
-    'mgi:id',
-    'mgi:symbol',
-    'mgi:name',
-    'refseq:accession',
-    'uniprot:name',
-    'uniprot:accession',
-    'locate:id',
-    'hpa:id',
-    )
+namespace_fullname = {
+    'embl:cds': 'EMBL CDS',
+    'ensembl:peptide_id' : 'ENSEMBL Peptide ID',
+    'ensembl:gene_id': 'ENSEMBL Gene ID',
+    'ensembl:transcript_id' : 'ENSEMBL Transcript ID',
+    'mgi:id' : 'MGI ID',
+    'mgi:symbol': 'MGI Symbol',
+    'mgi:name': 'MGI Name',
+    'refseq:accession': 'RefSeq Accession',
+    'uniprot:name': 'Uniprot Name',
+    'uniprot:accession': 'Uniprot Accession',
+    'locate:id': 'Locate ID',
+    'hpa:id': 'Human Protein Atlas ID',
+    }
+known_namespaces = tuple(namespace_fullname.keys())
 
 def verify_namespace(namespace):
     '''
