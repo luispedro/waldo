@@ -42,7 +42,7 @@ PREDICTIONS_ENABLED = False
 route('/', name='home', callback=lambda: template('index'))
 route('/help', name='help', callback=lambda:template('static/help'))
 route('/about', name='about', callback=lambda:template('static/about'))
-route('/contact-us', name='contact-us', callback=lambda:template('static/help'))
+route('/contact-us', name='contact-us', callback=lambda:template('static/contact-us'))
 route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root=path.join(basedir,'media')))
 
 
