@@ -19,6 +19,7 @@ import waldo.predictions.retrieve
 import waldo.sequences.retrieve
 import waldo.nog.retrieve
 from waldo.translations.services import translate
+from waldo.translations.models import namespace_fullname
 from waldo.go import id_to_term
 import waldo.backend
 import json
@@ -40,6 +41,12 @@ route('/about', name='about', callback=lambda:template('static/about'))
 route('/contact-us', name='contact-us', callback=lambda:template('static/help'))
 route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root=path.join(basedir,'media')))
 
+
+@route('/translate', name='translate')
+def translate():
+    return template('translate',
+        { 'namespaces': namespace_fullname.items(),
+        })
 
 @route('/query')
 def searchby():

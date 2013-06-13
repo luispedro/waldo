@@ -19,6 +19,7 @@
 <div id="content">
     <div class="right">
         <ul>
+        <li><a href="{{ get_url('translate') }}">Identifier Translation</a></li>
         <li><a href="{{ get_url('help') }}">Help</a></li>
         <li><a href="{{ get_url('about') }}">About Waldo</a></li>
         <li><a href="{{ get_url('contact-us') }}">Contact Us</a></li>
