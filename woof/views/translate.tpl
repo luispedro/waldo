@@ -1,8 +1,55 @@
 <h2>Identifier Translation</h2>
+% if results is not None:
+
+    <h3>Results</h3>
+    <p>Waldo uses Ensembl IDs as an intermediate step.</p>
+
+    <p><a href="#" id="resultstoggle">Show just final output (for easy copy &amp; paste)</a></p>
+    <script>
+        var full = true;
+        $('#resultstoggle').click(function() {
+            if (full) {
+                $('#fullresults').hide();
+                $('#justoutput').show();
+                $('#resultstoggle').text('Show full output');
+            } else {
+                $('#fullresults').hide();
+                $('#justoutput').show();
+                $('#resultstoggle').text('Show just final output');
+            }
+            full = !full;
+        });
+    </script>
+
+    <table id="fullresults">
+    <tr>
+    <th>Input ({{ inputns_user }})</th>
+    <th>Ensembl</th>
+    <th>Output ({{ outputns_user }})</th>
+    </tr>
+    %for r in results:
+    <tr>
+        <td>{{ r[0] }}</td>
+        <td>{{ r[1] }}</td>
+        <td>{{ r[2] }}</td>
+    </tr>
+    %end
+    </table>
+
+    <div id="justoutput" style="visibility:hidden">
+        <pre>
+        %for r in results:
+            {{ r[2] }}
+        %end
+        </pre>
+    </div>
+
+% end
+<h3>New Query</h3>
 <form action="/translate" method="post">
 <p><label for="inputns">Input Namespace:</label> <select name="inputns" id="inputns">
 %for (code,ns) in namespaces:
-    <option name="{{code}}">{{ns}}</option>
+    <option value="{{code}}">{{ns}}</option>
 %end
         </select>
 <p>Input your identifiers (max 100):
@@ -17,13 +64,15 @@ $('#samplebutton').click(function() {
 </script>
 <p><label for="outputns">Output Namespace:</label> <select name="outputns" id="outputns">
 %for (code,ns) in namespaces:
-    <option name="{{code}}">{{ns}}</option>
+    <option value="{{code}}">{{ns}}</option>
 %end
 <p><label for="outputformat">Output Format:</label> <select name="outputformat" id="outputformat">
     <option value="html" selected="true">Human Readable (HTML)</option>
     <option value="csv">Tab Separated</option>
     <option value="json">JSON</option>
 </select>
+<input type="Submit" />
+</form>
 
 <h2>Offlline Use</h2>
 

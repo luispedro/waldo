@@ -1,3 +1,6 @@
+# Woof is part of waldo
+# http://murphylab.web.cmu.edu/services/waldo/home
+
 try:
     from bottle import Bottle, run, template, redirect, static_file, request
     from bottle import SimpleTemplate
@@ -31,6 +34,7 @@ SimpleTemplate.defaults["get_url"] = app.get_url
 
 basedir = path.abspath(path.dirname(__file__))
 TEMPLATE_PATH.append(path.join(basedir, 'views'))
+session = waldo.backend.create_session()
 
 PREDICTIONS_ENABLED = False
 
@@ -42,11 +46,40 @@ route('/contact-us', name='contact-us', callback=lambda:template('static/help'))
 route('/media/<filename:path>', callback=lambda **f: static_file(f['filename'], root=path.join(basedir,'media')))
 
 
-@route('/translate', name='translate')
-def translate():
+
+@route('/translate', name='translate', method=('GET','POST'))
+def translate_identifiers():
+    if 'ids' not in request.forms:
+        return template('translate',
+            {
+                'results': None,
+                'namespaces': namespace_fullname.items(),
+            })
+
+    inputns = request.forms['inputns']
+    outputns = request.forms['outputns']
+    results = []
+    for i in request.forms['ids'].strip().split():
+        i = i.strip()
+        if not len(i):
+            continue
+        e = translate(i, inputns, 'ensembl:gene_id')
+        o = translate(e, 'ensembl:gene_id', outputns)
+        results.append((i,e,o))
+
+    if format == 'csv':
+        return '\n'.join('\t'.join(r) for r in results)
+    if format == 'json':
+        from collections import namedtuple
+        rtype = namedtuple('WaldoIDTranslation', 'input ensembl_gene output')
+        results = [rtype(r) for r in results]
+        return json.dumps(results)
     return template('translate',
-        { 'namespaces': namespace_fullname.items(),
-        })
+            {   'results': results,
+                'inputns_user' : namespace_fullname[inputns],
+                'outputns_user' : namespace_fullname[outputns],
+                'namespaces': namespace_fullname.items(),
+            })
 
 @route('/query')
 def searchby():
@@ -165,7 +198,6 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
 
 def get_json(request, id=None):
     entry = None
-    session = waldo.backend.create_session()
 
     op = request.path_info.split('/')[2]
     if op == 'locate':
@@ -180,7 +212,6 @@ def get_json(request, id=None):
         entry = waldo.predictions.retrieve.retrieve_predictions(id, session)
     elif op == 'mgi' :
         entry = waldo.mgi.retrieve.retrieve_entry(id, session)
-
     return HttpResponse(json.dumps(entry, cls=json_entry.EntryEncoder), content_type='application/json')
 
 
