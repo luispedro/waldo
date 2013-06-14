@@ -1,6 +1,7 @@
 <h2>Identifier Translation</h2>
 % if results is not None:
 
+
     <h3>Results</h3>
     <p>Waldo uses Ensembl IDs as an intermediate step.</p>
 
@@ -13,14 +14,25 @@
                 $('#justoutput').show();
                 $('#resultstoggle').text('Show full output');
             } else {
-                $('#fullresults').hide();
-                $('#justoutput').show();
+                $('#fullresults').show();
+                $('#justoutput').hide();
                 $('#resultstoggle').text('Show just final output');
             }
             full = !full;
         });
     </script>
 
+    <style>
+#fullresults TH {
+    border-top: solid 3px black;
+    border-bottom: solid 2px black;
+    background: #ccc;
+    padding-right: 4em;
+}
+#fullresults {
+    border-bottom: solid 3px black;
+}
+    </style>
     <table id="fullresults">
     <tr>
     <th>Input ({{ inputns_user }})</th>
@@ -36,13 +48,14 @@
     %end
     </table>
 
-    <div id="justoutput" style="visibility:hidden">
+    <div id="justoutput">
         <pre>
         %for r in results:
             {{ r[2] }}
         %end
         </pre>
     </div>
+    <script>$('#justoutput').hide();</script>
 
 % end
 <h3>New Query</h3>
