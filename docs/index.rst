@@ -17,6 +17,7 @@ Contents
 
    install.rst
    tutorial.rst
+   identifiers.rst
    architecture.rst
    database.rst
    api.rst
