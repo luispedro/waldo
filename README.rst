@@ -71,6 +71,8 @@ If you have installed waldo as above, you should execute::
 
     python woof/woof.py
 
+Then point your browser to http://localhost:8000/
+
 Links
 .....
 
