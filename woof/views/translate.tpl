@@ -91,4 +91,9 @@ $('#samplebutton').click(function() {
 
 <p>You can access the same functionality through a convenient Python interface.</P>
 
+<ol>
+    <li><a href="https://pypi.python.org/pypi/waldo">Download</a> and <a href="http://waldo.readthedocs.org/en/latest/install.html">install</a> waldo</li>
+    <li><a href="http://waldo.readthedocs.org/en/latest/identifiers.html">Learn how to map identifiers in Python</a></li>
+</ol>
+
 % rebase base title='Waldo Identifier Translation'
