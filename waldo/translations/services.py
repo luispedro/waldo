@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -93,3 +93,25 @@ def get_id_namespace(any_id):
     if re.match('[0-9]{7}', any_id) is not None:
         return 'locate:id'
     raise ValueError("waldo.translate.get_id_namespace: Unrecognised format for any_id: '%s'" % any_id)
+
+def list_all(namespace, session=None):
+    '''
+    all_ids = list_all(namespace, session={waldo.backend.create_session()})
+
+    Parameters
+    ----------
+    namespace : str
+        input namespacce
+    session : SQLAlchemy sesion object
+        SQLAlchemy session to use (default: call backend.create_session())
+
+    Returns
+    -------
+    alls_ids : list of str
+    '''
+    if session is None:
+        session = waldo.backend.create_session()
+    verify_namespace(namespace)
+    results = session.query(Translation.input_name).filter(Translation.input_namespace == namespace).all()
+    return [r[0] for r in results if r[0]]
+
