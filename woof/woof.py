@@ -129,17 +129,17 @@ def search(format='html'):
 @route('/search/uniprotname')
 def search(format='html'):
     uniprotname = request.query.uniprotname
-    return _result(format, 'Uniprot Name', uniprotname, translate(uniprotname, 'uniprot:name', 'ensembl:gene_id'))
+    return _result(format, 'Uniprot Name', uniprotname, translate(uniprotname.upper(), 'uniprot:name', 'ensembl:gene_id'))
 
 @route('/search/uniprotacc')
 def search(format='html'):
     uniprotacc = request.query.uniprotacc
-    return _result(format, 'Uniprot Accession ID', uniprotacc, translate(uniprotacc, 'uniprot:accession', 'ensembl:gene_id'))
+    return _result(format, 'Uniprot Accession ID', uniprotacc, translate(uniprotacc.upper(), 'uniprot:accession', 'ensembl:gene_id'))
 
 @route('/search/locateid')
 def search(format='html'):
     locateid = request.query.locateid
-    return _result(format, 'LOCATE ID', locateid, translate(locateid, 'locate:id', 'ensembl:gene_id'))
+    return _result(format, 'LOCATE ID', locateid, translate(locateid.upper(), 'locate:id', 'ensembl:gene_id'))
 
 
 def _format(entry, module):
@@ -185,6 +185,8 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
     if ensemblgene is None and ensemblpeptide is None:
         return
     session = waldo.backend.create_session()
+    ensemblgene = (ensemblgene.upper() if ensemblgene else ensemblgene)
+    ensemblpeptide = (ensemblpeptide.upper() if ensemblpeptide else ensemblpeptide)
 
     for module in (waldo.uniprot, waldo.mgi, waldo.locate):
         if ensemblgene is not None:
