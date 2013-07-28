@@ -141,6 +141,15 @@ def search(format='html'):
     locateid = request.query.locateid
     return _result(format, 'LOCATE ID', locateid, translate(locateid.upper(), 'locate:id', 'ensembl:gene_id'))
 
+_list_cache = {}
+@route('/list')
+def ensemblgene():
+    import json
+    namespace = request.query.namespace
+    if namespace not in _list_cache:
+        from waldo.translations.services import list_all
+        _list_cache[namespace] = list_all(namespace)
+    return json.dumps(_list_cache[namespace])
 
 def _format(entry, module):
     if module.name == 'LOCATE':
