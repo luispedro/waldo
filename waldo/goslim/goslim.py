@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2010, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,6 +23,8 @@
 from __future__ import division
 from models import SlimSet, SlimTerm, SlimMapping
 
+_known_slimsets = set(['mgi'])
+
 def map_to_goslim(go_id, set_name, session=None):
     '''
     go_slim_term = map_to_goslim(go_id, set_name, session={backend.create_session()})
@@ -43,6 +45,8 @@ def map_to_goslim(go_id, set_name, session=None):
     go_slim_term : str or None
         GO Slim Term corresponding to input `go_id`
     '''
+    if set_name not in _known_slimsets:
+        raise KeyError('waldo.goslim.map_to_goslim: Unknown GO Slim `%s` (known are %s)' % (set_name, _known_slimsets))
     if session is None:
         from waldo.backend import create_session
         session = create_session()
