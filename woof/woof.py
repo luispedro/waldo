@@ -90,7 +90,7 @@ def searchby():
             redirect('/search/%s?%s=%s' % (key,key,value))
     redirect('error')
 
-_mgi_goslim_all = [
+_mgi_goslim_all = set([
     'cell organization and biogenesis',
     'cytosol',
     'nucleus',
@@ -103,7 +103,7 @@ _mgi_goslim_all = [
     'mitochondrion',
     'translational apparatus',
     'extracellular matrix',
-    ]
+    ])
 
 def _result(format, name, value, arguments, predictions=[]):
     if type(arguments) != dict:
@@ -113,10 +113,15 @@ def _result(format, name, value, arguments, predictions=[]):
     for entry in _retrieve_all(**arguments):
         all_results.append(entry)
         goslim[entry['module']] = entry['goslim']
+    goslim_all = set()
+    for g in goslim.values():
+        goslim_all.update(g)
+    goslim_all = list(goslim_all&_mgi_goslim_all)
+    goslim_all.sort()
     return template('results', {
             'search_term_type': name,
             'search_term_value': value,
-            'goslim_all' : _mgi_goslim_all,
+            'goslim_all' : goslim_all,
             'goslim': goslim,
             'all_results': all_results,
             'predictions': predictions,

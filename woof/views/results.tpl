@@ -7,7 +7,7 @@ href="http://www.geneontology.org/GO.slims.shtml#whatIs">GO Slim</a> defined by
 <a href="http://www.informatics.jax.org/">Mouse Genome Informatics</a></p>:
 
 <table id="goslim_results">
-<tr>
+<tr id="goslim_results_header">
 <th>Location</th>
 % for key in goslim:
     <th>{{ key }}</th>
@@ -15,7 +15,7 @@ href="http://www.geneontology.org/GO.slims.shtml#whatIs">GO Slim</a> defined by
 </tr>
 % for p in goslim_all:
     <tr>
-    <td>{{ p }}</td>
+    <td class="goslim_results_location">{{ p }}</td>
     % for key in goslim:
         % if p in goslim[key]:
             <td>YES</td>
@@ -26,6 +26,29 @@ href="http://www.geneontology.org/GO.slims.shtml#whatIs">GO Slim</a> defined by
     </tr>
 % end
 </table>
+
+<style>
+#goslim_results TD {
+    padding-left: 2em
+    padding-right: 3em
+}
+.goslim_results_location {
+    padding-right: 4em
+}
+#goslim_results_header {
+    border-bottom: 2px solid black;
+    background: #eee;
+}
+#goslim_results {
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+    margin-left: 120px; 
+}
+
+</style>
+
+<p><em>Note that these databases are not independent sources as information
+from one database can be used as the basis for another database.</em></p>
 
 <h2>Database Results</h2>
 % for element in all_results:
