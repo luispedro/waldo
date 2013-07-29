@@ -1,5 +1,32 @@
 <p>Results for <cite>{{ search_term_value }}</cite> as {{ search_term_type }}</p>
 
+<h2>Summary Overview</h2>
+
+<p>This is a summary of what we found after mapping to the <a
+href="http://www.geneontology.org/GO.slims.shtml#whatIs">GO Slim</a> defined by
+<a href="http://www.informatics.jax.org/">Mouse Genome Informatics</a></p>:
+
+<table id="goslim_results">
+<tr>
+<th>Location</th>
+% for key in goslim:
+    <th>{{ key }}</th>
+% end
+</tr>
+% for p in goslim_all:
+    <tr>
+    <td>{{ p }}</td>
+    % for key in goslim:
+        % if p in goslim[key]:
+            <td>YES</td>
+        % else:
+            <td>NO</td>
+        % end
+    % end
+    </tr>
+% end
+</table>
+
 <h2>Database Results</h2>
 % for element in all_results:
     <div class="dbresult">

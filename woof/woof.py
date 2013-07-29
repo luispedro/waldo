@@ -24,6 +24,7 @@ import waldo.nog.retrieve
 from waldo.translations.services import translate
 from waldo.translations.models import namespace_fullname
 from waldo.go import id_to_term
+import waldo.goslim
 import waldo.backend
 import json
 from os import path
@@ -89,14 +90,35 @@ def searchby():
             redirect('/search/%s?%s=%s' % (key,key,value))
     redirect('error')
 
+_mgi_goslim_all = [
+    'cell organization and biogenesis',
+    'cytosol',
+    'nucleus',
+    'other cellular component',
+    'ER/Golgi',
+    'other membranes',
+    'cytoskeleton',
+    'plasma membrane',
+    'other cytoplasmic organelle',
+    'mitochondrion',
+    'translational apparatus',
+    'extracellular matrix',
+    ]
 
 def _result(format, name, value, arguments, predictions=[]):
     if type(arguments) != dict:
         arguments = {'ensemblgene': arguments}
+    all_results = []
+    goslim = {}
+    for entry in _retrieve_all(**arguments):
+        all_results.append(entry)
+        goslim[entry['module']] = entry['goslim']
     return template('results', {
             'search_term_type': name,
             'search_term_value': value,
-            'all_results': list(_retrieve_all(**arguments)),
+            'goslim_all' : _mgi_goslim_all,
+            'goslim': goslim,
+            'all_results': all_results,
             'predictions': predictions,
             'PREDICTIONS_ENABLED': PREDICTIONS_ENABLED,
     })
@@ -156,9 +178,9 @@ def _format(entry, module):
         evidence = '<br />'.join(
                 ['<a href="http://locate.imb.uq.edu.au/data_images/%s/%s"><img height="50" width="50" src="http://locate.imb.uq.edu.au/data_images/%s/%s" /></a>' %
                     (img.filename[0:3], img.filename, img.filename[0:3], img.filename) for img in entry.images]),
-        location = [(id_to_term(go_id),None) for go_id in module.retrieve_go_annotations(entry.internal_id)]
+        location = [(go_id,None) for go_id in module.retrieve_go_annotations(entry.internal_id)]
     else:
-        location = [(id_to_term(go_annotation.go_id),go_annotation.evidence_code) for go_annotation in entry.go_annotations]
+        location = [(go_annotation.go_id,go_annotation.evidence_code) for go_annotation in entry.go_annotations]
         try:
             evidence = '<br />'.join((annot.evidence or 'None') for annot in entry.go_annotations),
         except:
@@ -166,12 +188,16 @@ def _format(entry, module):
     name = entry.name
     if name is None:
         name = '<unnamed protein>'
+    goslim = [waldo.goslim.map_to_goslim(a, 'mgi') for a,_ in location]
+    location = [(id_to_term(loc),ev) for loc,ev in location]
     return {
         'protein': name,
         'organism' : '; '.join(map(str,entry.organisms)),
         'celltype': None,
         'condition': None,
         'location': location,
+        'goslim': goslim,
+        'module': module.name,
         'references': entry.references,
         'evidence' : evidence,
         'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.internal_id), module.name),
