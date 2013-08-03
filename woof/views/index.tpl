@@ -10,7 +10,7 @@
         </form>
         <script>
         function set_autocomplete(wid, namespace) {
-            $.getJSON('/list?namespace='+namespace, function (data) {
+            $.getJSON('list?namespace='+namespace, function (data) {
                 $(wid).autocomplete({
                         source: data
                 });
