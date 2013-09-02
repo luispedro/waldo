@@ -169,7 +169,7 @@ def search(format='html'):
     return _result(format, 'LOCATE ID', locateid, translate(locateid.upper(), 'locate:id', 'ensembl:gene_id'))
 
 _list_cache = {}
-@route('/list')
+@route('/list', name='id_list')
 def ensemblgene():
     import json
     namespace = request.query.namespace
