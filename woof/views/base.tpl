@@ -36,7 +36,7 @@
 <hr style="margin-top: 3em" />
 <div class="footer">
     <p>Something not working? <a href="{{ get_url('contact-us') }}">Let us know</a> and we will fix it!</p>
-    <p>Copyright (c) 2010-2013. Luis Pedro Coelho, Shannon Quinn, Hagit Shatkay, Robert F. Murphy, and Jephthah Liddie. All rights reserved.</p>
+    <p>Copyright (c) 2010-2013. Luis Pedro Coelho, Jephthah Liddie, Shannon Quinn, Hagit Shatkay, and Robert F. Murphy. All rights reserved.</p>
 </div>
 </body>
 </html>
