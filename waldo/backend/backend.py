@@ -34,7 +34,7 @@ _paths = [
     path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '/var/lib/waldo',
     ]
-use_fts3 = False
+build_fulltext_index = True
 
 Base = declarative_base()
 _engine = None
@@ -105,12 +105,13 @@ def create_tables():
     metadata.bind = _engine
     metadata.create_all()
     conn = _engine.connect()
-    if use_fts3:
-        #drop the old uniprot organism entry, and create a virtual one with fts3
+    if build_fulltext_index:
+        #drop the old uniprot organism entry, and create a virtual one with fts4
         conn.execute("drop table uniprot_entry")
-        conn.execute("""CREATE VIRTUAL TABLE uniprot_entry USING fts3 (
-                VARCHAR(32) NOT NULL,
+        conn.execute("""CREATE VIRTUAL TABLE uniprot_entry USING fts4 (
+                name VARCHAR(32) NOT NULL,
                 rname VARCHAR(128) NOT NULL,
+                gname VARCHAR(128) NOT NULL,
                 sequence TEXT,
                 PRIMARY KEY (name))""")
 
