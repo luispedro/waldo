@@ -34,8 +34,6 @@ _paths = [
     path.join(path.abspath(path.dirname(__file__)), '..', '..'),
     '/var/lib/waldo',
     ]
-build_fulltext_index = True
-
 Base = declarative_base()
 _engine = None
 _create_session = None
@@ -95,11 +93,17 @@ def call_create_session(creator):
     if creator: return creator()
     return create_session()
 
-def create_tables():
+def create_tables(build_fulltext_index=False):
     '''
-    create_tables()
+    create_tables(build_fulltext_index=False)
 
     Creates all tables in database.
+
+    Parameters
+    ----------
+
+    build_fulltext_index : bool, optional
+        Whether to build the full-text index (default: False)
     '''
     metadata = Base.metadata
     metadata.bind = _engine
