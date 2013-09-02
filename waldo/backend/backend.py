@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -40,9 +40,12 @@ Base = declarative_base()
 _engine = None
 _create_session = None
 
-def init(database_file=None):
+_waldo_database_version = '2013-07-29'
+
+def init(database_file=None, reinit=False):
     global _engine, _create_session
     basename = 'waldo.sqlite3'
+    creating = False
     if database_file is None:
         for basep in _paths:
             fullp = path.join(basep, basename)
@@ -52,8 +55,23 @@ def init(database_file=None):
                 break
         else:
             database_file = path.join(_paths[0], basename)
+    if reinit:
+        from os import unlink
+        try:
+            unlink(database_file)
+        except:
+            pass
+    creating = not path.exists(database_file)
     _engine = create_engine('sqlite:///' + database_file, echo=False)
     _create_session = sessionmaker(bind=_engine)
+    conn = _engine.connect()
+    if creating:
+            conn.execute('CREATE TABLE waldo_version (waldo_version_created CHAR(255))')
+            conn.execute('INSERT INTO waldo_version VALUES ("%s")' % _waldo_database_version)
+    else:
+        (v,) = conn.execute('SELECT * FROM waldo_version')
+        if v[0] != _waldo_database_version:
+            raise KeyError('Database version mismatch (using file `%s`)' % database_file)
 
 def create_session(**kwargs):
     '''
