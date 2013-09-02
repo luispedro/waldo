@@ -240,7 +240,11 @@ def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
         if name is None: continue
         entry = module.retrieve.retrieve_entry(name, session)
         if entry is None: continue
-        yield _format(entry, module)
+        try:
+            yield _format(entry, module)
+        except Exception, e:
+            print(e)
+            pass
 
 def get_json(request, id=None):
     entry = None
