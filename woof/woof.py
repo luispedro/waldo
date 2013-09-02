@@ -175,7 +175,11 @@ def ensemblgene():
     namespace = request.query.namespace
     if namespace not in _list_cache:
         from waldo.translations.services import list_all
-        _list_cache[namespace] = list_all(namespace)
+        full = list_all(namespace)
+        full = set(full)
+        full = list(full)
+        full.sort()
+        _list_cache[namespace] = full
     return json.dumps(_list_cache[namespace])
 
 def _format(entry, module):
