@@ -4,7 +4,7 @@
 
 <p>This is a summary of what we found after mapping to the <a
 href="http://www.geneontology.org/GO.slims.shtml#whatIs">GO Slim</a> defined by
-<a href="http://www.informatics.jax.org/">Mouse Genome Informatics</a></p>:
+<a href="http://www.informatics.jax.org/">Mouse Genome Informatics</a>:</p>
 
 <table id="goslim_results">
 <tr id="goslim_results_header">
@@ -78,8 +78,8 @@ from one database can be used as the basis for another database.</em></p>
         <ul>
         % for p in element['references']:
             <li>{{! p.gen_citation() }}</li>
-        </ul>
         %end
+        </ul>
     % end
     <p>Database link: {{! element['source'] }}</p>
     </div>
