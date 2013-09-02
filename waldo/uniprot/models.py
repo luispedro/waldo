@@ -65,7 +65,10 @@ class Reference(Base):
     dbRef = Column(String(64))
 
     def gen_citation(self):
-        return '<a href="%s"><cite>%s</cite></a> by <cite>%s</cite>' % (self.gen_url(), self.title, self.authors)
+        if self.authors:
+            return '<a href="%s"><cite>%s</cite></a> by <cite>%s</cite>' % (self.gen_url(), self.title, self.authors)
+        else:
+            return '<a href="%s"><cite>%s</cite></a>' % (self.gen_url(), self.title)
 
     def gen_url(self):
         rtype,_,code = self.dbRef.partition(':')
