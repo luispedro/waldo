@@ -168,6 +168,20 @@ def search(format='html'):
     locateid = request.query.locateid
     return _result(format, 'LOCATE ID', locateid, translate(locateid.upper(), 'locate:id', 'ensembl:gene_id'))
 
+@route('/search/uniprotmatch')
+def search(format='html'):
+    q = request.query.q
+    import waldo.uniprot.retrieve
+    rs = waldo.uniprot.retrieve.retrieve_name_matches(q)
+    if len(rs) == 1:
+        (e,) = rs
+        return _result(format, 'Uniprot', e.name, translate(e.name, 'uniprot:name', 'ensembl:gene_id'))
+    else:
+        return template('many', {
+            'results': rs,
+            'search_term_value': q,
+        })
+
 _list_cache = {}
 @route('/list', name='id_list')
 def ensemblgene():

@@ -1,5 +1,11 @@
-<h3>Search by...</h3>
-<div style="text-align: center; ">
+<h3>Simple Search</h3>
+<form action="/search/uniprotmatch" method="get">
+<input type="text" name="q" size="64" id="q" />
+<input type="submit" value="Lookup" />
+</form>
+
+<h3>Advanced Search</h3>
+<div style="text-align: right; ">
 <table cellspacing="10" cellpadding="10" border="0">
 <tr>
     <td>Ensembl gene ID:</td>
