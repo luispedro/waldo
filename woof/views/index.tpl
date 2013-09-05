@@ -5,6 +5,8 @@
 </form>
 
 <h3>Advanced Search</h3>
+<p><a href="#" id="expand_advanced">Expand advanced search options...</a></p>
+<div id="advanced_search">
 <div style="text-align: right; ">
 <table cellspacing="10" cellpadding="10" border="0">
 <tr>
@@ -22,7 +24,6 @@
                 });
             });
         }
-        set_autocomplete('#ensemblgene_input', 'ensembl:gene_id');
         </script>
     </td>
 </tr>
@@ -33,7 +34,6 @@
         <input type="text" name="ensemblprot" size="32" name='ensemblprot_input' />
         <input type="submit" value="Lookup" />
         </form>
-        <script>set_autocomplete('#ensemblgene_input', 'ensembl:peptide_id');</script>
     </td>
 </tr>
 <tr>
@@ -43,7 +43,6 @@
         <input type="text" name="uniprotacc" size="32" id='uniprotacc_input' />
         <input type="submit" value="Lookup" />
         </form>
-        <script>set_autocomplete('#uniprotacc_input', 'uniprot:accession');</script>
     </td>
 </tr>
 <tr>
@@ -53,7 +52,6 @@
         <input type="text" name="uniprotname" size="32" id='uniprotname_input' />
         <input type="submit" value="Lookup" />
         </form>
-        <script>set_autocomplete('#uniprotname_input', 'uniprot:name');</script>
     </td>
 </tr>
 <tr>
@@ -63,7 +61,6 @@
         <input type="text" name="mgiid" value="MGI:1918918" size="32" id="mgiid_input" />
         <input type="submit" value="Lookup" />
         </form>
-        <script>set_autocomplete('#mgiid_input', 'mgi:id');</script>
     </td>
 </tr>
 <tr>
@@ -73,10 +70,26 @@
         <input type="text" name="locateid" value="6008510" size="32" id="locateid_input" />
         <input type="submit" value="Lookup" />
         </form>
-        <script>set_autocomplete('#locateid_input', 'locate:id');</script>
     </td>
 </tr>
 </table>
 </div>
+</div>
+<script>
+$('#advanced_search').hide();
+$('#expand_advanced').click(function() {
+    $('#expand_advanced').hide();
+    $('#advanced_search').show();
+
+    set_autocomplete('#ensemblgene_input', 'ensembl:gene_id');
+    set_autocomplete('#ensemblgene_input', 'ensembl:peptide_id');
+    set_autocomplete('#uniprotacc_input', 'uniprot:accession');
+    set_autocomplete('#uniprotname_input', 'uniprot:name');
+    set_autocomplete('#mgiid_input', 'mgi:id');
+    set_autocomplete('#locateid_input', 'locate:id');
+
+    return false;
+});
+</script>
 
 %rebase base title='Waldo'
