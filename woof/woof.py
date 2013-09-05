@@ -228,6 +228,7 @@ def _format(entry, module):
 def _search_name(name):
     session = waldo.backend.create_session()
     uniprot_entries = waldo.uniprot.retrieve.retrieve_name_matches(name, session)
+    uniprot_entries.sort(key=e.rname)
     return [_format(entry, waldo.uniprot) for entry in uniprot_entries]
 
 def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
