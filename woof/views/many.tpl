@@ -1,5 +1,6 @@
 <h2></h2>
-<p>Results for <cite>{{ search_term_value }}</cite></p>
+<p><em>Multiple results</em> for <cite>{{ search_term_value }}</cite></p>
+<p>Please select desired one below.</p>
 
 <p>See results for <input type="checkbox" checked="true" id="see_human" /> Human
 <input type="checkbox" checked="true" id="see_mouse" /> Mouse</a>
