@@ -105,6 +105,7 @@ def main(argv):
     parser.add_option('--datadir', action='store', dest='datadir', default='/var/lib/waldo/data/', help='Where to store data files')
     parser.add_option('--database', action='store', dest='database', default='/var/lib/waldo/waldo.sqlite3', help='Path to database file')
     parser.add_option('--force-reindex', action='store_true', dest='force_reindex', help='Reindex data even if no changes are detected')
+    parser.add_option('--no-full-text', action='store_true', dest='no_fts', help='Do not create a full-text index')
     parser.add_option('--no-download', action='store_true', dest='no_download', help='Do not download any data (only useful with --force_reindex)')
     parser.add_option('--unsafe', action='store_true', dest='unsafe', help='Use database in unsafe mode (faster, but potentially a problem if there is a machine crash')
     options,args = parser.parse_args(argv)
@@ -160,7 +161,7 @@ def main(argv):
     chdir(startdir)
     if dirty_mods:
         waldo.backend.init(options.database)
-        waldo.backend.create_tables()
+        waldo.backend.create_tables(not option.no_fts)
 
         if options.unsafe:
             from sqlalchemy import event
