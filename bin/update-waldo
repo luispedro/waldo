@@ -161,7 +161,7 @@ def main(argv):
     chdir(startdir)
     if dirty_mods:
         waldo.backend.init(options.database)
-        waldo.backend.create_tables(not option.no_fts)
+        waldo.backend.create_tables(not options.no_fts)
 
         if options.unsafe:
             from sqlalchemy import event
