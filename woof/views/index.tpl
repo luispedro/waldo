@@ -1,4 +1,4 @@
-<h3>Simple Search</h3>
+<p>Type the name of a human or mouse protein:</p>
 <form action="/search/uniprotmatch" method="get">
 <input type="text" name="q" size="64" id="q" />
 <input type="submit" value="Lookup" />
