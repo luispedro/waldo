@@ -3,6 +3,9 @@
 <p>The web interface to waldo is very simple. You look up a protein and it
 returns whatever its databases know about it.</p>
 
+<p>This can be appropriate for casual use, but if you are going to query the
+database repeatedly, the Python interface is better.</p>
+
 <h2>Programmatic interface</h2>
 <p>Waldo can also be installed locally and programmatically queried. This is
 more appropriate for heavy usage.</p>
@@ -13,7 +16,7 @@ import waldo.uniprot.retrieve
 from waldo.go import id_to_term
 
 name = 'ACTB_HUMAN'
-gos = waldo.uniprot.retrieve.retrieve_go_annotations('name')
+gos = waldo.uniprot.retrieve.retrieve_go_annotations(name)
 
 for g in gos:
     print id_to_term(g)
@@ -54,6 +57,7 @@ to install the database.</p>
 
 <h3>Online Documentation</h3>
 
-<p>Further online documentation is available at <a href="http://waldo.readthedocs.org/en/latest/">read the docs</a>.</p>
+<p>Further online documentation is available at <a
+href="http://waldo.readthedocs.org/en/latest/">read the docs</a>.</p>
 
 %rebase base title='Help'
