@@ -38,7 +38,7 @@ Base = declarative_base()
 _engine = None
 _create_session = None
 
-_waldo_database_version = '2013-07-29'
+_waldo_database_version = '2013-09-10'
 
 def init(database_file=None, reinit=False):
     global _engine, _create_session

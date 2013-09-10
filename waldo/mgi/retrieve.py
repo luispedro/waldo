@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
@@ -54,8 +54,7 @@ def retrieve_go_annotations(mgi_id, session=None):
     -------
       go_ids : list of go terms (of the form "GO:00...")
     '''
-    if session is None: session = waldo.backend.create_session()
-    entr = session.query(Entry).filter(Entry.mgi_id == mgi_id).first()
+    entr = retrieve_entry(mgi_id, session)
     if entr is None:
         raise KeyError('waldo.mgi.retrieve_go_annotations: No entry for `%s`' % mgi_id)
     return [go.go_id for go in entr.go_annotations]
@@ -76,7 +75,13 @@ def retrieve_entry(id, session=None):
       entry : models.Entry object
     '''
     if session is None: session = waldo.backend.create_session()
-    return session.query(Entry).filter(Entry.mgi_id == id).first()
+    q = session.query(Entry)
+    if id.startswith('MGI:'):
+        q = q.filter(Entry.mgi_id == id)
+    else:
+        q = q.filter(Entry.symbol == id)
+    return q.first()
+
 
 
 def gen_url(id):

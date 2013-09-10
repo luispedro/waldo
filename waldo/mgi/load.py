@@ -114,7 +114,7 @@ def _load_gene_annotation(filename, session):
 
         if aspect == 'C':
             if DB_object_id not in entries:
-                entry = models.Entry(DB_object_id, DB_object_name)
+                entry = models.Entry(DB_object_id, DB_object_symbol, DB_object_name)
                 entries.add(DB_object_id)
                 session.add(entry)
                 loaded += 1
@@ -166,7 +166,6 @@ def _load_pubmed_ids(filename, session):
         # first, does mgi_id exist in our database?
         obj = session.query(models.Entry).filter(models.Entry.mgi_id == mgi_id).first()
         if obj is not None:
-
             # update the record to include the PubMed IDs
             obj.pubmedids = pubmed_ids
             if len(session.dirty) > 512:

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,6 +42,7 @@ class GOAnnotation(Base):
 class MGIEntry(Base):
     __tablename__ = 'mgi_entry'
     mgi_id = Column(String(32), nullable=False, primary_key=True)
+    symbol = Column(String(32))
     name = Column(String(32))
     pubmedids = Column(String(100), nullable=True)
     go_annotations = relation(GOAnnotation)
@@ -52,8 +53,9 @@ class MGIEntry(Base):
     def internal_id(self):
         return self.mgi_id
 
-    def __init__(self, mgi_id, name):
+    def __init__(self, mgi_id, symbol, name):
         self.mgi_id = mgi_id
+        self.symbol = symbol
         self.name = name
         self.go_annotations = []
 
