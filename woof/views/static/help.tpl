@@ -58,6 +58,8 @@ to install the database.</p>
 <h3>Online Documentation</h3>
 
 <p>Further online documentation is available at <a
-href="http://waldo.readthedocs.org/en/latest/">read the docs</a>.</p>
+href="http://waldo.readthedocs.org/en/latest/">read the docs</a>, including a
+<a
+href="http://waldo.readthedocs.org/en/latest/tutorial.html">tutorial</a>.</p>
 
 %rebase base title='Help'
