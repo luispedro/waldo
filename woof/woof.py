@@ -171,11 +171,16 @@ def search(format='html'):
 @route('/search/uniprotmatch')
 def search(format='html'):
     q = request.query.q
-    import waldo.uniprot.retrieve
-    rs = waldo.uniprot.retrieve.retrieve_name_matches(q)
+    rs = session.query(waldo.uniprot.models.Entry).filter_by(rname=q).all()
+    if len(rs) == 0:
+        rs = waldo.uniprot.retrieve.retrieve_name_matches(q)
     if len(rs) == 1:
         (e,) = rs
         return _result(format, 'Uniprot', e.name, translate(e.name, 'uniprot:name', 'ensembl:gene_id'))
+    elif len(rs) == 0:
+        return template('index', {
+                'message' : 'No results found.',
+        })
     else:
         return template('many', {
             'results': rs,
@@ -188,8 +193,12 @@ def ensemblgene():
     import json
     namespace = request.query.namespace
     if namespace not in _list_cache:
-        from waldo.translations.services import list_all
-        full = list_all(namespace)
+        if namespace == 'rname':
+            import waldo.uniprot
+            full = [name for name, in session.query(waldo.uniprot.models.Entry.rname).all()]
+        else:
+            from waldo.translations.services import list_all
+            full = list_all(namespace)
         full = set(full)
         full = list(full)
         full.sort()
@@ -225,11 +234,6 @@ def _format(entry, module):
         'evidence' : evidence,
         'source':'<a href="%s">%s</a>' % (module.retrieve.gen_url(entry.internal_id), module.name),
         }
-def _search_name(name):
-    session = waldo.backend.create_session()
-    uniprot_entries = waldo.uniprot.retrieve.retrieve_name_matches(name, session)
-    uniprot_entries.sort(key=e.rname)
-    return [_format(entry, waldo.uniprot) for entry in uniprot_entries]
 
 def _retrieve_all(ensemblgene=None, ensemblpeptide=None):
     '''

@@ -16,15 +16,6 @@
         <input type="text" name="ensemblgene" value="ENSMUSG00000064345" size="32" id="ensemblgene_input" />
         <input type="submit" value="Lookup" />
         </form>
-        <script>
-        function set_autocomplete(wid, namespace) {
-            $.getJSON('{{ get_url('id_list') }}?namespace='+namespace, function (data) {
-                $(wid).autocomplete({
-                        source: data
-                });
-            });
-        }
-        </script>
     </td>
 </tr>
 <tr>
@@ -76,6 +67,15 @@
 </div>
 </div>
 <script>
+function set_autocomplete(wid, namespace) {
+    $.getJSON('{{ get_url('id_list') }}?namespace='+namespace, function (data) {
+        $(wid).autocomplete({
+                source: data,
+                minLength: 4,
+        });
+    });
+}
+set_autocomplete('#q', 'rname');
 $('#advanced_search').hide();
 $('#expand_advanced').click(function() {
     $('#expand_advanced').hide();
