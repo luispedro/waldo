@@ -7,6 +7,8 @@
 <h3>Advanced Search</h3>
 <p><a href="#" id="expand_advanced">Expand advanced search options...</a></p>
 <div id="advanced_search">
+<p>Advanced search uses precise IDs to retrieve proteins.<br />
+Use the "sample input" buttons to provide examples.</p>
 <div style="text-align: right; ">
 <table cellspacing="10" cellpadding="10" border="0">
 <tr>
@@ -97,13 +99,6 @@ $('#advanced_search').hide();
 $('#expand_advanced').click(function() {
     $('#expand_advanced').hide();
     $('#advanced_search').show();
-
-    set_autocomplete('#ensemblgene_input', 'ensembl:gene_id');
-    set_autocomplete('#ensemblgene_input', 'ensembl:peptide_id');
-    set_autocomplete('#uniprotacc_input', 'uniprot:accession');
-    set_autocomplete('#uniprotname_input', 'uniprot:name');
-    set_autocomplete('#mgiid_input', 'mgi:id');
-    set_autocomplete('#locateid_input', 'locate:id');
 
     return false;
 });
