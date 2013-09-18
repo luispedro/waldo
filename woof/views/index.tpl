@@ -10,55 +10,56 @@
 <div style="text-align: right; ">
 <table cellspacing="10" cellpadding="10" border="0">
 <tr>
-    <td>Ensembl gene ID:</td>
+    <td style="vertical-align: top;">Ensembl gene ID:</td>
     <td>
-        <form action="/search/ensemblgene" method="get">
-        <input type="text" name="ensemblgene" value="ENSMUSG00000064345" size="32" id="ensemblgene_input" />
+        <form id="ensemblgene_form" action="/search/ensemblgene" method="get">
+        <input type="text" name="ensemblgene" value="" size="32" id="ensemblgene_input" />
         <input type="submit" value="Lookup" />
         </form>
     </td>
 </tr>
 <tr>
-    <td>Ensembl peptide ID:</td>
+    <td style="vertical-align: top;">Ensembl peptide ID:</td>
     <td>
-        <form action="/search/ensemblprot" method="get">
+        <form id="ensemblprot_form" action="/search/ensemblprot" method="get">
         <input type="text" name="ensemblprot" size="32" name='ensemblprot_input' />
         <input type="submit" value="Lookup" />
         </form>
+        </script>
     </td>
 </tr>
 <tr>
-    <td>Uniprot Accession ID:</td>
+    <td style="vertical-align: top;">Uniprot Accession ID:</td>
     <td>
-        <form action="/search/uniprotacc" method="get">
+        <form id="uniprotacc_form" action="/search/uniprotacc" method="get">
         <input type="text" name="uniprotacc" size="32" id='uniprotacc_input' />
         <input type="submit" value="Lookup" />
         </form>
     </td>
 </tr>
 <tr>
-    <td>Uniprot Protein name:</td>
+    <td style="vertical-align: top;">Uniprot Protein name:</td>
     <td>
-        <form action="/search/uniprotname" method="get">
+        <form id="uniprotname_form" action="/search/uniprotname" method="get">
         <input type="text" name="uniprotname" size="32" id='uniprotname_input' />
         <input type="submit" value="Lookup" />
         </form>
     </td>
 </tr>
 <tr>
-    <td>MGI ID:</td>
+    <td style="vertical-align: top;">MGI ID:</td>
     <td>
-        <form action="/search/mgiid" method="get">
-        <input type="text" name="mgiid" value="MGI:1918918" size="32" id="mgiid_input" />
+        <form id="mgiid_form" action="/search/mgiid" method="get">
+        <input type="text" name="mgiid" size="32" id="mgiid_input" />
         <input type="submit" value="Lookup" />
         </form>
     </td>
 </tr>
 <tr>
-    <td>LOCATE ID:</td>
+    <td style="vertical-align: top;">LOCATE ID:</td>
     <td>
-        <form action="/search/locateid" method="get">
-        <input type="text" name="locateid" value="6008510" size="32" id="locateid_input" />
+        <form id="locateid_form" action="/search/locateid" method="get">
+        <input type="text" name="locateid" size="32" id="locateid_input" />
         <input type="submit" value="Lookup" />
         </form>
     </td>
@@ -75,6 +76,22 @@ function set_autocomplete(wid, namespace) {
         });
     });
 }
+
+function set_sample(wid, value) {
+    $('#' + wid).append('<p><a href="#" id="' + wid + '_sample">sample input</a></p>');
+    $('#'+wid+'_sample').on('click', function(e) {
+        e.preventDefault();
+        $('#'+wid+' input[type="text"]').attr('value', value);
+        return false;
+    });
+}
+set_sample('ensemblgene_form', 'ENSMUSG00000064345');
+set_sample('ensemblprot_form', 'ENSP00000473465');
+set_sample('uniprotacc_form', 'P07437');
+set_sample('uniprotname_form', 'TBB5_HUMAN');
+set_sample('mgiid_form', 'MGI:1918918');
+set_sample('locateid_form', '6008510');
+
 set_autocomplete('#q', 'rname');
 $('#advanced_search').hide();
 $('#expand_advanced').click(function() {
