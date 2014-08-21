@@ -192,7 +192,6 @@ def _load_idmapping(datadir, session, organism_set):
             GI, \
             PDB, \
             GO, \
-            IPI, \
             UniRef100, \
             UniRef90, \
             UniRef50, \
