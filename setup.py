@@ -4,14 +4,14 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-from sys import exit
 try:
     import setuptools
 except:
-    print '''
+    from sys import exit
+    print('''
 setuptools not found. Please install it.
 
-On linux, the package is often called python-setuptools'''
+On linux, the package is often called python-setuptools''')
     exit(1)
 
 long_description = file('README.rst').read()
