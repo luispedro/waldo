@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2012, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2015, Shannon Quinn <squinn@cmu.edu> and Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,15 +21,15 @@
 #  THE SOFTWARE.
 
 from __future__ import division
-from sqlalchemy import Column, Boolean, String, Integer, ForeignKey
+from sqlalchemy import Column, Boolean, String, Integer, BigInteger, ForeignKey
 from sqlalchemy.orm import relation, backref
 from sqlalchemy.ext.declarative import declarative_base
 from waldo.backend import Base
 
 class Isoform(Base):
     __tablename__ = 'locate_isoforms'
-    id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
+    id = Column(BigInteger, primary_key=True)
+    locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     isoform_class = Column(String(20))
     isoform_name = Column(String(30))
 
@@ -39,8 +39,8 @@ class Isoform(Base):
 
 class Image(Base):
     __tablename__ = 'locate_images'
-    id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
+    id = Column(BigInteger, primary_key=True)
+    locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     filename = Column(String(50))
     is_coloc = Column(Boolean)
     celltype = Column(String(100))
@@ -67,9 +67,9 @@ class Image(Base):
 
 class LocatePrediction(Base):
     __tablename__ = 'locate_predictions'
-    id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    source_id = Column(Integer(11))
+    id = Column(BigInteger, primary_key=True)
+    locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
+    source_id = Column(BigInteger)
     method = Column(String(30))
     location = Column(String(50))
     go_id = Column(String(50))
@@ -83,11 +83,11 @@ class LocatePrediction(Base):
 class Literature(Base):
     __tablename__ = 'locate_literature'
     id = Column(Integer, primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
+    locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     authors = Column(String(200))
     title = Column(String(200))
     citation = Column(String(100))
-    source_id = Column(Integer(11))
+    source_id = Column(BigInteger)
     source_name = Column(String(50))
     accn = Column(String(20))
 
@@ -120,10 +120,10 @@ class Literature(Base):
 
 class LocateAnnotation(Base):
     __tablename__ = 'locate_annotations'
-    id = Column(Integer(11), primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     locate_id = Column(Integer, ForeignKey('locate_entries.id'), index=True)
     evidence = Column(String(64))
-    source_id = Column(Integer(11))
+    source_id = Column(BigInteger)
     source_name = Column(String(50))
     accn = Column(String(20))
     go_id = Column(String(32))
@@ -139,9 +139,9 @@ class LocateAnnotation(Base):
 
 class ExternalReference(Base):
     __tablename__ = 'locate_externalreferences'
-    xref_id = Column(Integer(11), primary_key=True)
-    locate_id = Column(Integer(11), ForeignKey('locate_entries.id'), index=True)
-    source_id = Column(Integer(11))
+    xref_id = Column(BigInteger, primary_key=True)
+    locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
+    source_id = Column(BigInteger)
     source_name = Column(String(50))
     accn = Column(String(20))
 
@@ -152,7 +152,7 @@ class ExternalReference(Base):
 
 class LocateEntry(Base):
     __tablename__ = 'locate_entries'
-    id = Column(Integer(11), primary_key=True)
+    id = Column(BigInteger, primary_key=True)
     organism = Column(String(30), nullable=True)
     name = Column(String(50))
     isoforms = relation(Isoform)
