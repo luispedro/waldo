@@ -4,14 +4,13 @@
 # License: MIT. See COPYING.MIT file in the Waldo distribution
 
 from __future__ import division
-from sqlalchemy import Column, String, BigInteger, ForeignKey
-from sqlalchemy.orm import relation, backref
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relation
 from waldo.backend import Base
 
 class Location(Base):
     __tablename__  = 'hpa_location'
-    loc_id = Column(BigInteger, primary_key=True)
+    loc_id = Column(Integer, primary_key=True)
     name = Column(String(30), nullable=False)
     entry_id = Column(String(30), ForeignKey('hpa_ids.ensembl_id'), index=True)
 
@@ -21,7 +20,7 @@ class Location(Base):
 
 class HPAEntry(Base):
     __tablename__ = 'hpa_ids'
-    entry_id = Column(BigInteger, primary_key=True)
+    entry_id = Column(Integer, primary_key=True)
     species = Column(String(30))
     ensembl_id = Column(String(50), nullable=False)
     locations = relation(Location)

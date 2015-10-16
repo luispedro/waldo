@@ -22,13 +22,12 @@
 
 from __future__ import division
 from sqlalchemy import Column, Boolean, String, Integer, BigInteger, ForeignKey
-from sqlalchemy.orm import relation, backref
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relation
 from waldo.backend import Base
 
 class Isoform(Base):
     __tablename__ = 'locate_isoforms'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, primary_key=True)
     locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     isoform_class = Column(String(20))
     isoform_name = Column(String(30))
@@ -39,7 +38,7 @@ class Isoform(Base):
 
 class Image(Base):
     __tablename__ = 'locate_images'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, primary_key=True)
     locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     filename = Column(String(50))
     is_coloc = Column(Boolean)
@@ -67,7 +66,7 @@ class Image(Base):
 
 class LocatePrediction(Base):
     __tablename__ = 'locate_predictions'
-    id = Column(BigInteger, primary_key=True)
+    id = Column(Integer, primary_key=True)
     locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     source_id = Column(BigInteger)
     method = Column(String(30))
@@ -139,7 +138,7 @@ class LocateAnnotation(Base):
 
 class ExternalReference(Base):
     __tablename__ = 'locate_externalreferences'
-    xref_id = Column(BigInteger, primary_key=True)
+    xref_id = Column(Integer, primary_key=True)
     locate_id = Column(BigInteger, ForeignKey('locate_entries.id'), index=True)
     source_id = Column(BigInteger)
     source_name = Column(String(50))
