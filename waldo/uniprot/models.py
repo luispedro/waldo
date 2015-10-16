@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2015, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,12 +22,12 @@
 
 from __future__ import division
 from sqlalchemy import Column, String, Integer, ForeignKey, Text
-from sqlalchemy.orm import relation, backref
+from sqlalchemy.orm import relation
 from waldo.backend import Base
 
 class Accession(Base):
     __tablename__ = 'uniprot_accession'
-    
+
     # We cannot use accession as primary key because they are not unique.
     # Sometimes, one single accession number has been demerged into multiple entries.
     acc_name_id = Column(Integer, primary_key=True)

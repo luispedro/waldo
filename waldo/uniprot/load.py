@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2009-2013, Luis Pedro Coelho <luis@luispedro.org>
+# Copyright (C) 2009-2015, Luis Pedro Coelho <luis@luispedro.org>
 # vim: set ts=4 sts=4 sw=4 expandtab smartindent:
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,7 +26,6 @@ import models
 from os import path
 
 from waldo.tools import _gzip_open
-import waldo.go
 from waldo.translations.models import Translation
 
 _inputfilename = 'uniprot_sprot.xml.gz'
@@ -206,7 +205,7 @@ def _load_idmapping(datadir, session, organism_set):
             Ensembl, \
             Ensembl_TRS, \
             Ensembl_PRO, \
-            Additional_PubMed = line[:-1].split('\t')
+            Additional_PubMed = line.rstrip('\n').split('\t')
         if organism_set is not None and \
             _name_guess(UniProtKB_ID) not in organism_set:
             continue
