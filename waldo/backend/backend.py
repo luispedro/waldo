@@ -35,6 +35,7 @@ _paths = [
     '/var/lib/waldo',
     ]
 Base = declarative_base()
+use_fts = False
 _engine = None
 _create_session = None
 
@@ -110,6 +111,8 @@ def create_tables(build_fulltext_index=False):
     metadata.create_all()
     conn = _engine.connect()
     if build_fulltext_index:
+        global use_fts
+        use_fts = True
         #drop the old uniprot organism entry, and create a virtual one with fts4
         conn.execute("drop table uniprot_entry")
         conn.execute("""CREATE VIRTUAL TABLE uniprot_entry USING fts4 (
