@@ -7,7 +7,6 @@ from __future__ import division
 from os import path
 import csv
 import models
-from waldo.translations.models import Translation
 
 _annot = 'subcellular_location.csv.zip'
 
@@ -28,7 +27,7 @@ def load(datadir, create_session=None):
     '''
     num_entries = load(datadir={data/}, create_session={backend.create_session})
 
-    Load the data from a subcellular location annotations file into the local 
+    Load the data from a subcellular location annotations file into the local
     relational database
 
     Parameters
@@ -59,7 +58,6 @@ def load(datadir, create_session=None):
     # loop through the entries in the file
     csvreader = csv.reader(inputf, delimiter=',', quotechar='"')
     count = 0
-    loc_names = []
     for row in csvreader:
         count += 1
         if count == 1:
@@ -69,16 +67,16 @@ def load(datadir, create_session=None):
         gene, main_loc, other_loc, exp_type, rel = row
 
         locations = main_loc.split(";")
-        if(other_loc != ""): 
+        if(other_loc != ""):
             locations += other_loc.split(";")
-    
+
         for name in locations:
             session.add(models.Location(name, gene))
 
         session.add(models.Entry(gene))
 
         session.commit()
-        
+
     return count - 1 # since the first row wasn't an entry
 
 
