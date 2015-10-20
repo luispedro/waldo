@@ -64,7 +64,7 @@ def load(datadir, create_session=None):
             continue
 
         # loop through the list of comma-separated elements on this row
-        gene, main_loc, other_loc, exp_type, rel = row
+        gene, gene_name, main_loc, other_loc, expression_type, reliability, main_loc_go, other_loc_go = row
 
         locations = main_loc.split(";")
         if(other_loc != ""):
